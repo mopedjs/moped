@@ -1,6 +1,6 @@
 {
   "name": "@moped/get-host-info",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -13,5 +13,8 @@
     "prepublish": "tsc -p tsconfig.build.json"
   },
   "repository": "https://github.com/mopedjs/moped/tree/master/packages/get-host-info",
-  "license": "MIT"
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  }
 }
