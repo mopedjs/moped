@@ -1,0 +1,20 @@
+{
+  "private": true,
+  "workspaces": ["packages/*"],
+  "scripts": {
+    "postinstall": "node postinstall",
+    "bootstrap": "lerna bootstrap",
+    "build": "lerna run prepublish",
+    "release": "lerna publish",
+    "test": "lerna run test",
+    "clean":
+      "rimraf packages/*/lib && rimraf packages/*/build && rimraf packages/*/node_modules && rimraf node_modules"
+  },
+  "devDependencies": {
+    "@types/node": "^8.0.33",
+    "lerna": "^2.4.0",
+    "prettier": "^1.7.4",
+    "rimraf": "^2.6.2",
+    "typescript": "^2.5.3"
+  }
+}
