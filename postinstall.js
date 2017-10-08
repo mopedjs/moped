@@ -73,6 +73,11 @@ readdirSync(__dirname + '/packages').forEach(directory => {
   pkg.repository =
     'https://github.com/mopedjs/moped/tree/master/packages/' + directory;
   pkg.license = 'MIT';
+  if (!pkg.private) {
+    pkg.publishConfig = {
+      access: 'public',
+    };
+  }
 
   prettierOptions
     .then(options => {
