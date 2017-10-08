@@ -1,6 +1,6 @@
 {
   "name": "@moped/get-host-info",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -9,9 +9,9 @@
     "detect-port-alt": "^1.1.3",
     "react-dev-utils": "^4.1.0"
   },
-  "devDependencies": {},
-  "scripts": {"prepublish": "tsc -p tsconfig.build.json"},
-  "repository":
-    "https://github.com/mopedjs/moped/tree/master/packages/get-host-info",
+  "scripts": {
+    "prepublish": "tsc -p tsconfig.build.json"
+  },
+  "repository": "https://github.com/mopedjs/moped/tree/master/packages/get-host-info",
   "license": "MIT"
 }
