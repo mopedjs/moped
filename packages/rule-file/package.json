@@ -9,12 +9,10 @@
     "@types/webpack": "^3.0.13",
     "file-loader": "^1.1.5"
   },
-  "scripts": {
-    "prepublish": "tsc -p tsconfig.build.json"
-  },
-  "repository": "https://github.com/mopedjs/moped/tree/master/packages/rule-file",
+  "scripts": {"prepublish": "tsc -p tsconfig.build.json"},
+  "repository":
+    "https://github.com/mopedjs/moped/tree/master/packages/rule-file",
   "license": "MIT",
-  "publishConfig": {
-    "access": "public"
-  }
+  "publishConfig": {"access": "public"},
+  "devDependencies": {}
 }

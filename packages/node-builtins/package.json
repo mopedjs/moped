@@ -4,15 +4,11 @@
   "description": "",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
-  "dependencies": {
-    "@types/node": "^8.0.33"
-  },
-  "scripts": {
-    "prepublish": "tsc -p tsconfig.build.json"
-  },
-  "repository": "https://github.com/mopedjs/moped/tree/master/packages/node-builtins",
+  "dependencies": {"@types/node": "^8.0.33"},
+  "scripts": {"prepublish": "tsc -p tsconfig.build.json"},
+  "repository":
+    "https://github.com/mopedjs/moped/tree/master/packages/node-builtins",
   "license": "MIT",
-  "publishConfig": {
-    "access": "public"
-  }
+  "publishConfig": {"access": "public"},
+  "devDependencies": {}
 }

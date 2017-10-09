@@ -18,12 +18,10 @@
     "style-loader": "^0.19.0",
     "webpack": "^3.6.0"
   },
-  "scripts": {
-    "prepublish": "tsc -p tsconfig.build.json"
-  },
-  "repository": "https://github.com/mopedjs/moped/tree/master/packages/rule-css",
+  "scripts": {"prepublish": "tsc -p tsconfig.build.json"},
+  "repository":
+    "https://github.com/mopedjs/moped/tree/master/packages/rule-css",
   "license": "MIT",
-  "publishConfig": {
-    "access": "public"
-  }
+  "publishConfig": {"access": "public"},
+  "devDependencies": {}
 }

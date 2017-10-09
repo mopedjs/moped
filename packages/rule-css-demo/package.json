@@ -11,16 +11,14 @@
     "html-webpack-plugin": "^2.30.1",
     "webpack": "^3.6.0"
   },
-  "devDependencies": {
-    "cross-env": "^5.0.5",
-    "rimraf": "^2.6.2"
-  },
+  "devDependencies": {"cross-env": "^5.0.5", "rimraf": "^2.6.2"},
   "scripts": {
     "prepublish": "tsc -p tsconfig.build.json",
     "build:prod": "cross-env NODE_ENV=production webpack",
     "build:dev": "cross-env NODE_ENV=development webpack",
     "test": "rimraf build && yarn build:prod && yarn build:dev"
   },
-  "repository": "https://github.com/mopedjs/moped/tree/master/packages/rule-css-demo",
+  "repository":
+    "https://github.com/mopedjs/moped/tree/master/packages/rule-css-demo",
   "license": "MIT"
 }

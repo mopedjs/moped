@@ -1,14 +1,14 @@
 {
-  "name": "@moped/jest-css",
-  "version": "0.0.2",
+  "name": "@moped/register-service-worker",
+  "version": "0.0.0",
   "description": "",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "dependencies": {"@types/node": "^8.0.33"},
+  "devDependencies": {},
   "scripts": {"prepublish": "tsc -p tsconfig.build.json"},
   "repository":
-    "https://github.com/mopedjs/moped/tree/master/packages/jest-css",
+    "https://github.com/mopedjs/moped/tree/master/packages/register-service-worker",
   "license": "MIT",
-  "publishConfig": {"access": "public"},
-  "devDependencies": {}
+  "publishConfig": {"access": "public"}
 }
