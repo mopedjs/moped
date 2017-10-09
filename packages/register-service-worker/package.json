@@ -1,14 +1,18 @@
 {
   "name": "@moped/register-service-worker",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
-  "dependencies": {"@types/node": "^8.0.33"},
-  "devDependencies": {},
-  "scripts": {"prepublish": "tsc -p tsconfig.build.json"},
-  "repository":
-    "https://github.com/mopedjs/moped/tree/master/packages/register-service-worker",
+  "dependencies": {
+    "@types/node": "^8.0.33"
+  },
+  "scripts": {
+    "prepublish": "tsc -p tsconfig.build.json"
+  },
+  "repository": "https://github.com/mopedjs/moped/tree/master/packages/register-service-worker",
   "license": "MIT",
-  "publishConfig": {"access": "public"}
+  "publishConfig": {
+    "access": "public"
+  }
 }
