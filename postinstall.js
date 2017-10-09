@@ -1,5 +1,4 @@
 const {readdirSync, writeFileSync, statSync, readFileSync} = require('fs');
-const prettier = require('prettier');
 
 const LICENSE = readFileSync(__dirname + '/LICENSE.md');
 
@@ -13,8 +12,6 @@ const tsconfigBuild = `{
 const tsconfig = `{
   "extends": "../../tsconfig.json"
 }`;
-
-const prettierOptions = prettier.resolveConfig(__filename, {});
 
 const dependencies = require('./package.json').devDependencies;
 readdirSync(__dirname + '/packages').forEach(directory => {
@@ -43,6 +40,7 @@ readdirSync(__dirname + '/packages').forEach(directory => {
       throw ex;
     }
   }
+  const before = JSON.stringify(pkg);
   if (!pkg.name) {
     pkg.name = '@moped/' + directory;
   }
@@ -61,9 +59,6 @@ readdirSync(__dirname + '/packages').forEach(directory => {
   if (!pkg.dependencies) {
     pkg.dependencies = {};
   }
-  if (!pkg.devDependencies) {
-    pkg.devDependencies = {};
-  }
   if (!pkg.scripts) {
     pkg.scripts = {};
   }
@@ -78,18 +73,12 @@ readdirSync(__dirname + '/packages').forEach(directory => {
       access: 'public',
     };
   }
-
-  prettierOptions
-    .then(options => {
-      options.parser = 'json';
-      const output = prettier.format(JSON.stringify(pkg), options);
-      writeFileSync(
-        __dirname + '/packages/' + directory + '/package.json',
-        output,
-      );
-    })
-    .catch(ex => {
-      console.error(ex);
-      process.exit(1);
-    });
+  const after = JSON.stringify(pkg);
+  if (before === after) {
+    return;
+  }
+  writeFileSync(
+    __dirname + '/packages/' + directory + '/package.json',
+    JSON.stringify(pkg, null, '  ') + '\n',
+  );
 });

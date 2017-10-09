@@ -1,5 +1,5 @@
 const enum Platform {
-  Client,
-  Server,
+  Client = 'client',
+  Server = 'server',
 }
 export default Platform;

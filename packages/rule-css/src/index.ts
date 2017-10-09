@@ -1,10 +1,11 @@
 import * as webpack from 'webpack';
 import autoprefixer = require('autoprefixer');
 import ExtractTextPlugin = require('extract-text-webpack-plugin');
-import {Environment, getEnvironment} from '@moped/enums';
+import {Environment, getEnvironment, Platform} from '@moped/enums';
 
 export interface CssRuleOptions {
   environment?: Environment;
+  platform?: Platform;
   cssFileName?: string;
   shouldUseRelativeAssetPaths?: boolean;
   disableSourceMaps?: boolean;
@@ -17,6 +18,14 @@ export default function css(
   plugin: webpack.Plugin | null;
 } {
   const environment = getEnvironment(opts.environment);
+  if (
+    opts.platform !== undefined &&
+    opts.platform !== Platform.Client &&
+    opts.platform !== Platform.Server
+  ) {
+    throw new Error('Expected platform to be either "client" or "server"');
+  }
+  const platform = opts.platform || Platform.Client;
   if (opts.cssFileName !== undefined && typeof opts.cssFileName !== 'string') {
     throw new Error('options.cssFileName must be a string, if provided');
   }
@@ -64,6 +73,23 @@ export default function css(
   };
 
   if (environment === Environment.Development) {
+    if (platform === Platform.Server) {
+      return {
+        rule: {
+          test: /\.css$/,
+          use: [
+            {
+              loader: require.resolve('css-loader/locals'),
+              options: {
+                importLoaders: 1,
+              },
+            },
+            postCSSLoader,
+          ],
+        },
+        plugin: null,
+      };
+    }
     return {
       rule: {
         test: /\.css$/,
@@ -81,6 +107,27 @@ export default function css(
       plugin: null,
     };
   }
+
+  if (platform === Platform.Server) {
+    return {
+      rule: {
+        test: /\.css$/,
+        use: [
+          {
+            loader: require.resolve('css-loader/locals'),
+            options: {
+              importLoaders: 1,
+              minimize: true,
+              sourceMap: shouldUseSourceMap,
+            },
+          },
+          postCSSLoader,
+        ],
+      },
+      plugin: null,
+    };
+  }
+
   const plugin = new ExtractTextPlugin({
     filename: cssFileName,
   });
