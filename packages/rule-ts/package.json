@@ -1,11 +1,11 @@
 {
   "name": "@moped/rule-ts",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "dependencies": {
-    "@moped/load-ts-config": "^0.0.0",
+    "@moped/load-ts-config": "^0.0.1",
     "@types/babel-core": "^6.25.2",
     "@types/node": "^8.0.33",
     "babel-core": "^6.26.0",
