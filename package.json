@@ -4,9 +4,9 @@
   "scripts": {
     "postinstall": "node postinstall",
     "bootstrap": "lerna bootstrap",
-    "build": "lerna run prepublish",
+    "build": "lerna run prepublish --parallel",
     "release": "lerna publish",
-    "test": "lerna run test",
+    "test": "lerna run test --parallel",
     "clean":
       "rimraf packages/*/lib && rimraf packages/*/build && rimraf packages/*/node_modules && rimraf node_modules"
   },

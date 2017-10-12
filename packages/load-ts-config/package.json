@@ -1,0 +1,22 @@
+{
+  "name": "@moped/load-ts-config",
+  "version": "0.0.0",
+  "description": "",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "dependencies": {
+    "@types/node": "^8.0.33",
+    "tsconfig": "^7.0.0"
+  },
+  "scripts": {
+    "prepublish": "tsc -p tsconfig.build.json"
+  },
+  "repository": "https://github.com/mopedjs/moped/tree/master/packages/load-ts-config",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "typescript": "^2.5.3"
+  }
+}

@@ -42,6 +42,10 @@ module.exports = {
 
 This can be `'development'`, `'production'` or `'test'`. If you don't provide it, it will default to the value of NODE_ENV.  If neither are specified, an exception will be thrown. It will also throw an exception if any value other than `'development'`, `'production'` and `'test'` is used.
 
+#### Options.platform
+
+This can be `'server'` or `'client'`. If you don't provide it, it will default to `'client'`.  Set this to `'server'` to build a server side version of your app that just excludes the css files.  If you are using `:local(.classNames)`, these should still work, providing your webpack config is otherwise the same between client and server.
+
 #### Options.cssFileName
 
 This is the name of the generated css file, relative to the build folder. It defaults to `'static/css/[name].[contenthash:8].css'`. The `[name]` and `[contenthash:8]` tokens will be replaced with appropriate values.

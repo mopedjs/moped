@@ -1,0 +1,27 @@
+{
+  "name": "@moped/rule-ts",
+  "version": "0.0.0",
+  "description": "",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "dependencies": {
+    "@moped/load-ts-config": "^0.0.0",
+    "@types/babel-core": "^6.25.2",
+    "@types/node": "^8.0.33",
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "cache-loader": "^1.1.0",
+    "shasum": "^1.0.2",
+    "thread-loader": "^1.1.2",
+    "ts-loader": "^2.3.7",
+    "tsconfig": "^7.0.0"
+  },
+  "scripts": {
+    "prepublish": "tsc -p tsconfig.build.json"
+  },
+  "repository": "https://github.com/mopedjs/moped/tree/master/packages/rule-ts",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  }
+}
