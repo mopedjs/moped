@@ -1,6 +1,7 @@
 import * as webpack from 'webpack';
 import autoprefixer = require('autoprefixer');
 import ExtractTextPlugin = require('extract-text-webpack-plugin');
+import NoOpPlugin from '@moped/plugin-noop';
 import {Environment, getEnvironment, Platform} from '@moped/enums';
 
 export interface CssRuleOptions {
@@ -15,7 +16,7 @@ export default function css(
   opts: CssRuleOptions = {},
 ): {
   rule: webpack.Rule;
-  plugin: webpack.Plugin | null;
+  plugin: webpack.Plugin;
 } {
   const environment = getEnvironment(opts.environment);
   if (
@@ -87,7 +88,7 @@ export default function css(
             postCSSLoader,
           ],
         },
-        plugin: null,
+        plugin: new NoOpPlugin(),
       };
     }
     return {
@@ -104,7 +105,7 @@ export default function css(
           postCSSLoader,
         ],
       },
-      plugin: null,
+      plugin: new NoOpPlugin(),
     };
   }
 
@@ -124,7 +125,7 @@ export default function css(
           postCSSLoader,
         ],
       },
-      plugin: null,
+      plugin: new NoOpPlugin(),
     };
   }
 

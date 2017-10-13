@@ -32,7 +32,7 @@ module.exports = {
   module: {
     rules: [css.rule],
   },
-  plugins: [css.plugin].filter(plugin => plugin !== null),
+  plugins: [css.plugin],
 };
 ```
 

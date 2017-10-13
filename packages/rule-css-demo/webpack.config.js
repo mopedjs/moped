@@ -18,7 +18,5 @@ module.exports = {
   module: {
     rules: [css.rule],
   },
-  plugins: [css.plugin, new HtmlWebpackPlugin()].filter(
-    plugin => plugin !== null,
-  ),
+  plugins: [css.plugin, new HtmlWebpackPlugin()],
 };

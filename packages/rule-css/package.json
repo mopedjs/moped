@@ -6,6 +6,7 @@
   "types": "./lib/index.d.ts",
   "dependencies": {
     "@moped/enums": "^0.0.4",
+    "@moped/plugin-noop": "^0.0.0",
     "@types/autoprefixer": "^6.7.3",
     "@types/extract-text-webpack-plugin": "^3.0.0",
     "@types/node": "^8.0.33",
@@ -22,7 +23,8 @@
   "scripts": {
     "prepublish": "tsc -p tsconfig.build.json"
   },
-  "repository": "https://github.com/mopedjs/moped/tree/master/packages/rule-css",
+  "repository":
+    "https://github.com/mopedjs/moped/tree/master/packages/rule-css",
   "license": "MIT",
   "publishConfig": {
     "access": "public"
