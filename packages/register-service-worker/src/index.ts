@@ -35,7 +35,7 @@ export interface Events {
    * "Content is cached for offline use." message.
    */
   contentCached(): any;
-  errorRegisteringServiceWorker(err: Error): any;
+  errorRegisteringServiceWorker?(err: Error): any;
 
   /**
    * Only called in development mode, when the backend is
