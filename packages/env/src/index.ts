@@ -46,5 +46,6 @@ export default function loadEnv(
     .split(delimiter)
     .filter(folder => folder && !isAbsolute(folder))
     .map(folder => resolve(appDirectory, folder))
+    .concat([resolve(appDirectory)])
     .join(delimiter);
 }
