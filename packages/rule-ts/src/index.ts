@@ -4,7 +4,6 @@ import * as webpack from 'webpack';
 import {Environment, getEnvironment} from '@moped/enums';
 import loadTsConfig from '@moped/load-ts-config';
 import * as typescript from 'typescript';
-// import {loadSync} from 'tsconfig';
 
 const babelLoaderPath = require.resolve('babel-loader');
 const tsLoaderPath = require.resolve('ts-loader');
@@ -50,6 +49,8 @@ export interface TypescriptRuleOptions {
 
   tsConfigFileName?: string;
   tsCompilerOptions?: typescript.CompilerOptions;
+
+  workers?: number;
 }
 
 export default function createTypescriptRule(
@@ -136,17 +137,26 @@ export default function createTypescriptRule(
       },
     });
   }
-  if (environment === Environment.Development) {
+  if (
+    options.workers !== undefined &&
+    (typeof options.workers !== 'number' ||
+      options.workers !== (options.workers | 0))
+  ) {
+    throw new Error('If provided, options.workers must be an integer');
+  }
+  const multiThreadded =
+    environment === Environment.Development &&
+    options.workers &&
+    options.workers > 2;
+  if (multiThreadded) {
     const workerOptions = {
       // allow one for forked typescript checker/other stuff
-      workers: require('os').cpus().length - 1,
+      workers: options.workers,
     };
-    if (workerOptions.workers > 1) {
-      loaders.push({
-        loader: require.resolve('thread-loader'),
-        options: workerOptions,
-      });
-    }
+    loaders.push({
+      loader: require.resolve('thread-loader'),
+      options: workerOptions,
+    });
   }
   if (babelOptions) {
     loaders.push({
@@ -162,7 +172,8 @@ export default function createTypescriptRule(
         configFile: tsConfigFileName,
         compilerOptions: tsCompilerOptions,
         // happy pack mode is actually also thread-loader mode
-        happyPackMode: true,
+        happyPackMode: multiThreadded,
+        transpileOnly: true,
         silent: true,
       },
     });
@@ -172,8 +183,7 @@ export default function createTypescriptRule(
       options: {
         configFile: tsConfigFileName,
         compilerOptions: tsCompilerOptions,
-        happyPackMode: false,
-        silent: false,
+        silent: true,
       },
     });
   }

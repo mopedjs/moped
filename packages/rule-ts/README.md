@@ -29,7 +29,6 @@ module.exports = {
     rules: [createTsRule()],
   },
 };
-
 ```
 
 ### Usage with `rule-file` and `rule-css`
@@ -43,6 +42,10 @@ declare module '*.png' {
 ```
 
 The wildcard allows this to match all `.png` files.
+
+### Type checking in development
+
+To maximise reload times, this module does not actually do any type checking in development. You can use `ForkTsCheckerWebpackPlugin` in development to add type checking, without compromising build time.
 
 ### Options
 
@@ -69,6 +72,12 @@ Overrides for the `compilerOptions` section of your tsconfig. `@moped/rule-ts` a
 #### Options.disableSourceMaps
 
 If you are building a very large application, generating source maps may become too slow, and might not be worth it. You can use this option to disable source maps. You can alternatively set the `GENERATE_SOURCEMAP` environment variable to `false` (this option is for compatibility with create-react-app).
+
+#### Options.workers
+
+If you have a very large number of modules, and a computer with many cores, you can pass a number of workers to make typescript compilation multi-threaded.  This is not enabled by default, because it has a very big overhead. When I've experimented with this, it's usually been faster to leave it turned off.
+
+N.B. If you enable workers, it is still only used in development.  Also, workers prevent this module from reporting syntax errors, so you will need to use `new ForkTsCheckerWebpackPlugin({ checkSyntacticErrors: true })` instead of `new ForkTsCheckerWebpackPlugin()` if using `ForkTsCheckerWebpackPlugin`.
 
 ## Licence
 
