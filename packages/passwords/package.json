@@ -1,0 +1,24 @@
+{
+  "name": "@moped/passwords",
+  "version": "0.0.0",
+  "description": "",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "dependencies": {
+    "@types/bytes": "^2.5.1",
+    "@types/ms": "^0.7.30",
+    "@types/node": "^8.0.33",
+    "base32": "^0.0.6",
+    "bytes": "^3.0.0",
+    "ms": "^2.0.0",
+    "secure-password": "^2.1.1"
+  },
+  "scripts": {
+    "prepublish": "tsc -p tsconfig.build.json"
+  },
+  "repository": "https://github.com/mopedjs/moped/tree/master/packages/passwords",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  }
+}
