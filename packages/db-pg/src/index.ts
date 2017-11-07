@@ -8,12 +8,12 @@ const pgp = pg();
 // 2^32 in the database
 pgp.pg.types.setTypeParser(20, str => parseInt(str, 10));
 
-export interface IConnection {
+export interface Connection {
   query(query: SQLQuery): Promise<any[]>;
-  task<T>(fn: (connection: IConnection) => Promise<T>): Promise<T>;
-  tx<T>(fn: (connection: IConnection) => Promise<T>): Promise<T>;
+  task<T>(fn: (connection: Connection) => Promise<T>): Promise<T>;
+  tx<T>(fn: (connection: Connection) => Promise<T>): Promise<T>;
 }
-class Connection {
+class ConnectionImplementation {
   private connection: pg.IBaseProtocol<{}>;
   constructor(connection: pg.IBaseProtocol<{}>) {
     this.connection = connection;
@@ -28,21 +28,21 @@ class Connection {
     }
     return this.connection.query(query);
   }
-  task<T>(fn: (connection: Connection) => Promise<T>): Promise<T> {
+  task<T>(fn: (connection: ConnectionImplementation) => Promise<T>): Promise<T> {
     return this.connection.task(t => {
-      return fn(new Connection(t)) as any;
+      return fn(new ConnectionImplementation(t)) as any;
     });
   }
-  tx<T>(fn: (connection: Connection) => Promise<T>): Promise<T> {
+  tx<T>(fn: (connection: ConnectionImplementation) => Promise<T>): Promise<T> {
     return this.connection.tx(t => {
-      return fn(new Connection(t)) as any;
+      return fn(new ConnectionImplementation(t)) as any;
     });
   }
 }
 
 export default function createConnection(
   connectionString: string | void = process.env.DATABASE_CONNECTION,
-): IConnection {
+): Connection {
   if (typeof connectionString !== 'string' || !connectionString) {
     throw new Error(
       'You must provide a connection string for @moped/db-pg. You can ' +
@@ -52,7 +52,7 @@ export default function createConnection(
   }
   const connection = pgp(connectionString);
 
-  return new Connection(connection);
+  return new ConnectionImplementation(connection);
 }
 
 module.exports = createConnection;

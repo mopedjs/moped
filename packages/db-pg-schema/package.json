@@ -1,0 +1,18 @@
+{
+  "name": "@moped/db-pg-schema",
+  "version": "0.0.0",
+  "description": "",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "dependencies": {
+    "@types/node": "^8.0.33"
+  },
+  "scripts": {
+    "prepublish": "tsc -p tsconfig.build.json"
+  },
+  "repository": "https://github.com/mopedjs/moped/tree/master/packages/db-pg-schema",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  }
+}

@@ -1,0 +1,655 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`generate 1`] = `
+"FILE: ./index.ts
+
+import sql, {SQLQuery} from '@moped/sql';
+import User from './tables/User';
+import Food from './tables/Food';
+import FavouriteFood from './tables/FavouriteFood';
+import OnlyPrimaryKey from './tables/OnlyPrimaryKey';
+
+function getOneResult<T>(results: T[]): T | null {
+  if (results.length === 0) {
+    return null;
+  }
+  if (results.length === 1) {
+    return results[0];
+  }
+  throw new Error(
+    'Expected either one result, or no results to be returned from this query',
+  );
+}
+function noop(): void {}
+export interface Connection {
+  query(query: SQLQuery): Promise<any[]>;
+  task<T>(fn: (connection: Connection) => Promise<T>): Promise<T>;
+  tx<T>(fn: (connection: Connection) => Promise<T>): Promise<T>;
+}
+export class APIBase {
+  protected db: Connection;
+  constructor(db: Connection) {
+    this.db = db;
+  }
+}
+
+export class UserAPI extends APIBase {
+  create(user: {
+    id?: User['id'];
+    username: User['username'];
+    profileDocument: User['profileDocument'];
+  }): Promise<User> {
+    const columns = Object.keys(user)
+      .sort()
+      .filter(
+        name =>
+          name === 'id' || name === 'username' || name === 'profileDocument',
+      )
+      .map(name => ({name, value: (user as any)[name]}));
+    const data = columns.length
+      ? sql\`\${sql.join(columns.map(c => sql.ident(c.name)))}\`
+      : sql\`DEFAULT VALUES\`;
+    let s = sql\`INSERT INTO \\"User\\" \${data} RETURNING *;\`;
+    return this.db.query(s).then(results => results[0]);
+  }
+
+  where(query: SQLQuery): Promise<User[]> {
+    return this.db.query(
+      sql.join([sql\`SELECT * FROM \\"User\\"\`, query], ' WHERE '),
+    );
+  }
+
+  list(query?: Partial<User>): Promise<User[]> {
+    if (query === undefined) {
+      return this.db.query(sql\`SELECT * FROM \\"User\\"\`);
+    }
+    return this.where(
+      sql.join(
+        Object.keys(query)
+          .sort()
+          .filter(
+            fieldName =>
+              fieldName === 'id' ||
+              fieldName === 'username' ||
+              fieldName === 'profileDocument',
+          )
+          .map(field => sql\`\${sql.ident(field)} = \${(query as any)[field]}\`),
+        ' AND ',
+      ),
+    );
+  }
+
+  get(
+    id: User['id'],
+    query?: {
+      username?: User['username'];
+      profileDocument?: User['profileDocument'];
+    },
+  ): Promise<User | null> {
+    if (query === undefined) {
+      return this.db
+        .query(sql\`SELECT * FROM \\"User\\" WHERE \\"id\\" = \${id}\`)
+        .then(getOneResult);
+    }
+    return this.db
+      .query(
+        sql.join(
+          [sql\`SELECT * FROM \\"User\\" WHERE \\"id\\" = \${id}\`].concat(
+            Object.keys(query)
+              .sort()
+              .filter(
+                fieldName =>
+                  fieldName === 'username' || fieldName === 'profileDocument',
+              )
+              .map(
+                field => sql\`\${sql.ident(field)} = \${(query as any)[field]}\`,
+              ),
+          ),
+          ' AND ',
+        ),
+      )
+      .then(getOneResult);
+  }
+
+  update(
+    id: User['id'],
+    user: {
+      username?: User['username'];
+      profileDocument?: User['profileDocument'];
+    },
+    query?: {
+      username?: User['username'];
+      profileDocument?: User['profileDocument'];
+    },
+  ): Promise<void> {
+    const updateColumns = sql.join(
+      Object.keys(user)
+        .sort()
+        .filter(
+          fieldName =>
+            fieldName === 'username' || fieldName === 'profileDocument',
+        )
+        .map(field => sql\`\${sql.ident(field)} = \${(user as any)[field]}\`),
+      ', ',
+    );
+
+    if (query === undefined) {
+      return this.db
+        .query(sql\`UPDATE \\"User\\" SET \${updateColumns} WHERE \\"id\\" = \${id}\`)
+        .then(noop);
+    }
+    return this.db
+      .query(
+        sql.join(
+          [sql\`UPDATE \\"User\\" SET \${updateColumns} WHERE \\"id\\" = \${id}\`].concat(
+            Object.keys(query)
+              .sort()
+              .filter(
+                fieldName =>
+                  fieldName === 'username' || fieldName === 'profileDocument',
+              )
+              .map(
+                field => sql\`\${sql.ident(field)} = \${(query as any)[field]}\`,
+              ),
+          ),
+          ' AND ',
+        ),
+      )
+      .then(noop);
+  }
+
+  remove(
+    id: User['id'],
+    query?: {
+      username?: User['username'];
+      profileDocument?: User['profileDocument'];
+    },
+  ): Promise<void> {
+    if (!query) {
+      return this.db
+        .query(sql\`DELETE FROM \\"User\\" WHERE \\"id\\" = \${id}\`)
+        .then(noop);
+    }
+    return this.db
+      .query(
+        sql.join(
+          [sql\`DELETE FROM \\"User\\" WHERE \\"id\\" = \${id}\`].concat(
+            Object.keys(query)
+              .sort()
+              .filter(
+                fieldName =>
+                  fieldName === 'username' || fieldName === 'profileDocument',
+              )
+              .map(
+                field => sql\`\${sql.ident(field)} = \${(query as any)[field]}\`,
+              ),
+          ),
+          ' AND ',
+        ),
+      )
+      .then(noop);
+  }
+}
+
+export class FoodAPI extends APIBase {
+  create(food: {
+    id?: Food['id'];
+    name: Food['name'];
+    callories?: Food['callories'];
+    averageRating: Food['averageRating'];
+  }): Promise<Food> {
+    const columns = Object.keys(food)
+      .sort()
+      .filter(
+        name =>
+          name === 'id' ||
+          name === 'name' ||
+          name === 'callories' ||
+          name === 'averageRating',
+      )
+      .map(name => ({name, value: (food as any)[name]}));
+    const data = columns.length
+      ? sql\`\${sql.join(columns.map(c => sql.ident(c.name)))}\`
+      : sql\`DEFAULT VALUES\`;
+    let s = sql\`INSERT INTO \\"Food\\" \${data} RETURNING *;\`;
+    return this.db.query(s).then(results => results[0]);
+  }
+
+  where(query: SQLQuery): Promise<Food[]> {
+    return this.db.query(
+      sql.join([sql\`SELECT * FROM \\"Food\\"\`, query], ' WHERE '),
+    );
+  }
+
+  list(query?: Partial<Food>): Promise<Food[]> {
+    if (query === undefined) {
+      return this.db.query(sql\`SELECT * FROM \\"Food\\"\`);
+    }
+    return this.where(
+      sql.join(
+        Object.keys(query)
+          .sort()
+          .filter(
+            fieldName =>
+              fieldName === 'id' ||
+              fieldName === 'name' ||
+              fieldName === 'callories' ||
+              fieldName === 'averageRating',
+          )
+          .map(field => sql\`\${sql.ident(field)} = \${(query as any)[field]}\`),
+        ' AND ',
+      ),
+    );
+  }
+
+  get(
+    id: Food['id'],
+    query?: {
+      name?: Food['name'];
+      callories?: Food['callories'];
+      averageRating?: Food['averageRating'];
+    },
+  ): Promise<Food | null> {
+    if (query === undefined) {
+      return this.db
+        .query(sql\`SELECT * FROM \\"Food\\" WHERE \\"id\\" = \${id}\`)
+        .then(getOneResult);
+    }
+    return this.db
+      .query(
+        sql.join(
+          [sql\`SELECT * FROM \\"Food\\" WHERE \\"id\\" = \${id}\`].concat(
+            Object.keys(query)
+              .sort()
+              .filter(
+                fieldName =>
+                  fieldName === 'name' ||
+                  fieldName === 'callories' ||
+                  fieldName === 'averageRating',
+              )
+              .map(
+                field => sql\`\${sql.ident(field)} = \${(query as any)[field]}\`,
+              ),
+          ),
+          ' AND ',
+        ),
+      )
+      .then(getOneResult);
+  }
+
+  update(
+    id: Food['id'],
+    food: {
+      name?: Food['name'];
+      callories?: Food['callories'];
+      averageRating?: Food['averageRating'];
+    },
+    query?: {
+      name?: Food['name'];
+      callories?: Food['callories'];
+      averageRating?: Food['averageRating'];
+    },
+  ): Promise<void> {
+    const updateColumns = sql.join(
+      Object.keys(food)
+        .sort()
+        .filter(
+          fieldName =>
+            fieldName === 'name' ||
+            fieldName === 'callories' ||
+            fieldName === 'averageRating',
+        )
+        .map(field => sql\`\${sql.ident(field)} = \${(food as any)[field]}\`),
+      ', ',
+    );
+
+    if (query === undefined) {
+      return this.db
+        .query(sql\`UPDATE \\"Food\\" SET \${updateColumns} WHERE \\"id\\" = \${id}\`)
+        .then(noop);
+    }
+    return this.db
+      .query(
+        sql.join(
+          [sql\`UPDATE \\"Food\\" SET \${updateColumns} WHERE \\"id\\" = \${id}\`].concat(
+            Object.keys(query)
+              .sort()
+              .filter(
+                fieldName =>
+                  fieldName === 'name' ||
+                  fieldName === 'callories' ||
+                  fieldName === 'averageRating',
+              )
+              .map(
+                field => sql\`\${sql.ident(field)} = \${(query as any)[field]}\`,
+              ),
+          ),
+          ' AND ',
+        ),
+      )
+      .then(noop);
+  }
+
+  remove(
+    id: Food['id'],
+    query?: {
+      name?: Food['name'];
+      callories?: Food['callories'];
+      averageRating?: Food['averageRating'];
+    },
+  ): Promise<void> {
+    if (!query) {
+      return this.db
+        .query(sql\`DELETE FROM \\"Food\\" WHERE \\"id\\" = \${id}\`)
+        .then(noop);
+    }
+    return this.db
+      .query(
+        sql.join(
+          [sql\`DELETE FROM \\"Food\\" WHERE \\"id\\" = \${id}\`].concat(
+            Object.keys(query)
+              .sort()
+              .filter(
+                fieldName =>
+                  fieldName === 'name' ||
+                  fieldName === 'callories' ||
+                  fieldName === 'averageRating',
+              )
+              .map(
+                field => sql\`\${sql.ident(field)} = \${(query as any)[field]}\`,
+              ),
+          ),
+          ' AND ',
+        ),
+      )
+      .then(noop);
+  }
+}
+
+export class FavouriteFoodAPI extends APIBase {
+  create(favouriteFood: {
+    userID: FavouriteFood['userID'];
+    foodID: FavouriteFood['foodID'];
+    rating?: FavouriteFood['rating'];
+  }): Promise<FavouriteFood> {
+    const columns = Object.keys(favouriteFood)
+      .sort()
+      .filter(
+        name => name === 'userID' || name === 'foodID' || name === 'rating',
+      )
+      .map(name => ({name, value: (favouriteFood as any)[name]}));
+    const data = columns.length
+      ? sql\`\${sql.join(columns.map(c => sql.ident(c.name)))}\`
+      : sql\`DEFAULT VALUES\`;
+    let s = sql\`INSERT INTO \\"FavouriteFood\\" \${data} RETURNING *;\`;
+    return this.db.query(s).then(results => results[0]);
+  }
+
+  where(query: SQLQuery): Promise<FavouriteFood[]> {
+    return this.db.query(
+      sql.join([sql\`SELECT * FROM \\"FavouriteFood\\"\`, query], ' WHERE '),
+    );
+  }
+
+  list(query?: Partial<FavouriteFood>): Promise<FavouriteFood[]> {
+    if (query === undefined) {
+      return this.db.query(sql\`SELECT * FROM \\"FavouriteFood\\"\`);
+    }
+    return this.where(
+      sql.join(
+        Object.keys(query)
+          .sort()
+          .filter(
+            fieldName =>
+              fieldName === 'userID' ||
+              fieldName === 'foodID' ||
+              fieldName === 'rating',
+          )
+          .map(field => sql\`\${sql.ident(field)} = \${(query as any)[field]}\`),
+        ' AND ',
+      ),
+    );
+  }
+
+  get(
+    id: {
+      userID: FavouriteFood['userID'];
+      foodID: FavouriteFood['foodID'];
+    },
+    query?: {rating?: FavouriteFood['rating']},
+  ): Promise<FavouriteFood | null> {
+    if (query === undefined) {
+      return this.db
+        .query(
+          sql\`SELECT * FROM \\"FavouriteFood\\" WHERE \\"userID\\" = \${id.userID} AND \\"foodID\\" = \${id.foodID}\`,
+        )
+        .then(getOneResult);
+    }
+    return this.db
+      .query(
+        sql.join(
+          [
+            sql\`SELECT * FROM \\"FavouriteFood\\" WHERE \\"userID\\" = \${id.userID} AND \\"foodID\\" = \${id.foodID}\`,
+          ].concat(
+            Object.keys(query)
+              .sort()
+              .filter(fieldName => fieldName === 'rating')
+              .map(
+                field => sql\`\${sql.ident(field)} = \${(query as any)[field]}\`,
+              ),
+          ),
+          ' AND ',
+        ),
+      )
+      .then(getOneResult);
+  }
+
+  update(
+    id: {
+      userID: FavouriteFood['userID'];
+      foodID: FavouriteFood['foodID'];
+    },
+    favouriteFood: {rating?: FavouriteFood['rating']},
+    query?: {rating?: FavouriteFood['rating']},
+  ): Promise<void> {
+    const updateColumns = sql.join(
+      Object.keys(favouriteFood)
+        .sort()
+        .filter(fieldName => fieldName === 'rating')
+        .map(
+          field => sql\`\${sql.ident(field)} = \${(favouriteFood as any)[field]}\`,
+        ),
+      ', ',
+    );
+
+    if (query === undefined) {
+      return this.db
+        .query(
+          sql\`UPDATE \\"FavouriteFood\\" SET \${updateColumns} WHERE \\"userID\\" = \${id.userID} AND \\"foodID\\" = \${id.foodID}\`,
+        )
+        .then(noop);
+    }
+    return this.db
+      .query(
+        sql.join(
+          [
+            sql\`UPDATE \\"FavouriteFood\\" SET \${updateColumns} WHERE \\"userID\\" = \${id.userID} AND \\"foodID\\" = \${id.foodID}\`,
+          ].concat(
+            Object.keys(query)
+              .sort()
+              .filter(fieldName => fieldName === 'rating')
+              .map(
+                field => sql\`\${sql.ident(field)} = \${(query as any)[field]}\`,
+              ),
+          ),
+          ' AND ',
+        ),
+      )
+      .then(noop);
+  }
+
+  remove(
+    id: {
+      userID: FavouriteFood['userID'];
+      foodID: FavouriteFood['foodID'];
+    },
+    query?: {rating?: FavouriteFood['rating']},
+  ): Promise<void> {
+    if (!query) {
+      return this.db
+        .query(
+          sql\`DELETE FROM \\"FavouriteFood\\" WHERE \\"userID\\" = \${id.userID} AND \\"foodID\\" = \${id.foodID}\`,
+        )
+        .then(noop);
+    }
+    return this.db
+      .query(
+        sql.join(
+          [
+            sql\`DELETE FROM \\"FavouriteFood\\" WHERE \\"userID\\" = \${id.userID} AND \\"foodID\\" = \${id.foodID}\`,
+          ].concat(
+            Object.keys(query)
+              .sort()
+              .filter(fieldName => fieldName === 'rating')
+              .map(
+                field => sql\`\${sql.ident(field)} = \${(query as any)[field]}\`,
+              ),
+          ),
+          ' AND ',
+        ),
+      )
+      .then(noop);
+  }
+}
+
+export class OnlyPrimaryKeyAPI extends APIBase {
+  create(
+    onlyPrimaryKey: {
+      id?: OnlyPrimaryKey['id'];
+    } = {},
+  ): Promise<OnlyPrimaryKey> {
+    const columns = Object.keys(onlyPrimaryKey)
+      .sort()
+      .filter(name => name === 'id')
+      .map(name => ({name, value: (onlyPrimaryKey as any)[name]}));
+    const data = columns.length
+      ? sql\`\${sql.join(columns.map(c => sql.ident(c.name)))}\`
+      : sql\`DEFAULT VALUES\`;
+    let s = sql\`INSERT INTO \\"OnlyPrimaryKey\\" \${data} RETURNING *;\`;
+    return this.db.query(s).then(results => results[0]);
+  }
+
+  where(query: SQLQuery): Promise<OnlyPrimaryKey[]> {
+    return this.db.query(
+      sql.join([sql\`SELECT * FROM \\"OnlyPrimaryKey\\"\`, query], ' WHERE '),
+    );
+  }
+
+  list(query?: Partial<OnlyPrimaryKey>): Promise<OnlyPrimaryKey[]> {
+    if (query === undefined) {
+      return this.db.query(sql\`SELECT * FROM \\"OnlyPrimaryKey\\"\`);
+    }
+    return this.where(
+      sql.join(
+        Object.keys(query)
+          .sort()
+          .filter(fieldName => fieldName === 'id')
+          .map(field => sql\`\${sql.ident(field)} = \${(query as any)[field]}\`),
+        ' AND ',
+      ),
+    );
+  }
+
+  get(id: OnlyPrimaryKey['id']): Promise<OnlyPrimaryKey | null> {
+    return this.db
+      .query(sql\`SELECT * FROM \\"OnlyPrimaryKey\\" WHERE \\"id\\" = \${id}\`)
+      .then(getOneResult);
+  }
+
+  remove(id: OnlyPrimaryKey['id']): Promise<void> {
+    return this.db
+      .query(sql\`DELETE FROM \\"OnlyPrimaryKey\\" WHERE \\"id\\" = \${id}\`)
+      .then(noop);
+  }
+}
+
+export default class Database extends APIBase {
+  private _User: UserAPI | void;
+  private _Food: FoodAPI | void;
+  private _FavouriteFood: FavouriteFoodAPI | void;
+  private _OnlyPrimaryKey: OnlyPrimaryKeyAPI | void;
+
+  get User(): UserAPI {
+    return this._User || (this._User = new UserAPI(this.db));
+  }
+
+  get Food(): FoodAPI {
+    return this._Food || (this._Food = new FoodAPI(this.db));
+  }
+
+  get FavouriteFood(): FavouriteFoodAPI {
+    return (
+      this._FavouriteFood ||
+      (this._FavouriteFood = new FavouriteFoodAPI(this.db))
+    );
+  }
+
+  get OnlyPrimaryKey(): OnlyPrimaryKeyAPI {
+    return (
+      this._OnlyPrimaryKey ||
+      (this._OnlyPrimaryKey = new OnlyPrimaryKeyAPI(this.db))
+    );
+  }
+
+  task<T>(fn: (connection: Database) => Promise<T>): Promise<T> {
+    return this.db.task(db => fn(new Database(db)));
+  }
+  tx<T>(fn: (connection: Database) => Promise<T>): Promise<T> {
+    return this.db.tx(db => fn(new Database(db)));
+  }
+}
+
+
+DIRECTORY: ./tables
+FILE: ./tables/FavouriteFood.ts
+
+import * as overrides from '../../overrides';
+
+export default interface FavouriteFood {
+  userID: overrides.FavouriteFood['userID'];
+  foodID: overrides.FavouriteFood['foodID'];
+  rating: overrides.FavouriteFood['rating'];
+};
+
+
+FILE: ./tables/Food.ts
+
+import * as overrides from '../../overrides';
+
+export default interface Food {
+  id: overrides.Food['id'];
+  name: string;
+  callories: number | null;
+  averageRating: overrides.Food['averageRating'];
+};
+
+
+FILE: ./tables/OnlyPrimaryKey.ts
+
+export default interface OnlyPrimaryKey {
+  id: number;
+};
+
+
+FILE: ./tables/User.ts
+
+import * as overrides from '../../overrides';
+
+export default interface User {
+  id: overrides.User['id'];
+  username: string;
+  profileDocument: overrides.User['profileDocument'];
+};
+
+"
+`;
