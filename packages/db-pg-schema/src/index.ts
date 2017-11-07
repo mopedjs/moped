@@ -28,25 +28,30 @@ export default function getSchema(
 ): Promise<TableSchema[]> {
   const schema = options.schema || 'public';
   const db = connect(options.connectionString);
-  return db.task(async db => {
-    const tableNames = await getTableNames(db);
-    return await Promise.all(
-      tableNames.map(async tableName => {
-        const primaryKeys = await getTablePrimaryKeys(db, tableName, schema);
-        const columns = await getTableColumns(db, tableName, schema);
-        return {
-          tableName,
-          columns: columns.map((column): ColumnSchema => {
-            return {
-              ...column,
-              isPrimary: primaryKeys.indexOf(column.columnName) !== -1,
-              tsType: getTypeScriptType(column.udtName),
-            };
-          }),
-        };
-      }),
-    );
-  });
+  return db
+    .task(async db => {
+      const tableNames = await getTableNames(db);
+      return await Promise.all(
+        tableNames.map(async tableName => {
+          const primaryKeys = await getTablePrimaryKeys(db, tableName, schema);
+          const columns = await getTableColumns(db, tableName, schema);
+          return {
+            tableName,
+            columns: columns.map((column): ColumnSchema => {
+              return {
+                ...column,
+                isPrimary: primaryKeys.indexOf(column.columnName) !== -1,
+                tsType: getTypeScriptType(column.udtName),
+              };
+            }),
+          };
+        }),
+      );
+    })
+    .then(result => {
+      db.dispose();
+      return result;
+    });
 }
 
 module.exports = getSchema;

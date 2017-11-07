@@ -1,22 +1,22 @@
 import {SQLQuery} from '@moped/sql';
 import pg = require('pg-promise');
 
-const pgp = pg();
-
-// we force BIG_INTEGER to return as a JavaScript number because we never expect
-// to handle integers larger than 2^52, but want to allow numbers greater than
-// 2^32 in the database
-pgp.pg.types.setTypeParser(20, str => parseInt(str, 10));
+function noop() {}
 
 export interface Connection {
   query(query: SQLQuery): Promise<any[]>;
   task<T>(fn: (connection: Connection) => Promise<T>): Promise<T>;
   tx<T>(fn: (connection: Connection) => Promise<T>): Promise<T>;
 }
+export interface RootConnection extends Connection {
+  dispose(): void;
+}
 class ConnectionImplementation {
   private connection: pg.IBaseProtocol<{}>;
-  constructor(connection: pg.IBaseProtocol<{}>) {
+  public dispose: () => void;
+  constructor(connection: pg.IBaseProtocol<{}>, dispose: () => void) {
     this.connection = connection;
+    this.dispose = dispose;
   }
   query(query: SQLQuery): Promise<any[]> {
     if (!(query instanceof SQLQuery)) {
@@ -28,21 +28,23 @@ class ConnectionImplementation {
     }
     return this.connection.query(query);
   }
-  task<T>(fn: (connection: ConnectionImplementation) => Promise<T>): Promise<T> {
+  task<T>(
+    fn: (connection: ConnectionImplementation) => Promise<T>,
+  ): Promise<T> {
     return this.connection.task(t => {
-      return fn(new ConnectionImplementation(t)) as any;
+      return fn(new ConnectionImplementation(t, noop)) as any;
     });
   }
   tx<T>(fn: (connection: ConnectionImplementation) => Promise<T>): Promise<T> {
     return this.connection.tx(t => {
-      return fn(new ConnectionImplementation(t)) as any;
+      return fn(new ConnectionImplementation(t, noop)) as any;
     });
   }
 }
 
 export default function createConnection(
   connectionString: string | void = process.env.DATABASE_CONNECTION,
-): Connection {
+): RootConnection {
   if (typeof connectionString !== 'string' || !connectionString) {
     throw new Error(
       'You must provide a connection string for @moped/db-pg. You can ' +
@@ -50,9 +52,17 @@ export default function createConnection(
         'the DATABASE_CONNECTION environment variable.',
     );
   }
+
+  const pgp = pg();
+
+  // we force BIG_INTEGER to return as a JavaScript number because we never expect
+  // to handle integers larger than 2^52, but want to allow numbers greater than
+  // 2^32 in the database
+  pgp.pg.types.setTypeParser(20, str => parseInt(str, 10));
+
   const connection = pgp(connectionString);
 
-  return new ConnectionImplementation(connection);
+  return new ConnectionImplementation(connection, () => pgp.end());
 }
 
 module.exports = createConnection;
