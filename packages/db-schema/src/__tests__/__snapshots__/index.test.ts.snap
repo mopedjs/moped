@@ -654,10 +654,10 @@ export default interface User {
 
 FILE: ./tables/index.ts
 
-import User from './tables/User';
-import Food from './tables/Food';
-import FavouriteFood from './tables/FavouriteFood';
-import OnlyPrimaryKey from './tables/OnlyPrimaryKey';
+import User from './User';
+import Food from './Food';
+import FavouriteFood from './FavouriteFood';
+import OnlyPrimaryKey from './OnlyPrimaryKey';
 
 export {User};
 export {Food};
