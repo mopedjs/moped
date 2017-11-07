@@ -259,7 +259,7 @@ export default async function generate(
     `
       ${tables
         .map(table => {
-          return `import ${table.tableName} from './tables/${table.tableName}';`;
+          return `import ${table.tableName} from './${table.tableName}';`;
         })
         .join('\n')}
 
