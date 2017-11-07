@@ -1,13 +1,13 @@
 {
   "name": "@moped/loader-perf-log-demo",
   "private": true,
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "dependencies": {
     "@moped/loader-perf-log": "^0.0.1",
-    "@moped/rule-ts": "^0.0.2",
+    "@moped/rule-ts": "^0.0.3",
     "@types/node": "^8.0.33",
     "@types/react": "^16.0.10",
     "@types/react-dom": "^16.0.1",
