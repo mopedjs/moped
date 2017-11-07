@@ -651,5 +651,18 @@ export default interface User {
   profileDocument: overrides.User['profileDocument'];
 };
 
+
+FILE: ./tables/index.ts
+
+import User from './tables/User';
+import Food from './tables/Food';
+import FavouriteFood from './tables/FavouriteFood';
+import OnlyPrimaryKey from './tables/OnlyPrimaryKey';
+
+export {User};
+export {Food};
+export {FavouriteFood};
+export {OnlyPrimaryKey};
+
 "
 `;

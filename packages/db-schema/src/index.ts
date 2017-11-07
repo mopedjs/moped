@@ -247,14 +247,29 @@ export default async function generate(
   readdirSync(directory + '/tables').forEach(filename => {
     const name = filename.replace(/\.ts$/, '');
     if (
-      /\.ts/.test(filename) &&
-      tables.some(table => table.tableName === name)
+      filename === 'index.ts' ||
+      (/\.ts/.test(filename) && tables.some(table => table.tableName === name))
     ) {
       return;
     }
     rimraf(directory + '/tables/' + filename);
   });
+  writeFile(
+    directory + '/tables/index.ts',
+    `
+      ${tables
+        .map(table => {
+          return `import ${table.tableName} from './tables/${table.tableName}';`;
+        })
+        .join('\n')}
 
+      ${tables
+        .map(table => {
+          return `export {${table.tableName}};`;
+        })
+        .join('\n')}
+    `,
+  );
   writeFile(
     directory + '/index.ts',
     `
