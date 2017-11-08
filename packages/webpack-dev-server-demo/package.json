@@ -1,13 +1,13 @@
 {
   "name": "@moped/webpack-dev-server-demo",
   "private": true,
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "dependencies": {
     "@moped/get-host-info": "^0.0.0",
-    "@moped/webpack-dev-server": "^0.0.0",
+    "@moped/webpack-dev-server": "^0.0.1",
     "@types/node": "^8.0.33",
     "html-webpack-plugin": "^2.30.1",
     "webpack": "^3.6.0"
@@ -20,7 +20,6 @@
     "start": "node start",
     "test": "yarn build"
   },
-  "repository":
-    "https://github.com/mopedjs/moped/tree/master/packages/rule-file-demo",
+  "repository": "https://github.com/mopedjs/moped/tree/master/packages/rule-file-demo",
   "license": "MIT"
 }
