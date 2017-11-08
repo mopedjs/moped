@@ -1,0 +1,21 @@
+{
+  "name": "@moped/webpack-dev-server",
+  "version": "0.0.0",
+  "description": "",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "dependencies": {
+    "@types/express": "^4.0.39",
+    "@types/node": "^8.0.33",
+    "@types/webpack-dev-server": "^2.9.1",
+    "webpack-dev-server": "^2.9.4"
+  },
+  "scripts": {
+    "prepublish": "tsc -p tsconfig.build.json"
+  },
+  "repository": "https://github.com/mopedjs/moped/tree/master/packages/webpack-dev-server",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  }
+}

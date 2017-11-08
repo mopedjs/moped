@@ -1,9 +1,9 @@
 {
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "baseUrl": "./packages",
+    "baseUrl": "./",
     "paths": {
-      "@moped/*": ["*/src"]
+      "@moped/*": ["packages/*/src"]
     }
   }
 }

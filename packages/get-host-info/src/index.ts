@@ -62,3 +62,6 @@ export default async function getHostInfo(): Promise<HostInfo | null> {
     ...urls,
   };
 }
+
+module.exports = getHostInfo;
+module.exports.default = getHostInfo;
