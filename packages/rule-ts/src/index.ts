@@ -46,6 +46,29 @@ function resolvePreset(path: string | any[], loadedFiles: string[] = []): any {
   };
 }
 
+function circular<T>(
+  obj: T,
+  seen: Map<any, string> = new Map(),
+  path: string = '<root>',
+) {
+  if (obj !== null && typeof obj === 'object') {
+    if (seen.has(obj)) {
+      throw new Error(
+        'Cicular reference detected between ' + seen.get(obj) + ' and ' + path,
+      );
+    }
+    seen.set(obj, path);
+  }
+  if (Array.isArray(obj)) {
+    obj.forEach((o, i) => circular(o, seen, path + '[' + i + ']'));
+  } else if (obj !== null && typeof obj === 'object') {
+    Object.keys(obj).forEach(key =>
+      circular((obj as any)[key], seen, path + '.' + key),
+    );
+  }
+  return obj;
+}
+
 export interface TypescriptRuleOptions {
   environment?: Environment;
   disableSourceMaps?: boolean;
@@ -127,14 +150,16 @@ export default function createTypescriptRule(
 
   const loaders: webpack.Loader[] = [];
   if (environment === Environment.Development) {
-    const key = shasum({
-      babel: babelPresets ? babelPresets.map(p => resolvePreset(p)) : null,
-      // TODO: this doesn't respect the `tsConfigFileName` option
-      // To fix this, we need to copy the config loading behaviour of
-      // https://github.com/TypeStrong/ts-loader/blob/master/src/config.ts
-      tsConfigFile: loadTsConfig(process.cwd()).options,
-      tsCompilerOptions,
-    });
+    const key = shasum(
+      circular({
+        babel: babelPresets ? babelPresets.map(p => resolvePreset(p)) : null,
+        // TODO: this doesn't respect the `tsConfigFileName` option
+        // To fix this, we need to copy the config loading behaviour of
+        // https://github.com/TypeStrong/ts-loader/blob/master/src/config.ts
+        tsConfigFile: loadTsConfig(process.cwd()).options,
+        tsCompilerOptions,
+      }),
+    );
     loaders.push({
       loader: require.resolve('cache-loader'),
       options: {
