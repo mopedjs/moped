@@ -20,14 +20,19 @@ function readPlugin(path: string | any[] | Function): any {
   }
   return readFileSync(babelCore.resolvePlugin(path), 'utf8');
 }
-function resolvePreset(path: string | any[]): any {
+function resolvePreset(path: string | any[], loadedFiles: string[] = []): any {
   if (Array.isArray(path)) {
-    return [resolvePreset(path[0])].concat(path.slice(1));
+    return [resolvePreset(path[0], loadedFiles)].concat(path.slice(1));
   }
   if (typeof path !== 'string') {
     return path;
   }
-  const opts = require(babelCore.resolvePreset(path));
+  const resolvedPath = babelCore.resolvePreset(path);
+  if (loadedFiles.indexOf(resolvedPath) !== -1) {
+    throw new Error('A preset cannot depend on itself. Check: ' + path);
+  }
+  loadedFiles.push(resolvedPath);
+  const opts = require(resolvedPath);
 
   if (typeof opts !== 'object' || !opts) {
     return null;
@@ -35,7 +40,9 @@ function resolvePreset(path: string | any[]): any {
   return {
     ...opts,
     plugins: (opts.plugins || []).map(readPlugin),
-    presets: (opts.presets || []).map(resolvePreset),
+    presets: (opts.presets || []).map((p: string | any[]) =>
+      resolvePreset(p, loadedFiles),
+    ),
   };
 }
 
@@ -121,7 +128,7 @@ export default function createTypescriptRule(
   const loaders: webpack.Loader[] = [];
   if (environment === Environment.Development) {
     const key = shasum({
-      babel: babelPresets ? babelPresets.map(resolvePreset) : null,
+      babel: babelPresets ? babelPresets.map(p => resolvePreset(p)) : null,
       // TODO: this doesn't respect the `tsConfigFileName` option
       // To fix this, we need to copy the config loading behaviour of
       // https://github.com/TypeStrong/ts-loader/blob/master/src/config.ts
