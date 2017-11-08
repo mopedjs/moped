@@ -1,2 +1,7 @@
 module.exports = require('./lib/server-webpack').default;
-module.exports.default = module.exports;
+Object.defineProperty(module.exports, 'default', {
+  configurable: false,
+  enumerable: false,
+  writable: false,
+  value: module.exports,
+});
