@@ -6,7 +6,7 @@
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "dependencies": {
-    "@moped/get-host-info": "^0.0.0",
+    "@moped/get-host-info": "^0.0.4",
     "@moped/webpack-dev-server": "^0.0.1",
     "@types/node": "^8.0.33",
     "html-webpack-plugin": "^2.30.1",
@@ -20,6 +20,7 @@
     "start": "node start",
     "test": "yarn build"
   },
-  "repository": "https://github.com/mopedjs/moped/tree/master/packages/rule-file-demo",
+  "repository":
+    "https://github.com/mopedjs/moped/tree/master/packages/webpack-dev-server-demo",
   "license": "MIT"
 }
