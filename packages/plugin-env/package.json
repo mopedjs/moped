@@ -1,0 +1,20 @@
+{
+  "name": "@moped/plugin-env",
+  "version": "0.0.0",
+  "description": "",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "dependencies": {
+    "@types/node": "^8.0.33",
+    "react-dev-utils": "^4.2.1",
+    "webpack": "^3.8.1"
+  },
+  "scripts": {
+    "prepublish": "tsc -p tsconfig.build.json"
+  },
+  "repository": "https://github.com/mopedjs/moped/tree/master/packages/plugin-env",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  }
+}
