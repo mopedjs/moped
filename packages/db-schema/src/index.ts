@@ -410,7 +410,7 @@ export default async function generate(
                     .map(c => `name === ${JSON.stringify(c.columnName)}`)
                     .join(' || ')})
                   .map(name => ({name, value: (${lowerName} as any)[name]}));
-                const data = columns.length ? sql\`\${sql.join(columns.map(c => sql.ident(c.name)))}\` : sql\`DEFAULT VALUES\`;
+                const data = columns.length ? sql\`(\${sql.join(columns.map(c => sql.ident(c.name)))}) VALUES (\${sql.join(columns.map(c => sql\`\${c.value}\`), ',')})\` : sql\`DEFAULT VALUES\`;
                 let s = sql\`INSERT INTO "${table.tableName}" \${data} RETURNING *;\`;
                 return this.db.query(s).then(results => results[0]);
               }

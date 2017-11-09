@@ -47,7 +47,9 @@ export class UserAPI extends APIBase {
       )
       .map(name => ({name, value: (user as any)[name]}));
     const data = columns.length
-      ? sql\`\${sql.join(columns.map(c => sql.ident(c.name)))}\`
+      ? sql\`(\${sql.join(
+          columns.map(c => sql.ident(c.name)),
+        )}) VALUES (\${sql.join(columns.map(c => sql\`\${c.value}\`), ',')})\`
       : sql\`DEFAULT VALUES\`;
     let s = sql\`INSERT INTO \\"User\\" \${data} RETURNING *;\`;
     return this.db.query(s).then(results => results[0]);
@@ -209,7 +211,9 @@ export class FoodAPI extends APIBase {
       )
       .map(name => ({name, value: (food as any)[name]}));
     const data = columns.length
-      ? sql\`\${sql.join(columns.map(c => sql.ident(c.name)))}\`
+      ? sql\`(\${sql.join(
+          columns.map(c => sql.ident(c.name)),
+        )}) VALUES (\${sql.join(columns.map(c => sql\`\${c.value}\`), ',')})\`
       : sql\`DEFAULT VALUES\`;
     let s = sql\`INSERT INTO \\"Food\\" \${data} RETURNING *;\`;
     return this.db.query(s).then(results => results[0]);
@@ -379,7 +383,9 @@ export class FavouriteFoodAPI extends APIBase {
       )
       .map(name => ({name, value: (favouriteFood as any)[name]}));
     const data = columns.length
-      ? sql\`\${sql.join(columns.map(c => sql.ident(c.name)))}\`
+      ? sql\`(\${sql.join(
+          columns.map(c => sql.ident(c.name)),
+        )}) VALUES (\${sql.join(columns.map(c => sql\`\${c.value}\`), ',')})\`
       : sql\`DEFAULT VALUES\`;
     let s = sql\`INSERT INTO \\"FavouriteFood\\" \${data} RETURNING *;\`;
     return this.db.query(s).then(results => results[0]);
@@ -533,7 +539,9 @@ export class OnlyPrimaryKeyAPI extends APIBase {
       .filter(name => name === 'id')
       .map(name => ({name, value: (onlyPrimaryKey as any)[name]}));
     const data = columns.length
-      ? sql\`\${sql.join(columns.map(c => sql.ident(c.name)))}\`
+      ? sql\`(\${sql.join(
+          columns.map(c => sql.ident(c.name)),
+        )}) VALUES (\${sql.join(columns.map(c => sql\`\${c.value}\`), ',')})\`
       : sql\`DEFAULT VALUES\`;
     let s = sql\`INSERT INTO \\"OnlyPrimaryKey\\" \${data} RETURNING *;\`;
     return this.db.query(s).then(results => results[0]);
