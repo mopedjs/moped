@@ -19,7 +19,7 @@ export interface ColumnSchema {
   tsType: string;
 }
 
-function getSymbolAtLocation(node: ts.Node): ts.Symbol {
+function getSymbolAtLocation(node: ts.Node): ts.Symbol | void {
   return (node as any).symbol;
 }
 
@@ -54,62 +54,69 @@ export default async function generate(
     const program = ts.createProgram([overrides], tsConfig.options as any);
     const checker = program.getTypeChecker();
     const file = program.getSourceFile(overrides);
-    const exports = checker.getExportsOfModule(getSymbolAtLocation(file));
-    exports.forEach(symbol => {
-      const tableName = symbol.name;
-      const type = checker.getDeclaredTypeOfSymbol(symbol);
-      if (type.flags & ts.TypeFlags.Object) {
-        const obj: ts.ObjectType = type as any;
-        if (obj.objectFlags & ts.ObjectFlags.Interface) {
-          const props: TableOverride = (overrideSpec[tableName] = {});
-          obj.getProperties().forEach(p => {
-            const declaration = p.valueDeclaration!;
-            const sourceFile = declaration.getSourceFile();
-            const {
-              line: baseLine,
-              character,
-            } = sourceFile.getLineAndCharacterOfPosition(declaration.pos);
-            const line =
-              baseLine +
-              (character >= sourceFile.text.split('\n')[baseLine].length
-                ? 2
-                : 1);
-            const property = p.valueDeclaration;
+    const fileSymbol = getSymbolAtLocation(file);
+    if (fileSymbol) {
+      const exports = checker.getExportsOfModule(fileSymbol);
+      exports.forEach(symbol => {
+        const tableName = symbol.name;
+        const type = checker.getDeclaredTypeOfSymbol(symbol);
+        if (type.flags & ts.TypeFlags.Object) {
+          const obj: ts.ObjectType = type as any;
+          if (obj.objectFlags & ts.ObjectFlags.Interface) {
+            const props: TableOverride = (overrideSpec[tableName] = {});
+            obj.getProperties().forEach(p => {
+              const declaration = p.valueDeclaration!;
+              const sourceFile = declaration.getSourceFile();
+              const {
+                line: baseLine,
+                character,
+              } = sourceFile.getLineAndCharacterOfPosition(declaration.pos);
+              const line =
+                baseLine +
+                (character >= sourceFile.text.split('\n')[baseLine].length
+                  ? 2
+                  : 1);
+              const property = p.valueDeclaration;
 
-            if (property && ts.isPropertySignature(property) && property.type) {
-              let pType = checker.getTypeFromTypeNode(property.type);
+              if (
+                property &&
+                ts.isPropertySignature(property) &&
+                property.type
+              ) {
+                let pType = checker.getTypeFromTypeNode(property.type);
 
-              let isOpaque = false;
-              let isNullable = false;
-              let opaqueID = 0;
-              if (pType.flags & ts.TypeFlags.Union) {
-                const unionType: ts.UnionType = pType as any;
-                const types = unionType.types;
-                isNullable = types.some(t => !!(t.flags & ts.TypeFlags.Null));
-                const nonNullTypes = types.filter(
-                  t => !(t.flags & ts.TypeFlags.Null),
-                );
-                if (nonNullTypes.length === 1) {
-                  pType = nonNullTypes[0];
+                let isOpaque = false;
+                let isNullable = false;
+                let opaqueID = 0;
+                if (pType.flags & ts.TypeFlags.Union) {
+                  const unionType: ts.UnionType = pType as any;
+                  const types = unionType.types;
+                  isNullable = types.some(t => !!(t.flags & ts.TypeFlags.Null));
+                  const nonNullTypes = types.filter(
+                    t => !(t.flags & ts.TypeFlags.Null),
+                  );
+                  if (nonNullTypes.length === 1) {
+                    pType = nonNullTypes[0];
+                  }
                 }
+                if (pType.flags & ts.TypeFlags.Enum) {
+                  const enumType: ts.EnumType = pType as any;
+                  opaqueID = (enumType as any).id;
+                  isOpaque = true;
+                }
+                props[p.name] = {
+                  fileName: sourceFile.fileName,
+                  line,
+                  isOpaque,
+                  isNullable,
+                  opaqueID,
+                };
               }
-              if (pType.flags & ts.TypeFlags.Enum) {
-                const enumType: ts.EnumType = pType as any;
-                opaqueID = (enumType as any).id;
-                isOpaque = true;
-              }
-              props[p.name] = {
-                fileName: sourceFile.fileName,
-                line,
-                isOpaque,
-                isNullable,
-                opaqueID,
-              };
-            }
-          });
+            });
+          }
         }
-      }
-    });
+      });
+    }
   }
   const prettierOptions =
     (await prettier.resolveConfig(directory + '/index.tsx')) || {};
