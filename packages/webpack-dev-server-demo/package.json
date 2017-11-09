@@ -17,8 +17,7 @@
   },
   "scripts": {
     "prepublish": "tsc -p tsconfig.build.json",
-    "start": "node start",
-    "test": "yarn build"
+    "start": "node start"
   },
   "repository": "https://github.com/mopedjs/moped/tree/master/packages/webpack-dev-server-demo",
   "license": "MIT"

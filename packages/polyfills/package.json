@@ -1,0 +1,21 @@
+{
+  "name": "@moped/polyfills",
+  "version": "0.0.0",
+  "description": "",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "dependencies": {
+    "@types/node": "^8.0.33",
+    "object-assign": "^4.1.1",
+    "promise": "^8.0.1",
+    "whatwg-fetch": "^2.0.3"
+  },
+  "scripts": {
+    "prepublish": "tsc -p tsconfig.build.json"
+  },
+  "repository": "https://github.com/mopedjs/moped/tree/master/packages/polyfills",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  }
+}
