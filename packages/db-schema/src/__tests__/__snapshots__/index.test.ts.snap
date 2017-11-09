@@ -49,6 +49,7 @@ export class UserAPI extends APIBase {
     const data = columns.length
       ? sql\`(\${sql.join(
           columns.map(c => sql.ident(c.name)),
+          ',',
         )}) VALUES (\${sql.join(columns.map(c => sql\`\${c.value}\`), ',')})\`
       : sql\`DEFAULT VALUES\`;
     let s = sql\`INSERT INTO \\"User\\" \${data} RETURNING *;\`;
@@ -213,6 +214,7 @@ export class FoodAPI extends APIBase {
     const data = columns.length
       ? sql\`(\${sql.join(
           columns.map(c => sql.ident(c.name)),
+          ',',
         )}) VALUES (\${sql.join(columns.map(c => sql\`\${c.value}\`), ',')})\`
       : sql\`DEFAULT VALUES\`;
     let s = sql\`INSERT INTO \\"Food\\" \${data} RETURNING *;\`;
@@ -385,6 +387,7 @@ export class FavouriteFoodAPI extends APIBase {
     const data = columns.length
       ? sql\`(\${sql.join(
           columns.map(c => sql.ident(c.name)),
+          ',',
         )}) VALUES (\${sql.join(columns.map(c => sql\`\${c.value}\`), ',')})\`
       : sql\`DEFAULT VALUES\`;
     let s = sql\`INSERT INTO \\"FavouriteFood\\" \${data} RETURNING *;\`;
@@ -541,6 +544,7 @@ export class OnlyPrimaryKeyAPI extends APIBase {
     const data = columns.length
       ? sql\`(\${sql.join(
           columns.map(c => sql.ident(c.name)),
+          ',',
         )}) VALUES (\${sql.join(columns.map(c => sql\`\${c.value}\`), ',')})\`
       : sql\`DEFAULT VALUES\`;
     let s = sql\`INSERT INTO \\"OnlyPrimaryKey\\" \${data} RETURNING *;\`;
