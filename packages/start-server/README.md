@@ -14,6 +14,8 @@ yarn add --dev @moped/start-server
 
 There are two ways to use start-server.  One for HTTP servers, which renders errror pages when in the error states, and queues incoming requests during the build process.  The other for any kind of node.js app.
 
+> **N.B.** This plugin includes the `webpack.HotModuleReplacementPlugin` plugin, so if you have that plugin already in your config, you **must** remove it.
+
 ### HTTP Servers
 
 #### webpack.config.js
