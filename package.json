@@ -1,16 +1,17 @@
 {
   "private": true,
-  "workspaces": [
-    "packages/*"
-  ],
+  "workspaces": ["packages/*"],
   "scripts": {
     "postinstall": "node postinstall",
     "bootstrap": "lerna bootstrap",
-    "build": "lerna run prepublish --parallel",
+    "build": "git add . && lerna run prepublish --parallel --since master",
+    "build:all": "lerna run prepublish --parallel",
+    "prerelease": "yarn build:all",
     "release": "lerna publish",
     "test": "jest && lerna run test --parallel",
     "watch:jest": "jest --watch",
-    "clean": "rimraf packages/*/lib && rimraf packages/*/build && rimraf packages/*/node_modules && rimraf node_modules"
+    "clean":
+      "rimraf packages/*/lib && rimraf packages/*/build && rimraf packages/*/node_modules && rimraf node_modules"
   },
   "devDependencies": {
     "@types/jest": "^21.1.5",
@@ -29,19 +30,11 @@
     "typescript": "^2.5.3"
   },
   "jest": {
-    "transformIgnorePatterns": [
-      "<rootDir>.*(node_modules)(?!.*moped.*).*$"
-    ],
+    "transformIgnorePatterns": ["<rootDir>.*(node_modules)(?!.*moped.*).*$"],
     "transform": {
       "^.+\\.tsx?$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
     },
     "testRegex": "/__tests__/.+\\.test\\.(jsx?|tsx?)$",
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js",
-      "jsx",
-      "json"
-    ]
+    "moduleFileExtensions": ["ts", "tsx", "js", "jsx", "json"]
   }
 }

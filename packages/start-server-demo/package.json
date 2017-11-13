@@ -1,0 +1,27 @@
+{
+  "name": "@moped/start-server-demo",
+  "private": true,
+  "version": "0.0.6",
+  "description": "",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "dependencies": {
+    "@babel/preset-env": "^7.0.0-beta.32",
+    "@moped/get-host-info": "^0.0.4",
+    "@moped/start-server": "^0.0.0",
+    "@types/node": "^8.0.33",
+    "babel-loader": "^7.1.2",
+    "babel-preset-env": "^1.6.1",
+    "html-webpack-plugin": "^2.30.1",
+    "webpack": "^3.6.0"
+  },
+  "devDependencies": {
+    "rimraf": "^2.6.2"
+  },
+  "scripts": {
+    "prepublish": "tsc -p tsconfig.build.json",
+    "start": "webpack --watch"
+  },
+  "repository": "https://github.com/mopedjs/moped/tree/master/packages/start-server-demo",
+  "license": "MIT"
+}

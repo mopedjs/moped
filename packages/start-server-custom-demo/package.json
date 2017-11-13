@@ -1,0 +1,24 @@
+{
+  "name": "@moped/start-server-custom-demo",
+  "private": true,
+  "version": "0.0.6",
+  "description": "",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "dependencies": {
+    "@moped/get-host-info": "^0.0.4",
+    "@moped/start-server": "^0.0.0",
+    "@types/node": "^8.0.33",
+    "html-webpack-plugin": "^2.30.1",
+    "webpack": "^3.6.0"
+  },
+  "devDependencies": {
+    "rimraf": "^2.6.2"
+  },
+  "scripts": {
+    "prepublish": "tsc -p tsconfig.build.json",
+    "start": "rimraf build && webpack --watch"
+  },
+  "repository": "https://github.com/mopedjs/moped/tree/master/packages/start-server-custom-demo",
+  "license": "MIT"
+}
