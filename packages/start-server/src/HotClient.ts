@@ -21,9 +21,14 @@ export default class HotClient {
   private _compileError: string | void = undefined;
   private _runtimeError: string | void = undefined;
   private continueOnError: boolean;
+  private onBuild: (() => void) | void;
 
-  constructor({continueOnError}: {continueOnError?: boolean} = {}) {
+  constructor(
+    {continueOnError}: {continueOnError?: boolean} = {},
+    onBuild?: () => void,
+  ) {
     this.continueOnError = continueOnError || false;
+    this.onBuild = onBuild;
     process.on('uncaughtException', err => {
       console.error(err);
       if (!continueOnError) {
@@ -46,12 +51,15 @@ export default class HotClient {
         break;
       case 'ok':
         this.handleSuccess();
+        if (this.onBuild) this.onBuild();
         break;
       case 'warnings':
         this.handleWarnings(message.data);
+        if (this.onBuild) this.onBuild();
         break;
       case 'errors':
         this.handleErrors(message.data);
+        if (this.onBuild) this.onBuild();
         break;
       case 'invalid':
         this._isValid = false;
