@@ -430,7 +430,9 @@ export class FavouriteFoodAPI extends APIBase {
     if (query === undefined) {
       return this.db
         .query(
-          sql\`SELECT * FROM \\"FavouriteFood\\" WHERE \\"userID\\" = \${id.userID} AND \\"foodID\\" = \${id.foodID}\`,
+          sql\`SELECT * FROM \\"FavouriteFood\\" WHERE \\"userID\\" = \${
+            id.userID
+          } AND \\"foodID\\" = \${id.foodID}\`,
         )
         .then(getOneResult);
     }
@@ -438,7 +440,9 @@ export class FavouriteFoodAPI extends APIBase {
       .query(
         sql.join(
           [
-            sql\`SELECT * FROM \\"FavouriteFood\\" WHERE \\"userID\\" = \${id.userID} AND \\"foodID\\" = \${id.foodID}\`,
+            sql\`SELECT * FROM \\"FavouriteFood\\" WHERE \\"userID\\" = \${
+              id.userID
+            } AND \\"foodID\\" = \${id.foodID}\`,
           ].concat(
             Object.keys(query)
               .sort()
@@ -474,7 +478,9 @@ export class FavouriteFoodAPI extends APIBase {
     if (query === undefined) {
       return this.db
         .query(
-          sql\`UPDATE \\"FavouriteFood\\" SET \${updateColumns} WHERE \\"userID\\" = \${id.userID} AND \\"foodID\\" = \${id.foodID}\`,
+          sql\`UPDATE \\"FavouriteFood\\" SET \${updateColumns} WHERE \\"userID\\" = \${
+            id.userID
+          } AND \\"foodID\\" = \${id.foodID}\`,
         )
         .then(noop);
     }
@@ -482,7 +488,9 @@ export class FavouriteFoodAPI extends APIBase {
       .query(
         sql.join(
           [
-            sql\`UPDATE \\"FavouriteFood\\" SET \${updateColumns} WHERE \\"userID\\" = \${id.userID} AND \\"foodID\\" = \${id.foodID}\`,
+            sql\`UPDATE \\"FavouriteFood\\" SET \${updateColumns} WHERE \\"userID\\" = \${
+              id.userID
+            } AND \\"foodID\\" = \${id.foodID}\`,
           ].concat(
             Object.keys(query)
               .sort()
@@ -507,7 +515,9 @@ export class FavouriteFoodAPI extends APIBase {
     if (!query) {
       return this.db
         .query(
-          sql\`DELETE FROM \\"FavouriteFood\\" WHERE \\"userID\\" = \${id.userID} AND \\"foodID\\" = \${id.foodID}\`,
+          sql\`DELETE FROM \\"FavouriteFood\\" WHERE \\"userID\\" = \${
+            id.userID
+          } AND \\"foodID\\" = \${id.foodID}\`,
         )
         .then(noop);
     }
@@ -515,7 +525,9 @@ export class FavouriteFoodAPI extends APIBase {
       .query(
         sql.join(
           [
-            sql\`DELETE FROM \\"FavouriteFood\\" WHERE \\"userID\\" = \${id.userID} AND \\"foodID\\" = \${id.foodID}\`,
+            sql\`DELETE FROM \\"FavouriteFood\\" WHERE \\"userID\\" = \${
+              id.userID
+            } AND \\"foodID\\" = \${id.foodID}\`,
           ].concat(
             Object.keys(query)
               .sort()
@@ -627,8 +639,15 @@ FILE: ./tables/FavouriteFood.ts
 
 import * as overrides from '../../overrides';
 
-export default interface FavouriteFood {
+export default interface DbFavouriteFood {
+  /**
+   * Primary Key
+   */
   userID: overrides.FavouriteFood['userID'];
+
+  /**
+   * Primary Key
+   */
   foodID: overrides.FavouriteFood['foodID'];
   rating: overrides.FavouriteFood['rating'];
 };
@@ -638,7 +657,11 @@ FILE: ./tables/Food.ts
 
 import * as overrides from '../../overrides';
 
-export default interface Food {
+export default interface DbFood {
+  /**
+   * Primary Key
+   * Default Value: autoincrement
+   */
   id: overrides.Food['id'];
   name: string;
   callories: number | null;
@@ -648,7 +671,11 @@ export default interface Food {
 
 FILE: ./tables/OnlyPrimaryKey.ts
 
-export default interface OnlyPrimaryKey {
+export default interface DbOnlyPrimaryKey {
+  /**
+   * Primary Key
+   * Default Value: autoincrement
+   */
   id: number;
 };
 
@@ -657,7 +684,11 @@ FILE: ./tables/User.ts
 
 import * as overrides from '../../overrides';
 
-export default interface User {
+export default interface DbUser {
+  /**
+   * Primary Key
+   * Default Value: autoincrement
+   */
   id: overrides.User['id'];
   username: string;
   profileDocument: overrides.User['profileDocument'];

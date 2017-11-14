@@ -5,6 +5,7 @@
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "dependencies": {
+    "@moped/load-ts-config": "^0.0.2",
     "@types/mkdirp": "^0.5.1",
     "@types/node": "^8.0.33",
     "@types/rimraf": "^2.0.2",
@@ -19,6 +20,7 @@
     "access": "public"
   },
   "devDependencies": {
+    "prettier": "^1.8.2",
     "rimraf": "^2.6.2",
     "typescript": "^2.6.1"
   }

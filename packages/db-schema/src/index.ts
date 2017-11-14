@@ -168,7 +168,7 @@ export default async function generate(
       directory + '/tables/' + table.tableName + '.ts',
       `
         ${importStatement}
-        export default interface ${table.tableName} {
+        export default interface Db${table.tableName} {
           ${table.columns
             .map(column => {
               const override = overriddenColumns[column.columnName];
@@ -244,7 +244,16 @@ export default async function generate(
                   JSON.stringify(column.columnName) +
                   ']';
               }
-              return `${column.columnName}: ${tsType};`;
+              const commentParts = [];
+              if (column.isPrimary) {
+                commentParts.push(`* Primary Key`);
+              }
+              if (column.columnDefault) {
+                commentParts.push(`* Default Value: ${column.columnDefault}`);
+              }
+              return `${commentParts.length
+                ? `\n/**\n${commentParts.join('\n')}\n*/\n`
+                : ``}${column.columnName}: ${tsType};`;
             })
             .join('\n')}
         }
