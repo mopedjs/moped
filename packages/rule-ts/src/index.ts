@@ -164,8 +164,9 @@ export default function createTypescriptRule(
       loader: require.resolve('cache-loader'),
       options: {
         cacheDirectory: resolve('.cache/typescript'),
-        cacheIdentifier: `cache-loader:${require('cache-loader/package.json')
-          .version} ${process.env.NODE_ENV} ${key}`,
+        cacheIdentifier: `cache-loader:${
+          require('cache-loader/package.json').version
+        } ${process.env.NODE_ENV} ${key}`,
       },
     });
   }

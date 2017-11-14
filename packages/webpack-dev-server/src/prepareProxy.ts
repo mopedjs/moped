@@ -10,7 +10,7 @@ export interface Options {
    * By default, we never proxy requests for "text/html" since these should go to index.html
    * in single page apps without server side rendering.  If you are doing server side rendering
    * you should enable this to proxy those requests.
-   * 
+   *
    * When using the object method for configuring the proxy, we proxy html requests by default.
    * You can set this to `false` to prevent proxying of html requests in object config.
    */

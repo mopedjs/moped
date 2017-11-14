@@ -104,7 +104,9 @@ function handleRequest(req: IncomingMessage, res: ServerResponse) {
                 }
               }
             };        
-            xhr.open('POST', '/__/moped/start-server/ok/${errorHashString}', true);
+            xhr.open('POST', '/__/moped/start-server/ok/${
+              errorHashString
+            }', true);
             xhr.send('poll');
           }
           poll();

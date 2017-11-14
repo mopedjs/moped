@@ -251,9 +251,11 @@ export default async function generate(
               if (column.columnDefault) {
                 commentParts.push(`* Default Value: ${column.columnDefault}`);
               }
-              return `${commentParts.length
-                ? `\n/**\n${commentParts.join('\n')}\n*/\n`
-                : ``}${column.columnName}: ${tsType};`;
+              return `${
+                commentParts.length
+                  ? `\n/**\n${commentParts.join('\n')}\n*/\n`
+                  : ``
+              }${column.columnName}: ${tsType};`;
             })
             .join('\n')}
         }
@@ -292,7 +294,9 @@ export default async function generate(
       import sql, {SQLQuery} from '@moped/sql';
       ${tables
         .map(table => {
-          return `import ${table.tableName} from './tables/${table.tableName}';`;
+          return `import ${table.tableName} from './tables/${
+            table.tableName
+          }';`;
         })
         .join('\n')}
 
@@ -340,16 +344,15 @@ export default async function generate(
             primaryKeys.length === 0
               ? ''
               : primaryKeys.length === 1
-                ? `${primaryKeys[0]
-                    .columnName}: ${table.tableName}[${JSON.stringify(
-                    primaryKeys[0].columnName,
-                  )}],`
+                ? `${primaryKeys[0].columnName}: ${
+                    table.tableName
+                  }[${JSON.stringify(primaryKeys[0].columnName)}],`
                 : `id: {${primaryKeys
                     .map(
                       column =>
-                        `${column.columnName}: ${table.tableName}[${JSON.stringify(
-                          column.columnName,
-                        )}],`,
+                        `${column.columnName}: ${
+                          table.tableName
+                        }[${JSON.stringify(column.columnName)}],`,
                     )
                     .join('\n')}},`;
           const queryParamExcludingId = table.columns.some(
@@ -367,8 +370,9 @@ export default async function generate(
             : '';
           const idCondition =
             primaryKeys.length === 1
-              ? `"${primaryKeys[0].columnName}" = \${${primaryKeys[0]
-                  .columnName}}`
+              ? `"${primaryKeys[0].columnName}" = \${${
+                  primaryKeys[0].columnName
+                }}`
               : primaryKeys
                   .map(
                     column =>
@@ -401,18 +405,18 @@ export default async function generate(
                 .map(column => {
                   const isOptional =
                     column.isNullable || !!column.columnDefault;
-                  return `${column.columnName}${isOptional
-                    ? '?'
-                    : ''}: ${table.tableName}[${JSON.stringify(
-                    column.columnName,
-                  )}],`;
+                  return `${column.columnName}${isOptional ? '?' : ''}: ${
+                    table.tableName
+                  }[${JSON.stringify(column.columnName)}],`;
                 })
                 .join('\n')}
-              }${table.columns.every(
-                column => column.isNullable || !!column.columnDefault,
-              )
-                ? ' = {}'
-                : ''}): Promise<${table.tableName}> {
+              }${
+                table.columns.every(
+                  column => column.isNullable || !!column.columnDefault,
+                )
+                  ? ' = {}'
+                  : ''
+              }): Promise<${table.tableName}> {
                 const columns = Object.keys(${lowerName})
                   .sort()
                   .filter(name => ${table.columns
@@ -420,17 +424,25 @@ export default async function generate(
                     .join(' || ')})
                   .map(name => ({name, value: (${lowerName} as any)[name]}));
                 const data = columns.length ? sql\`(\${sql.join(columns.map(c => sql.ident(c.name)), ',')}) VALUES (\${sql.join(columns.map(c => sql\`\${c.value}\`), ',')})\` : sql\`DEFAULT VALUES\`;
-                let s = sql\`INSERT INTO "${table.tableName}" \${data} RETURNING *;\`;
+                let s = sql\`INSERT INTO "${
+                  table.tableName
+                }" \${data} RETURNING *;\`;
                 return this.db.query(s).then(results => results[0]);
               }
 
               where(query: SQLQuery): Promise<${table.tableName}[]> {
-                return this.db.query(sql.join([sql\`SELECT * FROM "${table.tableName}"\`, query], ' WHERE '));
+                return this.db.query(sql.join([sql\`SELECT * FROM "${
+                  table.tableName
+                }"\`, query], ' WHERE '));
               }
 
-              list(query?: Partial<${table.tableName}>): Promise<${table.tableName}[]> {
+              list(query?: Partial<${table.tableName}>): Promise<${
+            table.tableName
+          }[]> {
                 if (query === undefined) {
-                  return this.db.query(sql\`SELECT * FROM "${table.tableName}"\`);
+                  return this.db.query(sql\`SELECT * FROM "${
+                    table.tableName
+                  }"\`);
                 }
                 return this.where(
                   sql.join(
@@ -444,40 +456,55 @@ export default async function generate(
                   )
                 );
               }
-              ${primaryKeys.length > 0
-                ? `
-                  get(${idParam} ${queryParamExcludingId}): Promise<${table.tableName} | null> {
-                    ${table.columns.some(column => !column.isPrimary)
-                      ? `
+              ${
+                primaryKeys.length > 0
+                  ? `
+                  get(${idParam} ${queryParamExcludingId}): Promise<${
+                      table.tableName
+                    } | null> {
+                    ${
+                      table.columns.some(column => !column.isPrimary)
+                        ? `
                           if (query === undefined) {
-                            return this.db.query(sql\`SELECT * FROM "${table.tableName}" WHERE ${idCondition}\`).then(getOneResult);
+                            return this.db.query(sql\`SELECT * FROM "${
+                              table.tableName
+                            }" WHERE ${idCondition}\`).then(getOneResult);
                           }
                           return this.db.query(
                             ${andQuery(
-                              `sql\`SELECT * FROM "${table.tableName}" WHERE ${idCondition}\``,
+                              `sql\`SELECT * FROM "${table.tableName}" WHERE ${
+                                idCondition
+                              }\``,
                               {notPrimary: true},
                             )}
                           ).then(getOneResult);
                         `
-                      : `
+                        : `
                           return this.db.query(
-                            sql\`SELECT * FROM "${table.tableName}" WHERE ${idCondition}\`
+                            sql\`SELECT * FROM "${table.tableName}" WHERE ${
+                            idCondition
+                          }\`
                           ).then(getOneResult);
-                        `}
+                        `
+                    }
                   }
                 `
-                : ''}
-                ${table.columns.some(column => !column.isPrimary)
-                  ? `
+                  : ''
+              }
+                ${
+                  table.columns.some(column => !column.isPrimary)
+                    ? `
                       update(${idParam} ${lowerName}: {${table.columns
-                      .filter(column => !column.isPrimary)
-                      .map(
-                        column =>
-                          `${column.columnName}?: ${table.tableName}[${JSON.stringify(
-                            column.columnName,
-                          )}],`,
-                      )
-                      .join('\n')}}, ${queryParamExcludingId}): Promise<void> {
+                        .filter(column => !column.isPrimary)
+                        .map(
+                          column =>
+                            `${column.columnName}?: ${
+                              table.tableName
+                            }[${JSON.stringify(column.columnName)}],`,
+                        )
+                        .join('\n')}}, ${
+                        queryParamExcludingId
+                      }): Promise<void> {
                         const updateColumns =
                           sql.join(
                             Object.keys(${lowerName})
@@ -485,36 +512,53 @@ export default async function generate(
                               .filter(fieldName => ${isColumn('fieldName', {
                                 notPrimary: true,
                               })})
-                              .map(field => sql\`\${sql.ident(field)} = \${(${lowerName} as any)[field]}\`),
+                              .map(field => sql\`\${sql.ident(field)} = \${(${
+                                lowerName
+                              } as any)[field]}\`),
                             ', '
                           );
                         
                         if (query === undefined) {
-                          return this.db.query(sql\`UPDATE "${table.tableName}" SET \${updateColumns} WHERE ${idCondition}\`).then(noop);
+                          return this.db.query(sql\`UPDATE "${
+                            table.tableName
+                          }" SET \${updateColumns} WHERE ${
+                        idCondition
+                      }\`).then(noop);
                         }
                         return this.db.query(
                           ${andQuery(
-                            `sql\`UPDATE "${table.tableName}" SET \${updateColumns} WHERE ${idCondition}\``,
+                            `sql\`UPDATE "${
+                              table.tableName
+                            }" SET \${updateColumns} WHERE ${idCondition}\``,
                             {notPrimary: true},
                           )}
                         ).then(noop);
                       }
                     `
-                  : ''}
+                    : ''
+                }
                 remove(${idParam} ${queryParamExcludingId}): Promise<void> {
-                  ${table.columns.some(column => !column.isPrimary)
-                    ? `
+                  ${
+                    table.columns.some(column => !column.isPrimary)
+                      ? `
                         if (!query) {
-                          return this.db.query(sql\`DELETE FROM "${table.tableName}" WHERE ${idCondition}\`).then(noop);
+                          return this.db.query(sql\`DELETE FROM "${
+                            table.tableName
+                          }" WHERE ${idCondition}\`).then(noop);
                         }
                         return this.db.query(
                           ${andQuery(
-                            `sql\`DELETE FROM "${table.tableName}" WHERE ${idCondition}\``,
+                            `sql\`DELETE FROM "${table.tableName}" WHERE ${
+                              idCondition
+                            }\``,
                             {notPrimary: true},
                           )}
                         ).then(noop);
                       `
-                    : `return this.db.query(sql\`DELETE FROM "${table.tableName}" WHERE ${idCondition}\`).then(noop);`}
+                      : `return this.db.query(sql\`DELETE FROM "${
+                          table.tableName
+                        }" WHERE ${idCondition}\`).then(noop);`
+                  }
                 }
             }
           `;
@@ -530,7 +574,9 @@ export default async function generate(
         .map(
           table => `
             get ${table.tableName}(): ${table.tableName}API {
-              return this._${table.tableName} || (this._${table.tableName} = new ${table.tableName}API(this.db));
+              return this._${table.tableName} || (this._${
+            table.tableName
+          } = new ${table.tableName}API(this.db));
             }
           `,
         )

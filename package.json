@@ -7,6 +7,7 @@
     "build": "git add . && lerna run prepublish --parallel --since master",
     "build:all": "lerna run prepublish --parallel",
     "prerelease": "yarn build:all",
+    "prettier": "prettier --write \"packages/*/src/**/*.{ts,tsx}\"",
     "release": "lerna publish",
     "test": "jest && lerna run test --parallel",
     "watch:jest": "jest --watch",
