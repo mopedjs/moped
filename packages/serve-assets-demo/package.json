@@ -1,0 +1,30 @@
+{
+  "name": "@moped/serve-assets-demo",
+  "private": true,
+  "version": "0.0.7",
+  "description": "",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "dependencies": {
+    "@babel/preset-env": "^7.0.0-beta.32",
+    "@moped/get-host-info": "^0.0.4",
+    "@moped/serve-assets": "^0.0.0",
+    "@types/node": "^8.0.33",
+    "babel-loader": "^7.1.2",
+    "babel-preset-env": "^1.6.1",
+    "html-webpack-plugin": "^2.30.1",
+    "then-request": "^4.1.0",
+    "webpack": "^3.6.0",
+    "webpack-manifest-plugin": "^1.3.2"
+  },
+  "devDependencies": {
+    "rimraf": "^2.6.2"
+  },
+  "scripts": {
+    "prepublish": "tsc -p tsconfig.build.json",
+    "start": "node src/server",
+    "build": "rimraf build && webpack"
+  },
+  "repository": "https://github.com/mopedjs/moped/tree/master/packages/serve-assets-demo",
+  "license": "MIT"
+}
