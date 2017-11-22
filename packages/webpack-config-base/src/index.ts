@@ -1,7 +1,10 @@
 import {relative, delimiter} from 'path';
 import * as webpack from 'webpack';
+import buildExternals, {ExternalMode, ExternalsElement} from './externals';
 
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
+
+export {ExternalMode, ExternalsElement};
 
 export interface Options {
   /**
@@ -43,6 +46,7 @@ export interface Options {
    * added after any custom ones you add
    */
   extensions?: string[];
+  externals?: ExternalsElement | ExternalsElement[];
   /**
    * Add additional plugins to the compiler.
    */
@@ -187,6 +191,9 @@ export default function webpackConfig(options: Options): webpack.Configuration {
     plugins: (options.plugins || []).filter(
       (p: webpack.Plugin | null | void): p is webpack.Plugin => p != null,
     ),
+    externals: options.externals
+      ? buildExternals(options.externals)
+      : undefined,
     target: options.target || 'web',
     // Some libraries import Node modules but don't use them in the browser.
     // Tell Webpack to provide empty mocks for them so importing them works.
@@ -219,6 +226,7 @@ export default function webpackConfig(options: Options): webpack.Configuration {
 module.exports = webpackConfig;
 module.exports.default = webpackConfig;
 
+module.exports.ExternalMode = ExternalMode;
 module.exports.DevTool = DevTool;
 module.exports.Target = Target;
 module.exports.getResolveConfig = getResolveConfig;
