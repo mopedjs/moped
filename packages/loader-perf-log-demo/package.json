@@ -1,12 +1,12 @@
 {
   "name": "@moped/loader-perf-log-demo",
   "private": true,
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "dependencies": {
-    "@moped/loader-perf-log": "^0.0.1",
+    "@moped/loader-perf-log": "^0.0.2",
     "@moped/rule-ts": "^0.0.6",
     "@types/node": "^8.0.33",
     "@types/react": "*",
@@ -27,7 +27,6 @@
     "build:dev": "rimraf build && cross-env NODE_ENV=development webpack",
     "test": "yarn build:dev && yarn build:prod"
   },
-  "repository":
-    "https://github.com/mopedjs/moped/tree/master/packages/loader-perf-log-demo",
+  "repository": "https://github.com/mopedjs/moped/tree/master/packages/loader-perf-log-demo",
   "license": "MIT"
 }

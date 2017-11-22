@@ -1,7 +1,7 @@
 {
   "name": "@moped/rule-ts-demo",
   "private": true,
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -26,7 +26,6 @@
     "build:dev": "rimraf build && cross-env NODE_ENV=development webpack",
     "test": "yarn build:dev && yarn build:prod"
   },
-  "repository":
-    "https://github.com/mopedjs/moped/tree/master/packages/rule-ts-demo",
+  "repository": "https://github.com/mopedjs/moped/tree/master/packages/rule-ts-demo",
   "license": "MIT"
 }

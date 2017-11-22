@@ -1,6 +1,6 @@
 {
   "name": "@moped/rule-css",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -23,8 +23,7 @@
   "scripts": {
     "prepublish": "tsc -p tsconfig.build.json"
   },
-  "repository":
-    "https://github.com/mopedjs/moped/tree/master/packages/rule-css",
+  "repository": "https://github.com/mopedjs/moped/tree/master/packages/rule-css",
   "license": "MIT",
   "publishConfig": {
     "access": "public"
