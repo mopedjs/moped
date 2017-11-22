@@ -6,12 +6,13 @@
   "types": "./lib/index.d.ts",
   "dependencies": {
     "@types/node": "^8.0.33",
-    "@types/webpack": "^3.0.14"
+    "@types/webpack": "*"
   },
   "scripts": {
     "prepublish": "tsc -p tsconfig.build.json"
   },
-  "repository": "https://github.com/mopedjs/moped/tree/master/packages/loader-perf-log",
+  "repository":
+    "https://github.com/mopedjs/moped/tree/master/packages/loader-perf-log",
   "license": "MIT",
   "publishConfig": {
     "access": "public"

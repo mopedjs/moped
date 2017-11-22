@@ -6,13 +6,14 @@
   "types": "./lib/index.d.ts",
   "dependencies": {
     "@types/node": "^8.0.33",
-    "@types/webpack": "^3.0.13",
+    "@types/webpack": "*",
     "file-loader": "^1.1.5"
   },
   "scripts": {
     "prepublish": "tsc -p tsconfig.build.json"
   },
-  "repository": "https://github.com/mopedjs/moped/tree/master/packages/rule-file",
+  "repository":
+    "https://github.com/mopedjs/moped/tree/master/packages/rule-file",
   "license": "MIT",
   "publishConfig": {
     "access": "public"
