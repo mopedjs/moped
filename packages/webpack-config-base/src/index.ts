@@ -151,6 +151,8 @@ export default function webpackConfig(options: Options): webpack.Configuration {
     output: {
       // The build folder.
       path: options.buildDirectory,
+      // Add /* filename */ comments to generated require()s in the output.
+      pathinfo: process.env.NODE_ENV !== 'production',
       // Generated JS file names (with nested folders).
       // There will be one main bundle, and one file per asynchronous chunk.
       // We don't currently advertise code splitting but Webpack supports it.
@@ -201,6 +203,12 @@ export default function webpackConfig(options: Options): webpack.Configuration {
             __dirname: true,
             setImmediate: false,
           },
+    // Turn off performance hints during development because we don't do any
+    // splitting or minification in interest of speed. These warnings become
+    // cumbersome.
+    performance: {
+      hints: process.env.NODE_ENV === 'production' ? undefined : false,
+    },
   };
 }
 

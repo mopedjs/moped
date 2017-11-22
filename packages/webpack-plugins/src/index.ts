@@ -25,5 +25,6 @@ export {
   StartServer,
   SourceMapSupport,
 };
+
 export const NamedModules = webpack.NamedModulesPlugin;
 export const HotModuleReplacement = webpack.HotModuleReplacementPlugin;

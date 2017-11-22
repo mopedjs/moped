@@ -64,6 +64,11 @@ readdirSync(__dirname + '/packages').forEach(directory => {
   }
   pkg.dependencies['@types/node'] = dependencies['@types/node'];
   pkg.scripts.prepublish = 'tsc -p tsconfig.build.json';
+  if (pkg['@moped/target'] === 'browser') {
+    pkg.scripts.prepublish =
+      'tsc -p tsconfig.build.json && node ../../prepare-for-browser ' +
+      directory;
+  }
 
   pkg.repository =
     'https://github.com/mopedjs/moped/tree/master/packages/' + directory;
