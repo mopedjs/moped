@@ -1,0 +1,19 @@
+{
+  "name": "@moped/webpack-config-base",
+  "version": "0.0.0",
+  "description": "",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "dependencies": {
+    "@types/node": "^8.0.33",
+    "react-dev-utils": "^4.2.1"
+  },
+  "scripts": {
+    "prepublish": "tsc -p tsconfig.build.json"
+  },
+  "repository": "https://github.com/mopedjs/moped/tree/master/packages/webpack-config-base",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  }
+}
