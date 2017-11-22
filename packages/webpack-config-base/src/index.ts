@@ -160,12 +160,16 @@ export default function webpackConfig(options: Options): webpack.Configuration {
         options.outputFileName ||
         (options.target === Target.node
           ? 'server.js'
-          : 'static/js/[name].[chunkhash:8].js'),
+          : process.env.NODE_ENV === 'production'
+            ? 'static/js/[name].[chunkhash:8].js'
+            : 'static/js/bundle.js'),
       chunkFilename:
         options.outputChunkFileName ||
         (options.target === Target.node
           ? '[name].chunk.js'
-          : 'static/js/[name].[chunkhash:8].chunk.js'),
+          : process.env.NODE_ENV === 'production'
+            ? 'static/js/[name].[chunkhash:8].chunk.js'
+            : 'static/js/[name].chunk.js'),
       // We inferred the "public path" (such as / or /my-project) from homepage.
       publicPath,
       // Point sourcemap entries to original disk location (format as URL on Windows)
