@@ -150,7 +150,12 @@ export default function webpackConfig(options: Options): webpack.Configuration {
   const publicPath = options.publicPath || '/';
   return {
     bail: options.bail || false,
-    devtool: options.devtool === undefined ? DevTool.sourceMap : false,
+    devtool:
+      options.devtool !== undefined
+        ? options.devtool
+        : process.env.NODE_ENV === 'production'
+          ? DevTool.sourceMap
+          : DevTool.cheapModuleSourceMap,
     entry: options.entry,
     output: {
       // The build folder.
