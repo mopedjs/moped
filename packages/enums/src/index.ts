@@ -37,4 +37,21 @@ export function getEnvironment(environment: void | Environment) {
       '"',
   );
 }
+
+export function getPlatform(
+  platform: void | Platform,
+  defaultPlatform?: Platform,
+): Platform {
+  if (platform === Platform.Client || platform === Platform.Server) {
+    return platform;
+  }
+  if (platform === undefined && defaultPlatform !== undefined) {
+    return defaultPlatform;
+  }
+  throw new Error(
+    'platform must be either "client" or "server" but was set to "' +
+      platform +
+      '"',
+  );
+}
 export {Environment, ImportType, Platform};

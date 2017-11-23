@@ -1,4 +1,4 @@
-const enum Platform {
+enum Platform {
   Client = 'client',
   Server = 'server',
 }

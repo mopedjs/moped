@@ -2,7 +2,7 @@ import * as webpack from 'webpack';
 import autoprefixer = require('autoprefixer');
 import ExtractTextPlugin = require('extract-text-webpack-plugin');
 import NoOpPlugin from '@moped/plugin-noop';
-import {Environment, getEnvironment, Platform} from '@moped/enums';
+import {Environment, getEnvironment, Platform, getPlatform} from '@moped/enums';
 
 export interface CssRuleOptions {
   environment?: Environment;
@@ -26,10 +26,7 @@ export default function css(
   ) {
     throw new Error('Expected platform to be either "client" or "server"');
   }
-  const platform = opts.platform || Platform.Client;
-  if (opts.cssFileName !== undefined && typeof opts.cssFileName !== 'string') {
-    throw new Error('options.cssFileName must be a string, if provided');
-  }
+  const platform = getPlatform(opts.platform, Platform.Client);
   const cssFileName =
     opts.cssFileName || 'static/css/[name].[contenthash:8].css';
   if (

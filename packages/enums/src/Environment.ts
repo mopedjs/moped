@@ -1,4 +1,4 @@
-const enum Environment {
+enum Environment {
   Development = 'development',
   Production = 'production',
   Test = 'test',

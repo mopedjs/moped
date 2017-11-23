@@ -127,7 +127,7 @@ export function getResolveConfig(
     // `web` extension prefixes have been added for better support
     // for React Native Web.
     extensions: (options.extensions || [])
-      .concat(['.web.js', '.js', '.json', '.web.jsx', '.jsx'])
+      .concat(['.web.js', '.mjs', '.js', '.json', '.web.jsx', '.jsx'])
       .filter((ext, i, arr) => arr.indexOf(ext) === i),
     alias: {
       // Support React Native Web

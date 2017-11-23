@@ -1,4 +1,4 @@
-const enum ImportType {
+enum ImportType {
   /**
    * An external library can be available as a global variable. The consumer can achieve this
    * by including the external library in a script tag.
