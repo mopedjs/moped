@@ -42,6 +42,7 @@ export interface Options {
    * Either server or client
    */
   platform?: Platform;
+  plugins?: Override<undefined | webpack.Plugin[]>;
   /**
    * The path to the `index.html` template you want to use
    */
@@ -140,19 +141,21 @@ export default function getConfig(options: Options): webpack.Configuration {
         ],
       },
     ],
-    plugins: [css.plugin].concat(
-      getPlugins(
-        {
-          appNodeModulesDirectory: options.appNodeModulesDirectory,
-          htmlTemplateFileName: options.htmlTemplateFileName,
-          port: options.port,
-          publicUrl,
-          buildDirectory: options.buildDirectory,
-        },
-        environment,
-        platform,
+    plugins: [css.plugin]
+      .concat(getOverride(options.plugins, environment, platform) || [])
+      .concat(
+        getPlugins(
+          {
+            appNodeModulesDirectory: options.appNodeModulesDirectory,
+            htmlTemplateFileName: options.htmlTemplateFileName,
+            port: options.port,
+            publicUrl,
+            buildDirectory: options.buildDirectory,
+          },
+          environment,
+          platform,
+        ),
       ),
-    ),
   });
 }
 
