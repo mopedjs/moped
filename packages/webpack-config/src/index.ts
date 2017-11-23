@@ -209,7 +209,7 @@ export function getBabelPresets(
   ];
 }
 
-function getBabelRule(
+export function getBabelRule(
   appSourceDirectory: string,
   babelPresets: void | string[],
   environment: Environment,
@@ -338,3 +338,11 @@ function getPlugins(
     platform,
   );
 }
+
+module.exports = getConfig;
+module.exports.default = getConfig;
+module.exports.SourceKind = SourceKind;
+module.exports.getEntry = getEntry;
+module.exports.getBabelPresets = getBabelPresets;
+module.exports.getBabelRule = getBabelRule;
+module.exports.getPlugins = getPlugins;
