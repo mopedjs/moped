@@ -3,9 +3,9 @@ import getConfig, {
   Environment,
   Platform,
   SourceKind,
+  ExternalMode,
 } from '@moped/webpack-config';
 import NodeExternals from '@moped/node-builtins';
-import {ExternalMode} from '@moped/webpack-config';
 import * as Paths from './Paths';
 import TypeScriptCheckerPluginInstance from './TypeScriptCheckerPluginInstance';
 

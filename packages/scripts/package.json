@@ -5,7 +5,17 @@
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "dependencies": {
-    "@types/node": "^8.0.33"
+    "@moped/env": "^0.1.0",
+    "@moped/get-host-info": "^0.0.4",
+    "@moped/node-builtins": "^0.0.3",
+    "@moped/webpack-config": "^0.0.3",
+    "@moped/webpack-dev-server": "^0.0.2",
+    "@types/node": "^8.0.33",
+    "chalk": "^2.3.0",
+    "fork-ts-checker-webpack-plugin": "^0.2.9",
+    "ms": "^2.0.0",
+    "react-dev-utils": "^4.2.1",
+    "webpack": "^3.8.1"
   },
   "scripts": {
     "prepublish": "tsc -p tsconfig.build.json"
