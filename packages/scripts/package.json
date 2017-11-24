@@ -1,6 +1,6 @@
 {
   "name": "@moped/scripts",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -9,7 +9,7 @@
     "@moped/get-host-info": "^0.0.4",
     "@moped/node-builtins": "^0.0.3",
     "@moped/webpack-config": "^0.0.3",
-    "@moped/webpack-dev-server": "^0.0.2",
+    "@moped/webpack-dev-server": "^0.0.3",
     "@types/node": "^8.0.33",
     "chalk": "^2.3.0",
     "fork-ts-checker-webpack-plugin": "^0.2.9",
