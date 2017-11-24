@@ -1,6 +1,6 @@
 {
   "name": "@moped/db-pg-create",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -18,8 +18,7 @@
   "bin": {
     "moped-db-pg-create": "./lib/index.js"
   },
-  "repository":
-    "https://github.com/mopedjs/moped/tree/master/packages/db-pg-create",
+  "repository": "https://github.com/mopedjs/moped/tree/master/packages/db-pg-create",
   "license": "MIT",
   "publishConfig": {
     "access": "public"
