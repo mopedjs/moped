@@ -13,6 +13,7 @@
     "@types/node": "^8.0.33",
     "chalk": "^2.3.0",
     "fork-ts-checker-webpack-plugin": "^0.2.9",
+    "fs-extra": "^4.0.2",
     "ms": "^2.0.0",
     "react-dev-utils": "^4.2.1",
     "webpack": "^3.8.1"
