@@ -104,7 +104,8 @@ export default function prepareProxy(
         onError: onProxyError(target),
         secure: false,
         changeOrigin: true,
-        ws: true,
+        // TODO: can we enable web sockets without breaking hot reloading?
+        ws: false,
         xfwd: true,
       },
     ];
