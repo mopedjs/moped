@@ -3,6 +3,7 @@ import * as webpack from 'webpack';
 import {Environment, getEnvironment, Platform, getPlatform} from '@moped/enums';
 import createConfig, {
   ExternalsElement,
+  ExternalMode,
   Target,
 } from '@moped/webpack-config-base';
 import createCssRule from '@moped/rule-css';
@@ -11,6 +12,7 @@ import createFileRule from '@moped/rule-file';
 import * as plugins from '@moped/webpack-plugins';
 import getOverride, {Override} from './getOverride';
 
+export {ExternalMode, Environment, Platform};
 export enum SourceKind {
   TypeScript = 'ts',
   JavaScript = 'js',
@@ -344,6 +346,9 @@ function getPlugins(
 
 module.exports = getConfig;
 module.exports.default = getConfig;
+module.exports.ExternalMode = ExternalMode;
+module.exports.Environment = Environment;
+module.exports.Platform = Platform;
 module.exports.SourceKind = SourceKind;
 module.exports.getEntry = getEntry;
 module.exports.getBabelPresets = getBabelPresets;
