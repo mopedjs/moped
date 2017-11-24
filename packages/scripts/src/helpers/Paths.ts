@@ -71,7 +71,7 @@ export const appBuildDirectoryClient = resolveApp('build/public');
 
 export const appSourceDirectory = resolveApp('src');
 export const appPublicDirectory = resolveApp('src/public');
-export const appHtml = resolveApp('src/public/index.html', {required: true});
+export const appHtml = resolveApp('src/index.html', {required: true});
 export const appNodeModulesDirectory = resolveApp('node_modules');
 
 export const appClient = firstExistingInApp(

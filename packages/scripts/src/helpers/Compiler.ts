@@ -69,6 +69,9 @@ export default class Compiler {
     this._invalidSubscribers.add(fn);
     return () => this._invalidSubscribers.delete(fn);
   }
+  buildCompleted(): boolean {
+    return this._status === CompilerStatus.done;
+  }
   printStatus() {
     switch (this._status) {
       case CompilerStatus.starting:
@@ -120,4 +123,3 @@ export default class Compiler {
     }
   }
 }
-module.exports = Compiler;

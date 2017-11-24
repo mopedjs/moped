@@ -87,10 +87,20 @@ if (isInteractive) {
   TypeScriptLog.onLog(() => onStatusChange());
   backend.onStatusChange(onStatusChange);
   frontend.onStatusChange(onStatusChange);
+  let ready = false;
   let started = false;
   function onStatusChange() {
     if (isInteractive) {
       clearConsole();
+    }
+    if (
+      ready &&
+      !started &&
+      backend.buildCompleted() &&
+      frontend.buildCompleted()
+    ) {
+      openBrowser(hostInfo.localUrlForBrowser);
+      started = true;
     }
     if (!started) {
       console.log(chalk.cyan('Starting the development server...\n'));
@@ -144,8 +154,8 @@ if (isInteractive) {
   }
 
   await Promise.all([frontend.ready, backend.ready]);
+  ready = true;
   onStatusChange();
-  openBrowser(hostInfo.localUrlForBrowser);
 })().catch(err => {
   if (err && err.stack) {
     console.error(err.stack);
