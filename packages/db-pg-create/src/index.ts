@@ -61,10 +61,10 @@ async function isWorking(dbConnection: string): Promise<boolean> {
 }
 
 (async () => {
-  const dbConnection = process.env.DATABASE_CONNECTION;
+  const dbConnection = process.env.DATABASE_URL;
   if (!dbConnection) {
     console.warn(
-      'You must set the DATABASE_CONNECTION envrionemnt variable in .env for moped to create the database.',
+      'You must set the DATABASE_URL envrionemnt variable in .env for moped to create the database.',
     );
     return;
   }
@@ -79,7 +79,7 @@ async function isWorking(dbConnection: string): Promise<boolean> {
       'Unable to connect to the database: ' + chalk.cyan(dbConnection),
     );
     console.warn(
-      'Moped can automatically create databeses where DATABASE_CONNECTION is of the form: ' +
+      'Moped can automatically create databeses where DATABASE_URL is of the form: ' +
         chalk.cyan('postgres://USERNAME@localhost/DBNAME'),
     );
     return;

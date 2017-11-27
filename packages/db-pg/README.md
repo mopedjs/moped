@@ -15,7 +15,7 @@ yarn add @moped/db-pg @moped/sql
 ```js
 const connect = require('@moped/db-pg');
 
-// to use the DATABASE_CONNECTION environment variable:
+// to use the DATABASE_URL environment variable:
 module.exports = connect();
 
 // to pass a database connection inline:

@@ -43,13 +43,13 @@ class ConnectionImplementation {
 }
 
 export default function createConnection(
-  connectionString: string | void = process.env.DATABASE_CONNECTION,
+  connectionString: string | void = process.env.DATABASE_URL,
 ): RootConnection {
   if (typeof connectionString !== 'string' || !connectionString) {
     throw new Error(
       'You must provide a connection string for @moped/db-pg. You can ' +
         'either pass one directly to the createConnection call or set ' +
-        'the DATABASE_CONNECTION environment variable.',
+        'the DATABASE_URL environment variable.',
     );
   }
 
