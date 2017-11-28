@@ -121,3 +121,5 @@ export const appServerProd = firstExistingInApp(
   {required: true},
 );
 export const appPackageJson = resolveApp('package.json', {required: true});
+export const dbMigrations = resolveApp('src/db-migrations');
+export const dbMigrationsBundle = resolveApp('src/db-migrations/bundle.ts');

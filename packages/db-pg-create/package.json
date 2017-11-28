@@ -17,9 +17,10 @@
     "prepublish": "tsc -p tsconfig.build.json"
   },
   "bin": {
-    "moped-db-pg-create": "./lib/index.js"
+    "moped-db-pg-create": "./lib/cli.js"
   },
-  "repository": "https://github.com/mopedjs/moped/tree/master/packages/db-pg-create",
+  "repository":
+    "https://github.com/mopedjs/moped/tree/master/packages/db-pg-create",
   "license": "MIT",
   "publishConfig": {
     "access": "public"

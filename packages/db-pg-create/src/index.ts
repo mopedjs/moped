@@ -1,6 +1,3 @@
-#!/usr/bin/env node
-
-import '@moped/env/development';
 import {existsSync} from 'fs';
 import connect from '@moped/db-pg';
 import sql from '@moped/sql';
@@ -60,7 +57,7 @@ async function isWorking(dbConnection: string): Promise<boolean> {
   }
 }
 
-(async () => {
+export default async () => {
   const dbConnection = process.env.DATABASE_URL;
   if (!dbConnection) {
     console.warn(
@@ -140,4 +137,4 @@ async function isWorking(dbConnection: string): Promise<boolean> {
     return;
   }
   console.warn('Failed to create the database ' + chalk.cyan(dbConnection));
-})();
+};
