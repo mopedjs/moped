@@ -1,8 +1,6 @@
 import {SQLQuery} from '@moped/sql';
 import pg = require('pg-promise');
 
-function noop() {}
-
 export interface Connection {
   query(query: SQLQuery): Promise<any[]>;
   task<T>(fn: (connection: Connection) => Promise<T>): Promise<T>;
@@ -12,11 +10,12 @@ export interface RootConnection extends Connection {
   dispose(): void;
 }
 class ConnectionImplementation {
-  private connection: pg.IBaseProtocol<{}>;
-  public dispose: () => void;
-  constructor(connection: pg.IBaseProtocol<{}>, dispose: () => void) {
+  private connection: IInstanceDisposalManager<pg.IBaseProtocol<{}>>;
+  constructor(connection: IInstanceDisposalManager<pg.IBaseProtocol<{}>>) {
     this.connection = connection;
-    this.dispose = dispose;
+  }
+  dispose() {
+    this.connection.dispose();
   }
   query(query: SQLQuery): Promise<any[]> {
     if (!(query instanceof SQLQuery)) {
@@ -26,22 +25,82 @@ class ConnectionImplementation {
         ),
       );
     }
-    return this.connection.query(query);
+    return this.connection.value.query(query);
   }
   task<T>(
     fn: (connection: ConnectionImplementation) => Promise<T>,
   ): Promise<T> {
-    return this.connection.task(t => {
-      return fn(new ConnectionImplementation(t, noop)) as any;
+    return this.connection.value.task(t => {
+      return fn(new ConnectionImplementation(this.connection.child(t))) as any;
     });
   }
   tx<T>(fn: (connection: ConnectionImplementation) => Promise<T>): Promise<T> {
-    return this.connection.tx(t => {
-      return fn(new ConnectionImplementation(t, noop)) as any;
+    return this.connection.value.tx(t => {
+      return fn(new ConnectionImplementation(this.connection.child(t))) as any;
     });
   }
 }
 
+interface IInstanceDisposalManager<T> {
+  readonly value: T;
+  isDisposed(): boolean;
+  dispose(): void;
+  child(value: T): IInstanceDisposalManager<T>;
+}
+class InstanceDisposalManager<T> {
+  private _isDisposed: boolean = false;
+  private _dispose: () => void;
+  public readonly value: T;
+  constructor(value: T, dispose: () => void) {
+    this.value = value;
+    this._dispose = dispose;
+  }
+  isDisposed() {
+    return this._isDisposed;
+  }
+  dispose() {
+    if (this._isDisposed) {
+      return;
+    }
+    this._isDisposed = true;
+    this._dispose();
+  }
+  child(value: T): IInstanceDisposalManager<T> {
+    return {
+      value,
+      isDisposed: () => this.isDisposed(),
+      dispose: () => this.dispose(),
+      child: value => this.child(value),
+    };
+  }
+}
+class GroupDisposalManager<T> {
+  private instanceCount: number = 0;
+  private _dispose: () => void;
+  public disposed: boolean = false;
+  public readonly value: T;
+  constructor(value: T, dispose: () => void) {
+    this.value = value;
+    this._dispose = dispose;
+  }
+  getInstance(): IInstanceDisposalManager<T> {
+    if (this.disposed) {
+      throw new Error('This group is disposed, you cannot keep using it.');
+    }
+    this.instanceCount++;
+    return new InstanceDisposalManager(this.value, () => {
+      this.instanceCount--;
+      if (this.instanceCount === 0) {
+        this.disposed = true;
+        this._dispose();
+      }
+    });
+  }
+}
+
+const connections: {
+  [connectionString: string]: GroupDisposalManager<pg.IBaseProtocol<{}>>;
+} = {};
 export default function createConnection(
   connectionString: string | void = process.env.DATABASE_URL,
 ): RootConnection {
@@ -50,6 +109,11 @@ export default function createConnection(
       'You must provide a connection string for @moped/db-pg. You can ' +
         'either pass one directly to the createConnection call or set ' +
         'the DATABASE_URL environment variable.',
+    );
+  }
+  if (connections[connectionString]) {
+    return new ConnectionImplementation(
+      connections[connectionString].getInstance(),
     );
   }
 
@@ -62,7 +126,13 @@ export default function createConnection(
 
   const connection = pgp(connectionString);
 
-  return new ConnectionImplementation(connection, () => pgp.end());
+  connections[connectionString] = new GroupDisposalManager(connection, () => {
+    pgp.end();
+    delete connections[connectionString];
+  });
+  return new ConnectionImplementation(
+    connections[connectionString].getInstance(),
+  );
 }
 
 module.exports = createConnection;

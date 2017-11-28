@@ -10,7 +10,8 @@
     "@moped/sql": "^0.0.1",
     "@types/node": "^8.0.33",
     "chalk": "^2.3.0",
-    "cross-spawn": "^5.1.0"
+    "cross-spawn": "^5.1.0",
+    "dotenv": "^4.0.0"
   },
   "scripts": {
     "prepublish": "tsc -p tsconfig.build.json"
