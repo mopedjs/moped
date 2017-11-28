@@ -1,11 +1,11 @@
 {
   "name": "@moped/db-pg-create",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "dependencies": {
-    "@moped/db-pg": "^0.0.4",
+    "@moped/db-pg": "^0.0.5",
     "@moped/env": "^0.1.0",
     "@moped/sql": "^0.0.1",
     "@types/node": "^8.0.33",
@@ -19,8 +19,7 @@
   "bin": {
     "moped-db-pg-create": "./lib/cli.js"
   },
-  "repository":
-    "https://github.com/mopedjs/moped/tree/master/packages/db-pg-create",
+  "repository": "https://github.com/mopedjs/moped/tree/master/packages/db-pg-create",
   "license": "MIT",
   "publishConfig": {
     "access": "public"
