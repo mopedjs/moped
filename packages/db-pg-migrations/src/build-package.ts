@@ -86,8 +86,9 @@ export default async function buildPackage(options: Options) {
     }
   });
   const output = `
-    import migrations, {MigrationsPackage, operation} from '${options.mopedDbPgMigrationsName ||
-      '@moped/db-pg-migrations'}';
+    import migrations, {MigrationsPackage${
+      migrations.length ? ', operation' : ''
+    }} from '${options.mopedDbPgMigrationsName || '@moped/db-pg-migrations'}';
 
     export {MigrationsPackage};
     export default migrations(
