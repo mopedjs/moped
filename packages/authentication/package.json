@@ -1,0 +1,26 @@
+{
+  "name": "@moped/authentication",
+  "version": "0.0.0",
+  "description": "",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "dependencies": {
+    "@types/cookies": "^0.7.1",
+    "@types/express": "^4.0.39",
+    "@types/helmet": "^0.0.37",
+    "@types/http-errors": "^1.6.1",
+    "@types/node": "^8.0.33",
+    "cookies": "^0.7.1",
+    "express": "^4.16.2",
+    "helmet": "^3.9.0",
+    "http-errors": "^1.6.2"
+  },
+  "scripts": {
+    "prepublish": "tsc -p tsconfig.build.json"
+  },
+  "repository": "https://github.com/mopedjs/moped/tree/master/packages/authentication",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  }
+}
