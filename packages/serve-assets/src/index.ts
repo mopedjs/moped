@@ -23,14 +23,21 @@ export type RequestHandler = (
   req: IncomingMessage,
   res: ServerResponse,
 ) => {} | null | void;
+export type AnyRequestHandler = (req: any, res: any) => any;
 export interface Options {
-  manifestFileName: string;
-  publicDirectoryName: string;
+  manifestFileName?: string;
+  publicDirectoryName?: string;
   proxyHtmlRequests?: boolean;
-  requestHandler: RequestHandler | Promise<RequestHandler>;
+  requestHandler:
+    | AnyRequestHandler
+    | {default: AnyRequestHandler}
+    | Promise<AnyRequestHandler | {default: AnyRequestHandler}>;
 }
 export default function serveAssets(options: Options) {
-  const manifest = JSON.parse(readFileSync(options.manifestFileName, 'utf8'));
+  const manifestFileName =
+    options.manifestFileName || 'public/asset-manifest.json';
+  const publicDirectoryName = options.publicDirectoryName || 'public';
+  const manifest = JSON.parse(readFileSync(manifestFileName, 'utf8'));
   const staticFiles: {
     [path: string]: void | PreparedResponse | PreparedResponsePromise;
   } = {};
@@ -39,9 +46,7 @@ export default function serveAssets(options: Options) {
   Object.keys(manifest)
     .map(key => manifest[key])
     .forEach((filename: string) => {
-      const body = readFileSync(
-        resolve(dirname(options.manifestFileName), filename),
-      );
+      const body = readFileSync(resolve(dirname(manifestFileName), filename));
       const response = prepare(body, {
         'Content-Type': filename.split('/').pop() || '',
         'Cache-Control': '1 year',
@@ -59,7 +64,7 @@ export default function serveAssets(options: Options) {
     });
 
   // other public files are only cached for a short time
-  lsrSync(options.publicDirectoryName).forEach(entry => {
+  lsrSync(publicDirectoryName).forEach(entry => {
     if (entry.isFile()) {
       const name = entry.path.substr(1);
       if (name[0] !== '/') {
@@ -90,9 +95,21 @@ export default function serveAssets(options: Options) {
   let requestHandler: RequestHandler | null = null;
   if (typeof options.requestHandler === 'function') {
     requestHandler = options.requestHandler;
+    pendingRequests = null;
+  } else if (
+    requestHandler &&
+    typeof requestHandler === 'object' &&
+    typeof (requestHandler as any).default === 'function'
+  ) {
+    requestHandler = (options.requestHandler as any).default;
+    pendingRequests = null;
   } else {
-    options.requestHandler.then(handler => {
-      requestHandler = handler;
+    (options.requestHandler as any).then((handler: any) => {
+      if (typeof handler === 'function') {
+        requestHandler = handler;
+      } else {
+        requestHandler = handler.default;
+      }
       if (pendingRequests) {
         pendingRequests.forEach(({req, res}) => handler(req, res));
         pendingRequests = null;

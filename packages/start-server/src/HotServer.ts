@@ -28,7 +28,7 @@ export type Handler = (
 let requestHandler: Handler | null = null;
 const pendingRequests: Request[] = [];
 
-export default function setServer(handler: Handler) {
+export default function setServer(handler: (req: any, res: any) => any) {
   if (typeof handler !== 'function') {
     throw new TypeError(
       'Expected handler to be a function accepting (req: IncomingMessage, req: ServerResponse) but got ' +
