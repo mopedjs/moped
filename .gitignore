@@ -27,3 +27,5 @@ packages/*/LICENSE.md
 packages/*/tsconfig.build.json
 packages/*/tsconfig.json
 packages/*/.cache
+
+.DS_Store
