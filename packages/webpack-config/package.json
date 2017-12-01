@@ -1,6 +1,6 @@
 {
   "name": "@moped/webpack-config",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -12,7 +12,7 @@
     "@moped/rule-file": "^0.0.4",
     "@moped/rule-ts": "^0.0.6",
     "@moped/webpack-config-base": "^0.0.6",
-    "@moped/webpack-plugins": "^0.0.2",
+    "@moped/webpack-plugins": "^0.0.3",
     "@types/node": "^8.0.33",
     "babel-loader": "^7.1.2",
     "react-dev-utils": "^4.2.1"

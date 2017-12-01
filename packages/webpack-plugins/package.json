@@ -1,12 +1,12 @@
 {
   "name": "@moped/webpack-plugins",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "dependencies": {
     "@moped/plugin-env": "^0.0.1",
-    "@moped/start-server": "^0.0.2",
+    "@moped/start-server": "^0.0.3",
     "@types/node": "^8.0.33",
     "case-sensitive-paths-webpack-plugin": "^2.1.1",
     "html-webpack-harddisk-plugin": "^0.1.0",
