@@ -1,0 +1,27 @@
+{
+  "name": "react-router-animated-switch",
+  "version": "0.0.0",
+  "description": "",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "dependencies": {
+    "@types/jest": "^21.1.5",
+    "@types/node": "^8.0.33",
+    "typescript": "^2.5.3"
+  },
+  "scripts": {
+    "prepublish": "tsc -p tsconfig.build.json && node ../../prepare-for-browser react-router-animated-switch"
+  },
+  "repository": "https://github.com/mopedjs/moped/tree/master/packages/react-router-animated-switch",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "@types/invariant": "^2.2.29",
+    "@types/prop-types": "^15.5.2",
+    "@types/react-router": "^4.0.19",
+    "@types/warning": "^3.0.0"
+  },
+  "@moped/target": "browser"
+}
