@@ -4,8 +4,8 @@
   "scripts": {
     "postinstall": "node postinstall",
     "bootstrap": "lerna bootstrap",
-    "build": "git add . && lerna run prepublish --parallel --since master",
-    "build:all": "lerna run prepublish --parallel",
+    "build": "git add . && lerna run prepublish --since master",
+    "build:all": "lerna run prepublish",
     "prerelease": "yarn build:all",
     "prettier": "prettier --write \"packages/*/src/**/*.{ts,tsx}\"",
     "release": "lerna publish",

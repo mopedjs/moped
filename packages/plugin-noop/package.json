@@ -6,7 +6,7 @@
   "types": "./lib/index.d.ts",
   "dependencies": {
     "@types/node": "^8.0.33",
-    "webpack": "^3.7.1"
+    "webpack": "3.8.1"
   },
   "scripts": {
     "prepublish": "tsc -p tsconfig.build.json"

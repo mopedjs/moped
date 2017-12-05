@@ -7,7 +7,7 @@
   "dependencies": {
     "@types/node": "^8.0.33",
     "react-dev-utils": "^4.2.1",
-    "webpack": "^3.8.1"
+    "webpack": "3.8.1"
   },
   "scripts": {
     "prepublish": "tsc -p tsconfig.build.json"
