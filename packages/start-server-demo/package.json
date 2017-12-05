@@ -1,7 +1,7 @@
 {
   "name": "@moped/start-server-demo",
   "private": true,
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
