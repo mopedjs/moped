@@ -1,11 +1,11 @@
 {
   "name": "@moped/scripts",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "dependencies": {
-    "@moped/env": "^0.1.0",
+    "@moped/env": "^0.1.1",
     "@moped/get-host-info": "^0.0.4",
     "@moped/node-builtins": "^0.0.3",
     "@moped/webpack-config": "^0.0.5",
