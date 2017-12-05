@@ -15,7 +15,8 @@
     "@moped/webpack-plugins": "^0.0.3",
     "@types/node": "^8.0.33",
     "babel-loader": "^7.1.2",
-    "react-dev-utils": "^4.2.1"
+    "react-dev-utils": "^4.2.1",
+    "url-loader": "^0.6.2"
   },
   "scripts": {
     "prepublish": "tsc -p tsconfig.build.json"
