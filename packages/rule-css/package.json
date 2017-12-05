@@ -1,12 +1,12 @@
 {
   "name": "@moped/rule-css",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "dependencies": {
     "@moped/enums": "^0.0.5",
-    "@moped/plugin-noop": "^0.0.2",
+    "@moped/plugin-noop": "^0.0.3",
     "@types/autoprefixer": "^6.7.3",
     "@types/extract-text-webpack-plugin": "^3.0.0",
     "@types/node": "^8.0.33",
