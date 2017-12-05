@@ -1,0 +1,16 @@
+{
+  "name": "@moped/authentication-demo",
+  "version": "0.0.0",
+  "description": "",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "dependencies": {
+    "@types/node": "^8.0.33"
+  },
+  "scripts": {},
+  "repository": "https://github.com/mopedjs/moped/tree/master/packages/authentication-demo",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  }
+}

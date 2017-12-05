@@ -18,7 +18,7 @@
     "react-router-animated-switch": "^0.0.1",
     "react-router-dom": "^4.2.2",
     "styled-components": "^2.2.4",
-    "webpack": "3.8.1"
+    "webpack": "^3.10.0"
   },
   "devDependencies": {
     "cross-env": "^5.0.5",

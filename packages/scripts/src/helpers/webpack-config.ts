@@ -45,7 +45,9 @@ export default function({
           return {mode: ExternalMode.commonjs, name: request};
         }
         if (
-          dependencies.some(name => request.substr(0, name.length) === name)
+          dependencies.some(name => request.substr(0, name.length) === name) &&
+          // hot reloading requires that start-server is always part of the webpack bundle
+          !/^\@moped\/start-server/.test(request)
         ) {
           return {mode: ExternalMode.commonjs, name: request};
         }
