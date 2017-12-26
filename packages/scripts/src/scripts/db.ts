@@ -1,3 +1,5 @@
+// Do this as the first thing so that any code reading it knows the right env.});
+import '@moped/env/development';
 import chalk from 'chalk';
 import {MigrationsPackage} from '@moped/db-pg-migrations';
 import * as Paths from '../helpers/Paths';
