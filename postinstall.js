@@ -9,6 +9,13 @@ const tsconfigBuild = `{
     "outDir": "lib"
   }
 }`;
+const tsconfigBuildYeoman = `{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "generators-src",
+    "outDir": "generators"
+  }
+}`;
 const tsconfig = `{
   "extends": "../../tsconfig.json"
 }`;
@@ -18,15 +25,6 @@ readdirSync(__dirname + '/packages').forEach(directory => {
   if (!statSync(__dirname + '/packages/' + directory).isDirectory()) {
     return;
   }
-  writeFileSync(__dirname + '/packages/' + directory + '/LICENSE.md', LICENSE);
-  writeFileSync(
-    __dirname + '/packages/' + directory + '/tsconfig.json',
-    tsconfig,
-  );
-  writeFileSync(
-    __dirname + '/packages/' + directory + '/tsconfig.build.json',
-    tsconfigBuild,
-  );
   let pkg = {};
   try {
     pkg = JSON.parse(
@@ -40,6 +38,16 @@ readdirSync(__dirname + '/packages').forEach(directory => {
       throw ex;
     }
   }
+  writeFileSync(__dirname + '/packages/' + directory + '/LICENSE.md', LICENSE);
+  writeFileSync(
+    __dirname + '/packages/' + directory + '/tsconfig.json',
+    tsconfig,
+  );
+  writeFileSync(
+    __dirname + '/packages/' + directory + '/tsconfig.build.json',
+
+    pkg['@moped/target'] === 'yeoman' ? tsconfigBuildYeoman : tsconfigBuild,
+  );
   const before = JSON.stringify(pkg);
   if (!pkg.name) {
     pkg.name = '@moped/' + directory;

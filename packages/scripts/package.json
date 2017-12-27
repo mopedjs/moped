@@ -5,6 +5,8 @@
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "dependencies": {
+    "@moped/db-pg-schema": "^0.0.5",
+    "@moped/db-schema": "^0.0.9",
     "@moped/env": "^0.1.1",
     "@moped/get-host-info": "^0.0.4",
     "@moped/node-builtins": "^0.0.3",

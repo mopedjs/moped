@@ -17,6 +17,7 @@ export interface ColumnSchema {
   isPrimary: boolean;
   tsType: string;
   udtName: UdtName;
+  comment?: string;
 }
 export {UdtName};
 export interface Options {

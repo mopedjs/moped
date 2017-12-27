@@ -73,6 +73,11 @@ export interface Options {
    * your source code is written in.
    */
   sourceKind?: SourceKind;
+
+  /**
+   * Set this to `false` to not automatically start the server in development mode
+   */
+  startServer?: boolean;
 }
 
 export default function getConfig(options: Options): webpack.Configuration {
@@ -153,6 +158,7 @@ export default function getConfig(options: Options): webpack.Configuration {
             port: options.port,
             publicUrl,
             buildDirectory: options.buildDirectory,
+            startServer: options.startServer,
           },
           environment,
           platform,
@@ -235,13 +241,14 @@ export function getBabelRule(
   };
 }
 
-function getPlugins(
+export function getPlugins(
   options: {
     appNodeModulesDirectory: string;
     htmlTemplateFileName: string;
     port?: number;
     publicUrl: string;
     buildDirectory: Override<string>;
+    startServer?: boolean;
   },
   environment: Environment,
   platform: Platform,
@@ -299,24 +306,32 @@ function getPlugins(
           new plugins.IgnoreMomentLocales(),
 
           // server side plugins
-          new plugins.StartServer({
-            name: 'server.js',
-            env: {
-              NODE_ENV: environment,
-              PORT: options.port !== undefined ? '' + options.port : undefined,
-              BUILD_PLATFORM: platform,
-              TEMPLATE_FILE:
-                getOverride(
-                  options.buildDirectory,
-                  environment,
-                  Platform.Client,
-                ) + '/index.html',
-              PUBLIC_URL: options.publicUrl,
-            },
-          }),
           new webpack.NoEmitOnErrorsPlugin(),
           new plugins.SourceMapSupport(),
-        ],
+        ].concat(
+          options.startServer !== false
+            ? [
+                new plugins.StartServer({
+                  name: 'server.js',
+                  env: {
+                    NODE_ENV: environment,
+                    PORT:
+                      options.port !== undefined
+                        ? '' + options.port
+                        : undefined,
+                    BUILD_PLATFORM: platform,
+                    TEMPLATE_FILE:
+                      getOverride(
+                        options.buildDirectory,
+                        environment,
+                        Platform.Client,
+                      ) + '/index.html',
+                    PUBLIC_URL: options.publicUrl,
+                  },
+                }),
+              ]
+            : [],
+        ),
         production: [
           new plugins.Env({
             NODE_ENV: environment,

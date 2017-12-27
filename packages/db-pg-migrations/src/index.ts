@@ -214,7 +214,9 @@ export class MigrationsPackage {
               await this.setMigrationStatus(db, {
                 ...status,
                 isApplied: direction === Direction.up,
-                lastUp: new Date(),
+                [direction === Direction.up
+                  ? 'lastUp'
+                  : 'lastDown']: new Date(),
               });
             }
           }
@@ -268,5 +270,32 @@ export class MigrationsPackage {
 export default function migrations(
   ...migrations: Migration[]
 ): MigrationsPackage {
-  return new MigrationsPackage(migrations);
+  const pkg = new MigrationsPackage(migrations);
+  const AUTO_RUN_DB_MIGRATION_PROCESS: string | void = (global as any)
+    .AUTO_RUN_DB_MIGRATION_PROCESS;
+  const AUTO_RUN_DB_MIGRATION_PROCESS_DONE: (() =>
+    | void
+    | void) = (global as any).AUTO_RUN_DB_MIGRATION_PROCESS_DONE;
+  if (AUTO_RUN_DB_MIGRATION_PROCESS) {
+    switch (AUTO_RUN_DB_MIGRATION_PROCESS) {
+      case 'downAll':
+      case 'downLast':
+      case 'downOne':
+      case 'upAll':
+      case 'upOne':
+        pkg[AUTO_RUN_DB_MIGRATION_PROCESS]().then(
+          () => {
+            if (AUTO_RUN_DB_MIGRATION_PROCESS_DONE) {
+              AUTO_RUN_DB_MIGRATION_PROCESS_DONE();
+            }
+          },
+          ex => {
+            console.error(ex.message);
+            process.exit(1);
+          },
+        );
+        break;
+    }
+  }
+  return pkg;
 }

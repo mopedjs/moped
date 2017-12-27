@@ -1,0 +1,2 @@
+# We use a local postgres database in development
+DATABASE_URL="postgres://<%= name %>@localhost/<%= name %>"

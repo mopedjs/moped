@@ -1,0 +1,36 @@
+{
+  "name": "generator-moped",
+  "version": "0.0.0",
+  "description": "",
+  "files": [
+    "generators"
+  ],
+  "keywords": [
+    "yeoman-generator"
+  ],
+  "dependencies": {
+    "chalk": "^2.3.0",
+    "mkdirp": "^0.5.1",
+    "yeoman-generator": "^1.0.0",
+    "@types/node": "^8.0.33"
+  },
+  "scripts": {
+    "prepublish": "tsc -p tsconfig.build.json"
+  },
+  "repository": "https://github.com/mopedjs/moped/tree/master/packages/generator-moped",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "@moped/target": "yeoman",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "devDependencies": {
+    "@authentication/cookie": "^0.0.4",
+    "@moped/db-pg": "^0.0.5",
+    "@types/chalk": "^2.2.0",
+    "@types/node": "^8.0.33",
+    "@types/yeoman-generator": "^2.0.0",
+    "bicycle": "^4.5.0"
+  }
+}
