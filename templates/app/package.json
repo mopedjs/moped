@@ -3,18 +3,23 @@
   "private": true,
   "version": "0.0.0",
   "dependencies": {
-    "@authentication/cookie": "^0.0.6",
-    "@moped/db-pg-migrations": "^0.0.4",
+    "@authentication/cookie": "^0.0.7",
+    "@authentication/passwordless": "^0.0.7",
+    "@authentication/send-message": "^0.0.1",
     "@moped/db-pg": "^0.0.5",
+    "@moped/db-pg-migrations": "^0.0.5",
     "@moped/sql": "^0.0.1",
     "bicycle": "^5.0.0",
     "express": "^4.16.2"
   },
   "devDependencies": {
-    "@moped/scripts": "^0.0.12",
+    "@authentication/react-passwordless": "^0.0.9",
+    "@moped/scripts": "^0.0.13",
+    "@types/react-router-dom": "^4.2.3",
     "react": "^16.2.0",
     "react-bicycle": "^3.1.2",
     "react-dom": "^16.2.0",
+    "react-router-dom": "^4.2.2",
     "ts-bicycle": "^3.0.2"
   },
   "scripts": {

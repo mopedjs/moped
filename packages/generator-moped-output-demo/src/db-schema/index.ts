@@ -2,7 +2,10 @@
 
 import sql, {SQLQuery} from '@moped/sql';
 import MopedMigrations from './tables/MopedMigrations';
+import RateLimitStates from './tables/RateLimitStates';
 import Sessions from './tables/Sessions';
+import Tokens from './tables/Tokens';
+import UserEmails from './tables/UserEmails';
 import Users from './tables/Users';
 
 function getOneResult<T>(results: T[]): T | null {
@@ -225,6 +228,165 @@ export class MopedMigrationsAPI extends APIBase {
   }
 }
 
+export class RateLimitStatesAPI extends APIBase {
+  create(rateLimitStates: {
+    id: RateLimitStates['id'];
+    timestamp: RateLimitStates['timestamp'];
+    value: RateLimitStates['value'];
+  }): Promise<RateLimitStates> {
+    const columns = Object.keys(rateLimitStates)
+      .sort()
+      .filter(name => name === 'id' || name === 'timestamp' || name === 'value')
+      .map(name => ({name, value: (rateLimitStates as any)[name]}));
+    const data = columns.length
+      ? sql`(${sql.join(
+          columns.map(c => sql.ident(c.name)),
+          ',',
+        )}) VALUES (${sql.join(columns.map(c => sql`${c.value}`), ',')})`
+      : sql`DEFAULT VALUES`;
+    let s = sql`INSERT INTO "RateLimitStates" ${data} RETURNING *;`;
+    return this.db.query(s).then(results => results[0]);
+  }
+
+  where(query: SQLQuery): Promise<RateLimitStates[]> {
+    return this.db.query(
+      sql.join([sql`SELECT * FROM "RateLimitStates"`, query], ' WHERE '),
+    );
+  }
+
+  list(query?: Partial<RateLimitStates>): Promise<RateLimitStates[]> {
+    if (query === undefined) {
+      return this.db.query(sql`SELECT * FROM "RateLimitStates"`);
+    }
+    return this.where(
+      sql.join(
+        Object.keys(query)
+          .sort()
+          .filter(
+            fieldName =>
+              fieldName === 'id' ||
+              fieldName === 'timestamp' ||
+              fieldName === 'value',
+          )
+          .map(field => sql`${sql.ident(field)} = ${(query as any)[field]}`),
+        ' AND ',
+      ),
+    );
+  }
+
+  get(
+    id: RateLimitStates['id'],
+    query?: {
+      timestamp?: RateLimitStates['timestamp'];
+      value?: RateLimitStates['value'];
+    },
+  ): Promise<RateLimitStates | null> {
+    if (query === undefined) {
+      return this.db
+        .query(sql`SELECT * FROM "RateLimitStates" WHERE "id" = ${id}`)
+        .then(getOneResult);
+    }
+    return this.db
+      .query(
+        sql.join(
+          [sql`SELECT * FROM "RateLimitStates" WHERE "id" = ${id}`].concat(
+            Object.keys(query)
+              .sort()
+              .filter(
+                fieldName => fieldName === 'timestamp' || fieldName === 'value',
+              )
+              .map(
+                field => sql`${sql.ident(field)} = ${(query as any)[field]}`,
+              ),
+          ),
+          ' AND ',
+        ),
+      )
+      .then(getOneResult);
+  }
+
+  update(
+    id: RateLimitStates['id'],
+    rateLimitStates: {
+      timestamp?: RateLimitStates['timestamp'];
+      value?: RateLimitStates['value'];
+    },
+    query?: {
+      timestamp?: RateLimitStates['timestamp'];
+      value?: RateLimitStates['value'];
+    },
+  ): Promise<void> {
+    const updateColumns = sql.join(
+      Object.keys(rateLimitStates)
+        .sort()
+        .filter(fieldName => fieldName === 'timestamp' || fieldName === 'value')
+        .map(
+          field =>
+            sql`${sql.ident(field)} = ${(rateLimitStates as any)[field]}`,
+        ),
+      ', ',
+    );
+
+    if (query === undefined) {
+      return this.db
+        .query(
+          sql`UPDATE "RateLimitStates" SET ${updateColumns} WHERE "id" = ${id}`,
+        )
+        .then(noop);
+    }
+    return this.db
+      .query(
+        sql.join(
+          [
+            sql`UPDATE "RateLimitStates" SET ${updateColumns} WHERE "id" = ${id}`,
+          ].concat(
+            Object.keys(query)
+              .sort()
+              .filter(
+                fieldName => fieldName === 'timestamp' || fieldName === 'value',
+              )
+              .map(
+                field => sql`${sql.ident(field)} = ${(query as any)[field]}`,
+              ),
+          ),
+          ' AND ',
+        ),
+      )
+      .then(noop);
+  }
+
+  remove(
+    id: RateLimitStates['id'],
+    query?: {
+      timestamp?: RateLimitStates['timestamp'];
+      value?: RateLimitStates['value'];
+    },
+  ): Promise<void> {
+    if (!query) {
+      return this.db
+        .query(sql`DELETE FROM "RateLimitStates" WHERE "id" = ${id}`)
+        .then(noop);
+    }
+    return this.db
+      .query(
+        sql.join(
+          [sql`DELETE FROM "RateLimitStates" WHERE "id" = ${id}`].concat(
+            Object.keys(query)
+              .sort()
+              .filter(
+                fieldName => fieldName === 'timestamp' || fieldName === 'value',
+              )
+              .map(
+                field => sql`${sql.ident(field)} = ${(query as any)[field]}`,
+              ),
+          ),
+          ' AND ',
+        ),
+      )
+      .then(noop);
+  }
+}
+
 export class SessionsAPI extends APIBase {
   create(sessions: {
     created: Sessions['created'];
@@ -416,11 +578,387 @@ export class SessionsAPI extends APIBase {
   }
 }
 
+export class TokensAPI extends APIBase {
+  create(tokens: {
+    attemptsRemaining: Tokens['attemptsRemaining'];
+    created: Tokens['created'];
+    dos: Tokens['dos'];
+    email: Tokens['email'];
+    expiry: Tokens['expiry'];
+    id?: Tokens['id'];
+    passCodeHash: Tokens['passCodeHash'];
+    state: Tokens['state'];
+    userAgent: Tokens['userAgent'];
+  }): Promise<Tokens> {
+    const columns = Object.keys(tokens)
+      .sort()
+      .filter(
+        name =>
+          name === 'attemptsRemaining' ||
+          name === 'created' ||
+          name === 'dos' ||
+          name === 'email' ||
+          name === 'expiry' ||
+          name === 'id' ||
+          name === 'passCodeHash' ||
+          name === 'state' ||
+          name === 'userAgent',
+      )
+      .map(name => ({name, value: (tokens as any)[name]}));
+    const data = columns.length
+      ? sql`(${sql.join(
+          columns.map(c => sql.ident(c.name)),
+          ',',
+        )}) VALUES (${sql.join(columns.map(c => sql`${c.value}`), ',')})`
+      : sql`DEFAULT VALUES`;
+    let s = sql`INSERT INTO "Tokens" ${data} RETURNING *;`;
+    return this.db.query(s).then(results => results[0]);
+  }
+
+  where(query: SQLQuery): Promise<Tokens[]> {
+    return this.db.query(
+      sql.join([sql`SELECT * FROM "Tokens"`, query], ' WHERE '),
+    );
+  }
+
+  list(query?: Partial<Tokens>): Promise<Tokens[]> {
+    if (query === undefined) {
+      return this.db.query(sql`SELECT * FROM "Tokens"`);
+    }
+    return this.where(
+      sql.join(
+        Object.keys(query)
+          .sort()
+          .filter(
+            fieldName =>
+              fieldName === 'attemptsRemaining' ||
+              fieldName === 'created' ||
+              fieldName === 'dos' ||
+              fieldName === 'email' ||
+              fieldName === 'expiry' ||
+              fieldName === 'id' ||
+              fieldName === 'passCodeHash' ||
+              fieldName === 'state' ||
+              fieldName === 'userAgent',
+          )
+          .map(field => sql`${sql.ident(field)} = ${(query as any)[field]}`),
+        ' AND ',
+      ),
+    );
+  }
+
+  get(
+    id: Tokens['id'],
+    query?: {
+      attemptsRemaining?: Tokens['attemptsRemaining'];
+      created?: Tokens['created'];
+      dos?: Tokens['dos'];
+      email?: Tokens['email'];
+      expiry?: Tokens['expiry'];
+      passCodeHash?: Tokens['passCodeHash'];
+      state?: Tokens['state'];
+      userAgent?: Tokens['userAgent'];
+    },
+  ): Promise<Tokens | null> {
+    if (query === undefined) {
+      return this.db
+        .query(sql`SELECT * FROM "Tokens" WHERE "id" = ${id}`)
+        .then(getOneResult);
+    }
+    return this.db
+      .query(
+        sql.join(
+          [sql`SELECT * FROM "Tokens" WHERE "id" = ${id}`].concat(
+            Object.keys(query)
+              .sort()
+              .filter(
+                fieldName =>
+                  fieldName === 'attemptsRemaining' ||
+                  fieldName === 'created' ||
+                  fieldName === 'dos' ||
+                  fieldName === 'email' ||
+                  fieldName === 'expiry' ||
+                  fieldName === 'passCodeHash' ||
+                  fieldName === 'state' ||
+                  fieldName === 'userAgent',
+              )
+              .map(
+                field => sql`${sql.ident(field)} = ${(query as any)[field]}`,
+              ),
+          ),
+          ' AND ',
+        ),
+      )
+      .then(getOneResult);
+  }
+
+  update(
+    id: Tokens['id'],
+    tokens: {
+      attemptsRemaining?: Tokens['attemptsRemaining'];
+      created?: Tokens['created'];
+      dos?: Tokens['dos'];
+      email?: Tokens['email'];
+      expiry?: Tokens['expiry'];
+      passCodeHash?: Tokens['passCodeHash'];
+      state?: Tokens['state'];
+      userAgent?: Tokens['userAgent'];
+    },
+    query?: {
+      attemptsRemaining?: Tokens['attemptsRemaining'];
+      created?: Tokens['created'];
+      dos?: Tokens['dos'];
+      email?: Tokens['email'];
+      expiry?: Tokens['expiry'];
+      passCodeHash?: Tokens['passCodeHash'];
+      state?: Tokens['state'];
+      userAgent?: Tokens['userAgent'];
+    },
+  ): Promise<void> {
+    const updateColumns = sql.join(
+      Object.keys(tokens)
+        .sort()
+        .filter(
+          fieldName =>
+            fieldName === 'attemptsRemaining' ||
+            fieldName === 'created' ||
+            fieldName === 'dos' ||
+            fieldName === 'email' ||
+            fieldName === 'expiry' ||
+            fieldName === 'passCodeHash' ||
+            fieldName === 'state' ||
+            fieldName === 'userAgent',
+        )
+        .map(field => sql`${sql.ident(field)} = ${(tokens as any)[field]}`),
+      ', ',
+    );
+
+    if (query === undefined) {
+      return this.db
+        .query(sql`UPDATE "Tokens" SET ${updateColumns} WHERE "id" = ${id}`)
+        .then(noop);
+    }
+    return this.db
+      .query(
+        sql.join(
+          [sql`UPDATE "Tokens" SET ${updateColumns} WHERE "id" = ${id}`].concat(
+            Object.keys(query)
+              .sort()
+              .filter(
+                fieldName =>
+                  fieldName === 'attemptsRemaining' ||
+                  fieldName === 'created' ||
+                  fieldName === 'dos' ||
+                  fieldName === 'email' ||
+                  fieldName === 'expiry' ||
+                  fieldName === 'passCodeHash' ||
+                  fieldName === 'state' ||
+                  fieldName === 'userAgent',
+              )
+              .map(
+                field => sql`${sql.ident(field)} = ${(query as any)[field]}`,
+              ),
+          ),
+          ' AND ',
+        ),
+      )
+      .then(noop);
+  }
+
+  remove(
+    id: Tokens['id'],
+    query?: {
+      attemptsRemaining?: Tokens['attemptsRemaining'];
+      created?: Tokens['created'];
+      dos?: Tokens['dos'];
+      email?: Tokens['email'];
+      expiry?: Tokens['expiry'];
+      passCodeHash?: Tokens['passCodeHash'];
+      state?: Tokens['state'];
+      userAgent?: Tokens['userAgent'];
+    },
+  ): Promise<void> {
+    if (!query) {
+      return this.db
+        .query(sql`DELETE FROM "Tokens" WHERE "id" = ${id}`)
+        .then(noop);
+    }
+    return this.db
+      .query(
+        sql.join(
+          [sql`DELETE FROM "Tokens" WHERE "id" = ${id}`].concat(
+            Object.keys(query)
+              .sort()
+              .filter(
+                fieldName =>
+                  fieldName === 'attemptsRemaining' ||
+                  fieldName === 'created' ||
+                  fieldName === 'dos' ||
+                  fieldName === 'email' ||
+                  fieldName === 'expiry' ||
+                  fieldName === 'passCodeHash' ||
+                  fieldName === 'state' ||
+                  fieldName === 'userAgent',
+              )
+              .map(
+                field => sql`${sql.ident(field)} = ${(query as any)[field]}`,
+              ),
+          ),
+          ' AND ',
+        ),
+      )
+      .then(noop);
+  }
+}
+
+export class UserEmailsAPI extends APIBase {
+  create(userEmails: {
+    email: UserEmails['email'];
+    userID: UserEmails['userID'];
+  }): Promise<UserEmails> {
+    const columns = Object.keys(userEmails)
+      .sort()
+      .filter(name => name === 'email' || name === 'userID')
+      .map(name => ({name, value: (userEmails as any)[name]}));
+    const data = columns.length
+      ? sql`(${sql.join(
+          columns.map(c => sql.ident(c.name)),
+          ',',
+        )}) VALUES (${sql.join(columns.map(c => sql`${c.value}`), ',')})`
+      : sql`DEFAULT VALUES`;
+    let s = sql`INSERT INTO "UserEmails" ${data} RETURNING *;`;
+    return this.db.query(s).then(results => results[0]);
+  }
+
+  where(query: SQLQuery): Promise<UserEmails[]> {
+    return this.db.query(
+      sql.join([sql`SELECT * FROM "UserEmails"`, query], ' WHERE '),
+    );
+  }
+
+  list(query?: Partial<UserEmails>): Promise<UserEmails[]> {
+    if (query === undefined) {
+      return this.db.query(sql`SELECT * FROM "UserEmails"`);
+    }
+    return this.where(
+      sql.join(
+        Object.keys(query)
+          .sort()
+          .filter(fieldName => fieldName === 'email' || fieldName === 'userID')
+          .map(field => sql`${sql.ident(field)} = ${(query as any)[field]}`),
+        ' AND ',
+      ),
+    );
+  }
+
+  get(
+    email: UserEmails['email'],
+    query?: {userID?: UserEmails['userID']},
+  ): Promise<UserEmails | null> {
+    if (query === undefined) {
+      return this.db
+        .query(sql`SELECT * FROM "UserEmails" WHERE "email" = ${email}`)
+        .then(getOneResult);
+    }
+    return this.db
+      .query(
+        sql.join(
+          [sql`SELECT * FROM "UserEmails" WHERE "email" = ${email}`].concat(
+            Object.keys(query)
+              .sort()
+              .filter(fieldName => fieldName === 'userID')
+              .map(
+                field => sql`${sql.ident(field)} = ${(query as any)[field]}`,
+              ),
+          ),
+          ' AND ',
+        ),
+      )
+      .then(getOneResult);
+  }
+
+  update(
+    email: UserEmails['email'],
+    userEmails: {userID?: UserEmails['userID']},
+    query?: {userID?: UserEmails['userID']},
+  ): Promise<void> {
+    const updateColumns = sql.join(
+      Object.keys(userEmails)
+        .sort()
+        .filter(fieldName => fieldName === 'userID')
+        .map(field => sql`${sql.ident(field)} = ${(userEmails as any)[field]}`),
+      ', ',
+    );
+
+    if (query === undefined) {
+      return this.db
+        .query(
+          sql`UPDATE "UserEmails" SET ${updateColumns} WHERE "email" = ${email}`,
+        )
+        .then(noop);
+    }
+    return this.db
+      .query(
+        sql.join(
+          [
+            sql`UPDATE "UserEmails" SET ${updateColumns} WHERE "email" = ${email}`,
+          ].concat(
+            Object.keys(query)
+              .sort()
+              .filter(fieldName => fieldName === 'userID')
+              .map(
+                field => sql`${sql.ident(field)} = ${(query as any)[field]}`,
+              ),
+          ),
+          ' AND ',
+        ),
+      )
+      .then(noop);
+  }
+
+  remove(
+    email: UserEmails['email'],
+    query?: {userID?: UserEmails['userID']},
+  ): Promise<void> {
+    if (!query) {
+      return this.db
+        .query(sql`DELETE FROM "UserEmails" WHERE "email" = ${email}`)
+        .then(noop);
+    }
+    return this.db
+      .query(
+        sql.join(
+          [sql`DELETE FROM "UserEmails" WHERE "email" = ${email}`].concat(
+            Object.keys(query)
+              .sort()
+              .filter(fieldName => fieldName === 'userID')
+              .map(
+                field => sql`${sql.ident(field)} = ${(query as any)[field]}`,
+              ),
+          ),
+          ' AND ',
+        ),
+      )
+      .then(noop);
+  }
+}
+
 export class UsersAPI extends APIBase {
-  create(users: {id?: Users['id']; name: Users['name']}): Promise<Users> {
+  create(users: {
+    id?: Users['id'];
+    name: Users['name'];
+    privateStatus?: Users['privateStatus'];
+    publicStatus?: Users['publicStatus'];
+  }): Promise<Users> {
     const columns = Object.keys(users)
       .sort()
-      .filter(name => name === 'id' || name === 'name')
+      .filter(
+        name =>
+          name === 'id' ||
+          name === 'name' ||
+          name === 'privateStatus' ||
+          name === 'publicStatus',
+      )
       .map(name => ({name, value: (users as any)[name]}));
     const data = columns.length
       ? sql`(${sql.join(
@@ -446,14 +984,27 @@ export class UsersAPI extends APIBase {
       sql.join(
         Object.keys(query)
           .sort()
-          .filter(fieldName => fieldName === 'id' || fieldName === 'name')
+          .filter(
+            fieldName =>
+              fieldName === 'id' ||
+              fieldName === 'name' ||
+              fieldName === 'privateStatus' ||
+              fieldName === 'publicStatus',
+          )
           .map(field => sql`${sql.ident(field)} = ${(query as any)[field]}`),
         ' AND ',
       ),
     );
   }
 
-  get(id: Users['id'], query?: {name?: Users['name']}): Promise<Users | null> {
+  get(
+    id: Users['id'],
+    query?: {
+      name?: Users['name'];
+      privateStatus?: Users['privateStatus'];
+      publicStatus?: Users['publicStatus'];
+    },
+  ): Promise<Users | null> {
     if (query === undefined) {
       return this.db
         .query(sql`SELECT * FROM "Users" WHERE "id" = ${id}`)
@@ -465,7 +1016,12 @@ export class UsersAPI extends APIBase {
           [sql`SELECT * FROM "Users" WHERE "id" = ${id}`].concat(
             Object.keys(query)
               .sort()
-              .filter(fieldName => fieldName === 'name')
+              .filter(
+                fieldName =>
+                  fieldName === 'name' ||
+                  fieldName === 'privateStatus' ||
+                  fieldName === 'publicStatus',
+              )
               .map(
                 field => sql`${sql.ident(field)} = ${(query as any)[field]}`,
               ),
@@ -478,13 +1034,26 @@ export class UsersAPI extends APIBase {
 
   update(
     id: Users['id'],
-    users: {name?: Users['name']},
-    query?: {name?: Users['name']},
+    users: {
+      name?: Users['name'];
+      privateStatus?: Users['privateStatus'];
+      publicStatus?: Users['publicStatus'];
+    },
+    query?: {
+      name?: Users['name'];
+      privateStatus?: Users['privateStatus'];
+      publicStatus?: Users['publicStatus'];
+    },
   ): Promise<void> {
     const updateColumns = sql.join(
       Object.keys(users)
         .sort()
-        .filter(fieldName => fieldName === 'name')
+        .filter(
+          fieldName =>
+            fieldName === 'name' ||
+            fieldName === 'privateStatus' ||
+            fieldName === 'publicStatus',
+        )
         .map(field => sql`${sql.ident(field)} = ${(users as any)[field]}`),
       ', ',
     );
@@ -500,7 +1069,12 @@ export class UsersAPI extends APIBase {
           [sql`UPDATE "Users" SET ${updateColumns} WHERE "id" = ${id}`].concat(
             Object.keys(query)
               .sort()
-              .filter(fieldName => fieldName === 'name')
+              .filter(
+                fieldName =>
+                  fieldName === 'name' ||
+                  fieldName === 'privateStatus' ||
+                  fieldName === 'publicStatus',
+              )
               .map(
                 field => sql`${sql.ident(field)} = ${(query as any)[field]}`,
               ),
@@ -511,7 +1085,14 @@ export class UsersAPI extends APIBase {
       .then(noop);
   }
 
-  remove(id: Users['id'], query?: {name?: Users['name']}): Promise<void> {
+  remove(
+    id: Users['id'],
+    query?: {
+      name?: Users['name'];
+      privateStatus?: Users['privateStatus'];
+      publicStatus?: Users['publicStatus'];
+    },
+  ): Promise<void> {
     if (!query) {
       return this.db
         .query(sql`DELETE FROM "Users" WHERE "id" = ${id}`)
@@ -523,7 +1104,12 @@ export class UsersAPI extends APIBase {
           [sql`DELETE FROM "Users" WHERE "id" = ${id}`].concat(
             Object.keys(query)
               .sort()
-              .filter(fieldName => fieldName === 'name')
+              .filter(
+                fieldName =>
+                  fieldName === 'name' ||
+                  fieldName === 'privateStatus' ||
+                  fieldName === 'publicStatus',
+              )
               .map(
                 field => sql`${sql.ident(field)} = ${(query as any)[field]}`,
               ),
@@ -537,7 +1123,10 @@ export class UsersAPI extends APIBase {
 
 export default class Database extends APIBase {
   private _MopedMigrations: MopedMigrationsAPI | void;
+  private _RateLimitStates: RateLimitStatesAPI | void;
   private _Sessions: SessionsAPI | void;
+  private _Tokens: TokensAPI | void;
+  private _UserEmails: UserEmailsAPI | void;
   private _Users: UsersAPI | void;
 
   get MopedMigrations(): MopedMigrationsAPI {
@@ -547,8 +1136,23 @@ export default class Database extends APIBase {
     );
   }
 
+  get RateLimitStates(): RateLimitStatesAPI {
+    return (
+      this._RateLimitStates ||
+      (this._RateLimitStates = new RateLimitStatesAPI(this.db))
+    );
+  }
+
   get Sessions(): SessionsAPI {
     return this._Sessions || (this._Sessions = new SessionsAPI(this.db));
+  }
+
+  get Tokens(): TokensAPI {
+    return this._Tokens || (this._Tokens = new TokensAPI(this.db));
+  }
+
+  get UserEmails(): UserEmailsAPI {
+    return this._UserEmails || (this._UserEmails = new UserEmailsAPI(this.db));
   }
 
   get Users(): UsersAPI {

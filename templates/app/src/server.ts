@@ -1,4 +1,5 @@
 import express from 'express';
+import {passwordlessMiddleware} from './authentication/passwordless';
 import BicycleServer from './bicycle/server';
 import {
   getBicycleContext,
@@ -21,6 +22,8 @@ app.use((req, res, next) => {
  */
 const bicycle = new BicycleServer();
 app.post('/bicycle', bicycle.createMiddleware(getBicycleContext));
+
+app.use(passwordlessMiddleware);
 
 // place any custom request handlers here (e.g. to serve exports of data as PDFs)
 

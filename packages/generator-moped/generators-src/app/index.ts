@@ -55,7 +55,7 @@ module.exports = class MopedGenerator extends Generator {
 
   writeOutput() {
     this.fs.copyTpl(
-      this.templatePath('env'),
+      this.templatePath('.env'),
       this.destinationPath('.env'),
       this.props,
     );
@@ -81,6 +81,10 @@ module.exports = class MopedGenerator extends Generator {
       this.templatePath('src/client.tsx'),
       this.destinationPath('src/client.tsx'),
     );
+    this.fs.copy(
+      this.templatePath('src/email.ts'),
+      this.destinationPath('src/email.ts'),
+    );
     this.fs.copyTpl(
       this.templatePath('src/index.html'),
       this.destinationPath('src/index.html'),
@@ -98,10 +102,40 @@ module.exports = class MopedGenerator extends Generator {
       this.templatePath('src/server.ts'),
       this.destinationPath('src/server.ts'),
     );
+    mkdirp(this.destinationPath('src/authentication'));
+    this.fs.copy(
+      this.templatePath('src/authentication/passwordless.ts'),
+      this.destinationPath('src/authentication/passwordless.ts'),
+    );
     mkdirp(this.destinationPath('src/bicycle-schema'));
     this.fs.copy(
       this.templatePath('src/bicycle-schema/BicycleContext.ts'),
       this.destinationPath('src/bicycle-schema/BicycleContext.ts'),
+    );
+    this.fs.copy(
+      this.templatePath('src/bicycle-schema/Root.ts'),
+      this.destinationPath('src/bicycle-schema/Root.ts'),
+    );
+    this.fs.copy(
+      this.templatePath('src/bicycle-schema/User.ts'),
+      this.destinationPath('src/bicycle-schema/User.ts'),
+    );
+    mkdirp(this.destinationPath('src/components'));
+    this.fs.copy(
+      this.templatePath('src/components/App.tsx'),
+      this.destinationPath('src/components/App.tsx'),
+    );
+    this.fs.copy(
+      this.templatePath('src/components/Home.tsx'),
+      this.destinationPath('src/components/Home.tsx'),
+    );
+    this.fs.copy(
+      this.templatePath('src/components/LoginPage.tsx'),
+      this.destinationPath('src/components/LoginPage.tsx'),
+    );
+    this.fs.copy(
+      this.templatePath('src/components/ProfilePage.tsx'),
+      this.destinationPath('src/components/ProfilePage.tsx'),
     );
     mkdirp(this.destinationPath('src/db-migrations'));
     this.fs.copy(

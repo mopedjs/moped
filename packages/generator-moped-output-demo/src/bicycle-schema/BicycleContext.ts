@@ -1,9 +1,11 @@
 import Cookie from '@authentication/cookie';
 import {Request, Response} from 'express';
+import * as PasswordlessTypes from '@authentication/passwordless';
 import Session from 'src/db-schema/tables/Sessions';
 import User from 'src/db-schema/tables/Users';
 import DatabaseAPI from 'src/db-schema';
 import db from 'src/db';
+import passwordless, {PasswordlessState} from 'src/authentication/passwordless';
 
 // sid short for Session ID, the session stores info about the currently
 // logged in user.
@@ -17,6 +19,15 @@ export interface Options {
   session?: Session;
   user?: User;
   setUser: (userID: number) => Promise<Session>;
+  logout: (session: Session) => Promise<void>;
+
+  createPasswordlessToken(
+    email: string,
+    state: PasswordlessState,
+  ): Promise<PasswordlessTypes.CreateTokenResult>;
+  verifyPassworldessToken(
+    passCode: string,
+  ): Promise<PasswordlessTypes.VerifyPassCodeResult<PasswordlessState>>;
 }
 
 /**
@@ -30,15 +41,28 @@ export interface Options {
  */
 export default class BicycleContext {
   private _setUser: (userID: number) => Promise<Session>;
+  private _logout: (session: Session) => Promise<void>;
 
   db: DatabaseAPI;
   session?: Session;
   user?: User;
 
+  createPasswordlessToken: (
+    email: string,
+    state: PasswordlessState,
+  ) => Promise<PasswordlessTypes.CreateTokenResult>;
+  verifyPassworldessToken: (
+    passCode: string,
+  ) => Promise<PasswordlessTypes.VerifyPassCodeResult<PasswordlessState>>;
+
   constructor(options: Options) {
+    this._setUser = options.setUser;
+    this._logout = options.logout;
     this.db = options.db;
     this.session = options.session;
     this.user = options.user;
+    this.createPasswordlessToken = options.createPasswordlessToken;
+    this.verifyPassworldessToken = options.verifyPassworldessToken;
   }
 
   async setUser(userID: number): Promise<Session | null> {
@@ -50,6 +74,13 @@ export default class BicycleContext {
       return session;
     }
     return null;
+  }
+  async logout(): Promise<void> {
+    if (this.session) {
+      await this._logout(this.session);
+      this.user = undefined;
+      this.session = undefined;
+    }
   }
 }
 
@@ -83,6 +114,17 @@ export function getBicycleContext(req: Request, res: Response) {
             });
             sessionCookie.set(req, res, session.id);
             return session;
+          },
+          async logout(session: Session) {
+            await db.Sessions.remove(session.id);
+            sessionCookie.remove(req, res);
+          },
+
+          createPasswordlessToken(email: string, state: PasswordlessState) {
+            return passwordless.createToken(req, res, email, state);
+          },
+          verifyPassworldessToken(passCode: string) {
+            return passwordless.verifyPassCode(req, res, {passCode});
           },
         }),
       );

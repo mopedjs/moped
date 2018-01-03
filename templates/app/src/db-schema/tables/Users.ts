@@ -7,4 +7,14 @@ export default interface DbUsers {
    */
   id: number;
   name: string;
+
+  /**
+   * Default Value: ''::text
+   */
+  privateStatus: string;
+
+  /**
+   * Default Value: ''::text
+   */
+  publicStatus: string;
 };

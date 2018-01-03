@@ -1,4 +1,5 @@
 import {Application} from 'express';
+import WebpackDevServer = require('webpack-dev-server');
 import prepareProxy, {ProxyConfig} from './prepareProxy';
 
 const errorOverlayMiddleware = require('react-dev-utils/errorOverlayMiddleware');
@@ -29,14 +30,30 @@ export interface WebpackDevServerConfig {
 }
 export default function createWebpackDevServerConfig(
   options: WebpackDevServerConfig,
-) {
+): WebpackDevServer.Configuration {
+  const proxyHtmlRequests =
+    options.proxyHtmlRequests !== undefined
+      ? options.proxyHtmlRequests
+      : process.env.PROXY_HTML_REQUESTS === 'true';
+  if (
+    options.proxyHtmlRequests === undefined &&
+    process.env.PROXY_HTML_REQUESTS !== undefined &&
+    process.env.PROXY_HTML_REQUESTS !== 'true' &&
+    process.env.PROXY_HTML_REQUESTS !== 'false'
+  ) {
+    throw new Error(
+      'If the PROXY_HTML_REQUESTS environment variable is specified it must be either "true" or "false" but it is set to "' +
+        process.env.PROXY_HTML_REQUESTS +
+        '"',
+    );
+  }
   const protocol =
     options.protocol == null
       ? process.env.HTTPS === 'true' ? 'https' : 'http'
       : options.protocol;
   const host =
     options.host == null ? process.env.HOST || '0.0.0.0' : options.host;
-  return {
+  const config = {
     // WebpackDevServer 2.4.3 introduced a security fix that prevents remote
     // websites from potentially accessing local content through DNS rebinding:
     // https://github.com/webpack/webpack-dev-server/issues/887
@@ -109,7 +126,7 @@ export default function createWebpackDevServerConfig(
     public: options.allowedHost,
     proxy: options.proxy
       ? prepareProxy(options.proxy, {
-          proxyHtmlRequests: options.proxyHtmlRequests,
+          proxyHtmlRequests,
           publicDirectoryName: options.publicDirectoryName,
         })
       : undefined,
@@ -124,4 +141,7 @@ export default function createWebpackDevServerConfig(
       app.use(noopServiceWorkerMiddleware());
     },
   };
+  if (options.proxyHtmlRequests) {
+    (config as any).index = '';
+  }
 }

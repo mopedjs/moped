@@ -28,12 +28,30 @@ export interface Options {
   manifestFileName?: string;
   publicDirectoryName?: string;
   proxyHtmlRequests?: boolean;
+}
+export default function serveAssets(
   requestHandler:
     | AnyRequestHandler
     | {default: AnyRequestHandler}
-    | Promise<AnyRequestHandler | {default: AnyRequestHandler}>;
-}
-export default function serveAssets(options: Options) {
+    | Promise<AnyRequestHandler | {default: AnyRequestHandler}>,
+  options: Options = {},
+) {
+  const proxyHtmlRequests =
+    options.proxyHtmlRequests !== undefined
+      ? options.proxyHtmlRequests
+      : process.env.PROXY_HTML_REQUESTS === 'true';
+  if (
+    options.proxyHtmlRequests === undefined &&
+    process.env.PROXY_HTML_REQUESTS !== undefined &&
+    process.env.PROXY_HTML_REQUESTS !== 'true' &&
+    process.env.PROXY_HTML_REQUESTS !== 'false'
+  ) {
+    throw new Error(
+      'If the PROXY_HTML_REQUESTS environment variable is specified it must be either "true" or "false" but it is set to "' +
+        process.env.PROXY_HTML_REQUESTS +
+        '"',
+    );
+  }
   const manifestFileName =
     options.manifestFileName || 'public/asset-manifest.json';
   const publicDirectoryName = options.publicDirectoryName || 'public';
@@ -92,23 +110,23 @@ export default function serveAssets(options: Options) {
   });
 
   let pendingRequests: PendingRequest[] | null = [];
-  let requestHandler: RequestHandler | null = null;
-  if (typeof options.requestHandler === 'function') {
-    requestHandler = options.requestHandler;
+  let rh: RequestHandler | null = null;
+  if (typeof requestHandler === 'function') {
+    rh = requestHandler;
     pendingRequests = null;
   } else if (
     requestHandler &&
     typeof requestHandler === 'object' &&
     typeof (requestHandler as any).default === 'function'
   ) {
-    requestHandler = (options.requestHandler as any).default;
+    rh = (requestHandler as any).default;
     pendingRequests = null;
   } else {
-    (options.requestHandler as any).then((handler: any) => {
+    (requestHandler as any).then((handler: any) => {
       if (typeof handler === 'function') {
-        requestHandler = handler;
+        rh = handler;
       } else {
-        requestHandler = handler.default;
+        rh = handler.default;
       }
       if (pendingRequests) {
         pendingRequests.forEach(({req, res}) => handler(req, res));
@@ -126,7 +144,7 @@ export default function serveAssets(options: Options) {
     }
     if (
       !(
-        options.proxyHtmlRequests ||
+        proxyHtmlRequests ||
         (req.headers.accept &&
           req.headers.accept.indexOf('text/html') === -1) ||
         (req.url && req.url.substr(0, 4) === '/__/')
@@ -138,8 +156,8 @@ export default function serveAssets(options: Options) {
         return;
       }
     }
-    if (requestHandler) {
-      requestHandler(req, res);
+    if (rh) {
+      rh(req, res);
     } else if (pendingRequests) {
       pendingRequests.push({req, res});
     } else {

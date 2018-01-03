@@ -35,15 +35,15 @@ lsr(__dirname + '/templates', {
       const pkg = JSON.parse(fs.readFileSync(entry.fullPath, 'utf8'));
       pkg.name = '<%= name %>';
       fs.writeFileSync(outputPath, JSON.stringify(pkg, null, '  ') + '\n');
-    }
-    if (/\.env$/.test(entry.path)) {
+    } else if (/\.env$/.test(entry.path)) {
       fs.writeFileSync(
         outputPath,
         fs
           .readFileSync(entry.fullPath, 'utf8')
           .replace(/app\-name/g, '<%= name %>'),
       );
+    } else {
+      fs.writeFileSync(outputPath, fs.readFileSync(entry.fullPath));
     }
-    fs.writeFileSync(outputPath, fs.readFileSync(entry.fullPath));
   }
 });

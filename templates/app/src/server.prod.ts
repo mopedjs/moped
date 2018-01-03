@@ -10,9 +10,7 @@ async function prepareDatabase() {
 }
 
 serve({
-  // if you are doing server side rendering, you should set
-  // proxyHtmlRequests to `true`
-  proxyHtmlRequests: false,
+  proxyHtmlRequests: process.env.PROXY_HTML_REQUESTS === 'true',
   requestHandler: prepareDatabase()
     .then(() => import('./server'))
     .then(server => server.default as any)

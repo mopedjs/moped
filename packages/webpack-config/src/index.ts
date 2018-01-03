@@ -335,6 +335,7 @@ export function getPlugins(
         production: [
           new plugins.Env({
             NODE_ENV: environment,
+            PROXY_HTML_REQUESTS: process.env.PROXY_HTML_REQUESTS || 'false',
             BUILD_PLATFORM: platform,
             TEMPLATE_FILE: relative(
               getOverride(options.buildDirectory, environment, Platform.Server),

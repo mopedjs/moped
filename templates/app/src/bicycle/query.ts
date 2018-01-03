@@ -2,5 +2,9 @@
 // do not edit by hand
 
 import {getType} from 'bicycle/typed-helpers/query';
+import * as QueryTypes from './query-types';
 
 export {getType};
+
+export const Root = new QueryTypes.RootQuery<{}>({});
+export const User = new QueryTypes.UserQuery<{}>({});

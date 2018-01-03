@@ -71,7 +71,6 @@ if (isInteractive) {
         const devServer = createWebpackDevServer(webpackCompiler, {
           allowedHost: hostInfo.lanUrlForConfig,
           proxy: 'http://localhost:' + hostInfo.backendPort,
-          proxyHtmlRequests: true,
           publicDirectoryName: Paths.appPublicDirectory,
         });
         devServer.listen(hostInfo.frontendPort, hostInfo.host, err => {
