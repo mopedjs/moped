@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 import {sync as mkdirp} from 'mkdirp';
-import {basename, resolve} from 'path';
+import {basename} from 'path';
 import Generator = require('yeoman-generator');
 
 interface Props {
@@ -51,7 +51,6 @@ module.exports = class MopedGenerator extends Generator {
       mkdirp(name);
       this.destinationRoot(this.destinationPath(name));
     }
-    this.sourceRoot(resolve(__dirname + '/../../templates/app'));
   }
 
   writeOutput() {
@@ -65,7 +64,7 @@ module.exports = class MopedGenerator extends Generator {
       this.destinationPath('.gitignore'),
     );
     this.fs.copy(
-      this.templatePath('prettierrc'),
+      this.templatePath('.prettierrc'),
       this.destinationPath('.prettierrc'),
     );
     this.fs.copyTpl(
@@ -77,8 +76,9 @@ module.exports = class MopedGenerator extends Generator {
       this.templatePath('tsconfig.json'),
       this.destinationPath('tsconfig.json'),
     );
+    mkdirp(this.destinationPath('src'));
     this.fs.copy(
-      this.templatePath('src/client.tsx.txt'),
+      this.templatePath('src/client.tsx'),
       this.destinationPath('src/client.tsx'),
     );
     this.fs.copyTpl(
@@ -87,31 +87,33 @@ module.exports = class MopedGenerator extends Generator {
       this.props,
     );
     this.fs.copy(
-      this.templatePath('src/server.dev.ts.txt'),
+      this.templatePath('src/server.dev.ts'),
       this.destinationPath('src/server.dev.ts'),
     );
     this.fs.copy(
-      this.templatePath('src/server.prod.ts.txt'),
+      this.templatePath('src/server.prod.ts'),
       this.destinationPath('src/server.prod.ts'),
     );
     this.fs.copy(
-      this.templatePath('src/server.ts.txt'),
+      this.templatePath('src/server.ts'),
       this.destinationPath('src/server.ts'),
     );
+    mkdirp(this.destinationPath('src/bicycle-schema'));
     this.fs.copy(
-      this.templatePath('src/bicycle-schema/BicycleContext.ts.txt'),
+      this.templatePath('src/bicycle-schema/BicycleContext.ts'),
       this.destinationPath('src/bicycle-schema/BicycleContext.ts'),
     );
+    mkdirp(this.destinationPath('src/db-migrations'));
     this.fs.copy(
-      this.templatePath('src/db-migrations/00001-init.ts.txt'),
+      this.templatePath('src/db-migrations/00001-init.ts'),
       this.destinationPath('src/db-migrations/00001-init.ts'),
     );
     this.fs.copy(
-      this.templatePath('src/db-connection.ts.txt'),
+      this.templatePath('src/db-connection.ts'),
       this.destinationPath('src/db-connection.ts'),
     );
     this.fs.copy(
-      this.templatePath('src/db.ts.txt'),
+      this.templatePath('src/db.ts'),
       this.destinationPath('src/db.ts'),
     );
   }

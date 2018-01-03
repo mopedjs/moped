@@ -30,4 +30,4 @@ packages/*/.cache
 packages/*/generators/
 
 .DS_Store
-.env
+*.local
