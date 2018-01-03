@@ -1,17 +1,17 @@
 {
   "name": "generator-moped-output-demo",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "dependencies": {
     "@authentication/cookie": "^0.0.6",
-    "@moped/db-pg-migrations": "^0.0.4",
     "@moped/db-pg": "^0.0.5",
+    "@moped/db-pg-migrations": "^0.0.5",
     "@moped/sql": "^0.0.1",
     "bicycle": "^5.0.0",
     "express": "^4.16.2"
   },
   "devDependencies": {
-    "@moped/scripts": "^0.0.12",
+    "@moped/scripts": "^0.0.13",
     "react": "^16.2.0",
     "react-bicycle": "^3.1.2",
     "react-dom": "^16.2.0",

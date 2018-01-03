@@ -1,6 +1,6 @@
 {
   "name": "generator-moped",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "",
   "files": [
     "generators"
@@ -9,10 +9,10 @@
     "yeoman-generator"
   ],
   "dependencies": {
+    "@types/node": "^8.0.33",
     "chalk": "^2.3.0",
     "mkdirp": "^0.5.1",
-    "yeoman-generator": "^1.0.0",
-    "@types/node": "^8.0.33"
+    "yeoman-generator": "^1.0.0"
   },
   "scripts": {
     "prepublish": "tsc -p tsconfig.build.json"
