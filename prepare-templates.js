@@ -2,7 +2,11 @@ const fs = require('fs');
 const lsr = require('lsr').lsrSync;
 const rimraf = require('rimraf').sync;
 
-lsr(__dirname + '/templates').forEach(entry => {
+lsr(__dirname + '/templates', {
+  filter(entry) {
+    return entry.name !== 'node_modules' && entry.name !== 'yarn.lock';
+  },
+}).forEach(entry => {
   const match = /\.\/([^\/]+)\/?/.exec(entry.path);
   if (!match) {
     return;
@@ -30,7 +34,7 @@ lsr(__dirname + '/templates').forEach(entry => {
     if (/package\.json$/.test(entry.path)) {
       const pkg = JSON.parse(fs.readFileSync(entry.fullPath, 'utf8'));
       pkg.name = '<%= name %>';
-      fs.writeFileSync(outputPath, JSON.strinigfy(pkg, null, '  ') + '\n');
+      fs.writeFileSync(outputPath, JSON.stringify(pkg, null, '  ') + '\n');
     }
     if (/\.env$/.test(entry.path)) {
       fs.writeFileSync(
