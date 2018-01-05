@@ -51,6 +51,7 @@ const plugins: BabelRC = [
       ssr: true,
     },
   ],
+  require.resolve('react-loadable/babel'),
 ];
 
 export default plugins.concat(env !== 'production' ? DevelopmentHelpers : []);

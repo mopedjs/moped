@@ -1,5 +1,8 @@
 import express from 'express';
+import severSideRenderer from '@moped/server-side-render';
+import * as React from 'react';
 import {passwordlessMiddleware} from './authentication/passwordless';
+import App from './components/App';
 import BicycleServer from './bicycle/server';
 import {
   getBicycleContext,
@@ -27,9 +30,21 @@ app.use(passwordlessMiddleware);
 
 // place any custom request handlers here (e.g. to serve exports of data as PDFs)
 
-app.get('*', (req, res, next) => {
-  console.log('hit proxy: ' + req.url);
-  res.sendFile(require('path').resolve('public/index.html'));
-});
+// If you are not doing server side rendering, you can delete this
+// if statement, along with the imports for:
+//  * @moped/server-side-render
+//  * react
+//  * ./components/App
+if (process.env.PROXY_HTML_REQUESTS === 'true') {
+  app.use(
+    severSideRenderer({
+      bicycle,
+      getBicycleContext,
+      render() {
+        return <App />;
+      },
+    }),
+  );
+}
 
 export default app;

@@ -99,8 +99,8 @@ module.exports = class MopedGenerator extends Generator {
       this.destinationPath('src/server.prod.ts'),
     );
     this.fs.copy(
-      this.templatePath('src/server.ts'),
-      this.destinationPath('src/server.ts'),
+      this.templatePath('src/server.tsx'),
+      this.destinationPath('src/server.tsx'),
     );
     mkdirp(this.destinationPath('src/authentication'));
     this.fs.copy(
@@ -150,6 +150,7 @@ module.exports = class MopedGenerator extends Generator {
       this.templatePath('src/db.ts'),
       this.destinationPath('src/db.ts'),
     );
+    mkdirp(this.destinationPath('src/public'));
   }
   async install() {
     await this.yarnInstall();

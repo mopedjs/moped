@@ -1,4 +1,4 @@
-import {relative} from 'path';
+import {relative, resolve} from 'path';
 import * as webpack from 'webpack';
 import {Environment, getEnvironment, Platform, getPlatform} from '@moped/enums';
 import createConfig, {
@@ -275,6 +275,12 @@ export function getPlugins(
           new plugins.HotModuleReplacement(),
           new plugins.CaseSensitivePaths(),
           new plugins.WatchMissingNodeModules(options.appNodeModulesDirectory),
+          new plugins.ReactLoadable({
+            filename: resolve(
+              getOverride(options.buildDirectory, environment, Platform.Server),
+              'react-loadable.json',
+            ),
+          }),
           new plugins.IgnoreMomentLocales(),
         ],
         production: [
@@ -294,6 +300,12 @@ export function getPlugins(
             minify: true,
             // For unknown urls we fall back to rendering this page
             navigateFallback: options.publicUrl + '/index.html',
+          }),
+          new plugins.ReactLoadable({
+            filename: resolve(
+              getOverride(options.buildDirectory, environment, Platform.Server),
+              'react-loadable.json',
+            ),
           }),
           new plugins.IgnoreMomentLocales(),
         ],

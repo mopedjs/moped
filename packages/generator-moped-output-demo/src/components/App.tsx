@@ -1,8 +1,20 @@
 import * as React from 'react';
 import {Switch, Route, Link} from 'react-router-dom';
 import styled from 'styled-components';
-import Home from './Home';
-import ProfilePage from './ProfilePage';
+import loadable from 'react-loadable';
+
+const Home = loadable({
+  loading: () => null,
+  loader: () => import('./Home'),
+});
+const ProfilePage = loadable({
+  loading: () => null,
+  loader: () => import('./ProfilePage'),
+});
+const PageNotFound = loadable({
+  loading: () => null,
+  loader: () => import('./PageNotFound'),
+});
 
 const Nav = styled.nav`
   position: absolute;
@@ -31,6 +43,7 @@ export default function App() {
       <Switch>
         <Route path="/" exact component={Home} />
         <Route path="/profile" exact component={ProfilePage} />
+        <Route component={PageNotFound} />
       </Switch>
     </NavContainer>
   );

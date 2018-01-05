@@ -122,17 +122,23 @@ export default function serveAssets(
     rh = (requestHandler as any).default;
     pendingRequests = null;
   } else {
-    (requestHandler as any).then((handler: any) => {
-      if (typeof handler === 'function') {
-        rh = handler;
-      } else {
-        rh = handler.default;
-      }
-      if (pendingRequests) {
-        pendingRequests.forEach(({req, res}) => handler(req, res));
-        pendingRequests = null;
-      }
-    });
+    (requestHandler as any)
+      .then((handler: any) => {
+        if (typeof handler === 'function') {
+          rh = handler;
+        } else {
+          rh = handler.default;
+        }
+        if (pendingRequests) {
+          pendingRequests.forEach(({req, res}) => handler(req, res));
+          pendingRequests = null;
+        }
+      })
+      .catch((ex: any) => {
+        console.error('Error loading server');
+        console.error(ex.stack || ex.message || ex);
+        process.exit(1);
+      });
   }
   const server = createServer((req, res) => {
     const url = req.url ? req.url.split('?')[0] : undefined;

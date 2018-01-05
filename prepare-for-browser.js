@@ -9,7 +9,11 @@ lsrSync(__dirname + '/packages/' + process.argv[2] + '/lib').forEach(entry => {
       entry.fullPath.replace(/\.jsx$/, '.js'),
       babel.transformFileSync(entry.fullPath, {
         babelrc: false,
-        presets: [require.resolve('./packages/babel-preset/browser')],
+        presets: [
+          process.argv[2] === 'server-side-render'
+            ? require.resolve('./packages/babel-preset/server')
+            : require.resolve('./packages/babel-preset/browser'),
+        ],
       }).code,
     );
     if (/\.jsx$/.test(entry.fullPath)) {

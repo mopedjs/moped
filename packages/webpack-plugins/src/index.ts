@@ -8,6 +8,7 @@ import CurrentWorkingDirectory from './CurrentWorkingDirectory';
 import WatchMissingNodeModulesType from './WatchMissingNodeModulesType';
 import MinifyJs from './MinifyJs';
 import Manifest from './Manifest';
+import ReactLoadable from './ReactLoadable';
 import ServiceWorker from './ServiceWorker';
 import SourceMapSupport from './SourceMapSupport';
 
@@ -23,6 +24,7 @@ export {
   WatchMissingNodeModules,
   MinifyJs,
   Manifest,
+  ReactLoadable,
   ServiceWorker,
   StartServer,
   SourceMapSupport,

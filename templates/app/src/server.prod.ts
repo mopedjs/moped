@@ -11,14 +11,5 @@ async function prepareDatabase() {
 
 // serve immediately binds to a port and begins serving static assets
 // it is ok to take an extra second or two to start the dynamic server
-serve(
-  prepareDatabase()
-    .then(() => import('./server'))
-    .then(server => server.default as any)
-    .catch(ex => {
-      console.error('Error loading server');
-      console.error(ex.stack || ex.message || ex);
-      process.exit(1);
-      throw new Error('Should be unreachable code');
-    }),
-);
+// this allows us to check the databse is properly updated
+serve(prepareDatabase().then(() => import('./server')));
