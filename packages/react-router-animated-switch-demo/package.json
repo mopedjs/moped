@@ -1,14 +1,14 @@
 {
   "name": "@moped/react-router-animated-switch-demo",
   "private": true,
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "dependencies": {
     "@moped/get-host-info": "^0.0.4",
     "@moped/rule-ts": "^0.0.6",
-    "@moped/webpack-dev-server": "^0.0.3",
+    "@moped/webpack-dev-server": "^0.0.4",
     "@types/node": "^8.0.33",
     "@types/react": "*",
     "@types/react-dom": "*",

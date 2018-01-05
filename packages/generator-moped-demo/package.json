@@ -1,13 +1,13 @@
 {
   "name": "@moped/generator-moped-demo",
   "private": true,
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "dependencies": {
     "@types/node": "^8.0.33",
-    "generator-moped": "^0.0.1",
+    "generator-moped": "^0.0.2",
     "yo": "^2.0.0"
   },
   "scripts": {

@@ -1,7 +1,7 @@
 {
   "name": "generator-moped-output-demo",
   "private": true,
-  "version": "0.0.1",
+  "version": "0.0.2",
   "dependencies": {
     "@authentication/cookie": "^0.0.7",
     "@authentication/passwordless": "^0.0.7",
@@ -15,9 +15,9 @@
   },
   "devDependencies": {
     "@authentication/react-passwordless": "^0.0.9",
-    "@moped/scripts": "^0.0.13",
-    "@moped/server-side-render": "^0.0.0",
-    "@moped/status-code": "^0.0.0",
+    "@moped/scripts": "^0.0.14",
+    "@moped/server-side-render": "^0.0.1",
+    "@moped/status-code": "^0.0.1",
     "@types/react-loadable": "^5.3.0",
     "@types/react-router-dom": "^4.2.3",
     "react": "^16.2.0",

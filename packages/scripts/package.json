@@ -1,6 +1,6 @@
 {
   "name": "@moped/scripts",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "description": "",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -10,8 +10,8 @@
     "@moped/env": "^0.1.1",
     "@moped/get-host-info": "^0.0.4",
     "@moped/node-builtins": "^0.0.3",
-    "@moped/webpack-config": "^0.0.8",
-    "@moped/webpack-dev-server": "^0.0.3",
+    "@moped/webpack-config": "^0.0.9",
+    "@moped/webpack-dev-server": "^0.0.4",
     "@types/node": "^8.0.33",
     "chalk": "^2.3.0",
     "fork-ts-checker-webpack-plugin": "^0.2.9",
