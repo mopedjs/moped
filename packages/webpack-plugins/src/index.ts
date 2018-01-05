@@ -4,6 +4,7 @@ import StartServer from '@moped/start-server';
 import Html from './Html';
 import IgnoreMomentLocales from './IgnoreMomentLocales';
 import CaseSensitivePathsType from './CaseSensitivePathsType';
+import CurrentWorkingDirectory from './CurrentWorkingDirectory';
 import WatchMissingNodeModulesType from './WatchMissingNodeModulesType';
 import MinifyJs from './MinifyJs';
 import Manifest from './Manifest';
@@ -18,6 +19,7 @@ export {
   Html,
   IgnoreMomentLocales,
   CaseSensitivePaths,
+  CurrentWorkingDirectory,
   WatchMissingNodeModules,
   MinifyJs,
   Manifest,

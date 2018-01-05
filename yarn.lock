@@ -7610,8 +7610,8 @@ react-dev-utils@^4.1.0, react-dev-utils@^4.2.1:
     text-table "0.2.0"
 
 react-digit-input@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/react-digit-input/-/react-digit-input-1.0.1.tgz#609b85637132581612f224a868629d33c7459e64"
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/react-digit-input/-/react-digit-input-1.1.0.tgz#2f4565d5a330d3c867eb2d7a3a21cb8f41502b65"
   dependencies:
     w3c-keyname "^1.1.7"
 
@@ -8669,7 +8669,7 @@ style-loader@^0.19.0:
     loader-utils "^1.0.2"
     schema-utils "^0.3.0"
 
-styled-components@^2.2.4:
+styled-components@^2.2.4, styled-components@^2.4.0:
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/styled-components/-/styled-components-2.4.0.tgz#086d0fd483d54638837fca3ea546a030b94adf75"
   dependencies:

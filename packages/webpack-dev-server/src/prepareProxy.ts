@@ -89,6 +89,7 @@ export default function prepareProxy(
           return (
             mayProxy(pathname) &&
             (options.proxyHtmlRequests ||
+              pathname.substr(0, 4) === '/__/' ||
               (req.headers.accept &&
                 req.headers.accept.indexOf('text/html') === -1))
           );
@@ -133,6 +134,7 @@ export default function prepareProxy(
           mayProxy(pathname) &&
           pathname.match(context) &&
           (options.proxyHtmlRequests !== false ||
+            pathname.substr(0, 4) === '/__/' ||
             (req.headers.accept &&
               req.headers.accept.indexOf('text/html') === -1))
         );

@@ -27,4 +27,8 @@ app.use(passwordlessMiddleware);
 
 // place any custom request handlers here (e.g. to serve exports of data as PDFs)
 
+app.get('*', (req, res, next) => {
+  res.sendFile('public/index.html');
+});
+
 export default app;

@@ -302,6 +302,7 @@ export function getPlugins(
         development: [
           new plugins.NamedModules(),
           new plugins.CaseSensitivePaths(),
+          new plugins.CurrentWorkingDirectory(),
           new plugins.WatchMissingNodeModules(options.appNodeModulesDirectory),
           new plugins.IgnoreMomentLocales(),
 
@@ -350,6 +351,7 @@ export function getPlugins(
           // Minify the code?
           // new plugins.MinifyJs(),
           new plugins.CaseSensitivePaths(),
+          new plugins.CurrentWorkingDirectory(),
           new plugins.IgnoreMomentLocales(),
           new plugins.SourceMapSupport(),
         ],

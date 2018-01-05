@@ -10,7 +10,8 @@
     "@moped/db-pg-migrations": "^0.0.5",
     "@moped/sql": "^0.0.1",
     "bicycle": "^5.0.0",
-    "express": "^4.16.2"
+    "express": "^4.16.2",
+    "styled-components": "^2.4.0"
   },
   "devDependencies": {
     "@authentication/react-passwordless": "^0.0.9",

@@ -53,7 +53,7 @@ export default function createWebpackDevServerConfig(
       : options.protocol;
   const host =
     options.host == null ? process.env.HOST || '0.0.0.0' : options.host;
-  const config = {
+  const config: WebpackDevServer.Configuration = {
     // WebpackDevServer 2.4.3 introduced a security fix that prevents remote
     // websites from potentially accessing local content through DNS rebinding:
     // https://github.com/webpack/webpack-dev-server/issues/887
@@ -125,10 +125,10 @@ export default function createWebpackDevServerConfig(
     },
     public: options.allowedHost,
     proxy: options.proxy
-      ? prepareProxy(options.proxy, {
+      ? (prepareProxy(options.proxy, {
           proxyHtmlRequests,
           publicDirectoryName: options.publicDirectoryName,
-        })
+        }) as any)
       : undefined,
     setup(app: Application) {
       // This lets us open files from the runtime error overlay.
@@ -141,7 +141,8 @@ export default function createWebpackDevServerConfig(
       app.use(noopServiceWorkerMiddleware());
     },
   };
-  if (options.proxyHtmlRequests) {
+  if (proxyHtmlRequests) {
     (config as any).index = '';
   }
+  return config;
 }

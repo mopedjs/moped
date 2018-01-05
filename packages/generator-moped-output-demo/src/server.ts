@@ -1,4 +1,3 @@
-import {resolve} from 'path';
 import express from 'express';
 import {passwordlessMiddleware} from './authentication/passwordless';
 import BicycleServer from './bicycle/server';
@@ -28,9 +27,9 @@ app.use(passwordlessMiddleware);
 
 // place any custom request handlers here (e.g. to serve exports of data as PDFs)
 
-app.use((req, res, next) => {
-  console.log('server rendered: ' + req.url);
-  res.sendFile(resolve('build/public/index.html'));
+app.get('*', (req, res, next) => {
+  console.log('hit proxy: ' + req.url);
+  res.sendFile(require('path').resolve('public/index.html'));
 });
 
 export default app;

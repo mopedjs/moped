@@ -28,6 +28,8 @@ packages/*/tsconfig.build.json
 packages/*/tsconfig.json
 packages/*/.cache
 packages/*/generators/
+templates/app/.cache
+templates/app/build
 
 .DS_Store
 *.local

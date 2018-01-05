@@ -9,11 +9,10 @@ async function prepareDatabase() {
   await dbMigrations.upAll();
 }
 
-serve({
-  // if you are doing server side rendering, you should set
-  // proxyHtmlRequests to `true`
-  proxyHtmlRequests: false,
-  requestHandler: prepareDatabase()
+// serve immediately binds to a port and begins serving static assets
+// it is ok to take an extra second or two to start the dynamic server
+serve(
+  prepareDatabase()
     .then(() => import('./server'))
     .then(server => server.default as any)
     .catch(ex => {
@@ -22,4 +21,4 @@ serve({
       process.exit(1);
       throw new Error('Should be unreachable code');
     }),
-});
+);
