@@ -126,6 +126,10 @@ module.exports = class MopedGenerator extends Generator {
       this.destinationPath('src/components/App.tsx'),
     );
     this.fs.copy(
+      this.templatePath('src/components/ErrorBoundary.tsx'),
+      this.destinationPath('src/components/ErrorBoundary.tsx'),
+    );
+    this.fs.copy(
       this.templatePath('src/components/Home.tsx'),
       this.destinationPath('src/components/Home.tsx'),
     );

@@ -32,6 +32,10 @@ const WARN_AFTER_BUNDLE_GZIP_SIZE = 512 * 1024; // 512KB
 const WARN_AFTER_CHUNK_GZIP_SIZE = 1024 * 1024; // 1MB
 
 (async () => {
+  // TODO: build migrations bundle
+  // TODO: run migrations?
+  // TODO: build bicycle schema
+
   // First, read the current file sizes in build directory.
   // This lets us display how much they changed later.
   const previousFileSizes = await measureFileSizesBeforeBuild(
