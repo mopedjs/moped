@@ -66,6 +66,11 @@ export default class StartServerPlugin implements webpack.Plugin {
       ...process.env,
       ...(this.options.env || {}),
     };
+    Object.keys(env).forEach(key => {
+      if (env[key] === undefined) {
+        delete env[key];
+      }
+    });
     function start() {
       let restarted = false;
       let restart = () => {

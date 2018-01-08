@@ -7,8 +7,6 @@ import getConfig, {
   SourceKind,
   ExternalMode,
 } from '@moped/webpack-config';
-import pgSchema from '@moped/db-pg-schema';
-import writeSchema from '@moped/db-schema';
 import {prompt} from 'inquirer';
 import * as webpack from 'webpack';
 import chalk from 'chalk';
@@ -133,6 +131,7 @@ async function runMigrations(direction: 'up' | 'down') {
       name: 'answer',
       type: 'list',
       message: 'How many database migrations should you run?',
+      default: direction === 'up' ? 'all' : 'last',
       choices:
         direction === 'up'
           ? [
@@ -255,6 +254,8 @@ async function runMigrations(direction: 'up' | 'down') {
   await generateSchema();
 }
 async function generateSchema() {
+  const {default: pgSchema} = await import('@moped/db-pg-schema');
+  const {default: writeSchema} = await import('@moped/db-schema');
   const schema = await pgSchema();
   await writeSchema(
     schema,
