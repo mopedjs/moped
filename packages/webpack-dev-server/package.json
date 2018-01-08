@@ -11,7 +11,7 @@
     "webpack-dev-server": "^2.9.4"
   },
   "scripts": {
-    "prepublish": "tsc -p tsconfig.build.json"
+    "prepublish": "node ../../prebuild webpack-dev-server&& tsc -p tsconfig.build.json && node ../../prepare webpack-dev-server"
   },
   "repository": "https://github.com/mopedjs/moped/tree/master/packages/webpack-dev-server",
   "license": "MIT",

@@ -9,7 +9,7 @@
     "ansi-to-html": "^0.6.3"
   },
   "scripts": {
-    "prepublish": "tsc -p tsconfig.build.json"
+    "prepublish": "node ../../prebuild start-server&& tsc -p tsconfig.build.json && node ../../prepare start-server"
   },
   "repository": "https://github.com/mopedjs/moped/tree/master/packages/start-server",
   "license": "MIT",

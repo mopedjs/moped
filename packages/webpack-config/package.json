@@ -19,7 +19,7 @@
     "url-loader": "^0.6.2"
   },
   "scripts": {
-    "prepublish": "tsc -p tsconfig.build.json"
+    "prepublish": "node ../../prebuild webpack-config&& tsc -p tsconfig.build.json && node ../../prepare webpack-config"
   },
   "repository": "https://github.com/mopedjs/moped/tree/master/packages/webpack-config",
   "license": "MIT",

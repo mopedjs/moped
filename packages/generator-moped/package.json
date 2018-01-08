@@ -15,7 +15,7 @@
     "yeoman-generator": "^1.0.0"
   },
   "scripts": {
-    "prepublish": "tsc -p tsconfig.build.json"
+    "prepublish": "node ../../prebuild generator-moped&& tsc -p tsconfig.build.json && node ../../prepare generator-moped"
   },
   "repository": "https://github.com/mopedjs/moped/tree/master/packages/generator-moped",
   "license": "MIT",

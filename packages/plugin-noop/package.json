@@ -9,7 +9,7 @@
     "webpack": "^3.10.0"
   },
   "scripts": {
-    "prepublish": "tsc -p tsconfig.build.json"
+    "prepublish": "node ../../prebuild plugin-noop&& tsc -p tsconfig.build.json && node ../../prepare plugin-noop"
   },
   "repository": "https://github.com/mopedjs/moped/tree/master/packages/plugin-noop",
   "license": "MIT",

@@ -10,7 +10,7 @@
     "webpack": "^3.10.0"
   },
   "scripts": {
-    "prepublish": "tsc -p tsconfig.build.json"
+    "prepublish": "node ../../prebuild plugin-env&& tsc -p tsconfig.build.json && node ../../prepare plugin-env"
   },
   "repository": "https://github.com/mopedjs/moped/tree/master/packages/plugin-env",
   "license": "MIT",

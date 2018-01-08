@@ -8,7 +8,7 @@
     "@types/node": "^8.0.33"
   },
   "scripts": {
-    "prepublish": "tsc -p tsconfig.build.json"
+    "prepublish": "node ../../prebuild jest-css&& tsc -p tsconfig.build.json && node ../../prepare jest-css"
   },
   "repository": "https://github.com/mopedjs/moped/tree/master/packages/jest-css",
   "license": "MIT",

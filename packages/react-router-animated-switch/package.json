@@ -10,7 +10,7 @@
     "typescript": "^2.5.3"
   },
   "scripts": {
-    "prepublish": "tsc -p tsconfig.build.json && node ../../prepare-for-browser react-router-animated-switch"
+    "prepublish": "node ../../prebuild react-router-animated-switch&& tsc -p tsconfig.build.json && node ../../prepare react-router-animated-switch"
   },
   "repository": "https://github.com/mopedjs/moped/tree/master/packages/react-router-animated-switch",
   "license": "MIT",

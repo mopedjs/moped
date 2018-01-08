@@ -1,3 +1,5 @@
+// @public
+
 import load from './';
 
 if (

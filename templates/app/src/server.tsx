@@ -1,4 +1,5 @@
-import express from 'express';
+import express, {Request, Response} from 'express';
+import sentry from '@moped/sentry/server';
 import severSideRenderer from '@moped/server-side-render';
 import * as React from 'react';
 import {passwordlessMiddleware} from './authentication/passwordless';
@@ -7,9 +8,20 @@ import BicycleServer from './bicycle/server';
 import {
   getBicycleContext,
   refreshSession,
+  loadSession,
 } from './bicycle-schema/BicycleContext';
 
 const app = express();
+
+// sentry automatically records runtime exceptions for you
+// if you set the SENTRY_DSN environment variable to the URL
+// you get from https://sentry.io
+app.use(
+  sentry.requestHandler(async (req: Request, res: Response) => {
+    const {user} = await loadSession(req, res);
+    return user;
+  }),
+);
 
 app.use((req, res, next) => {
   // Refreshing the session cookie on every request prevents the session
@@ -46,5 +58,7 @@ if (process.env.PROXY_HTML_REQUESTS === 'true') {
     }),
   );
 }
+
+app.use(sentry.errorHandler());
 
 export default app;

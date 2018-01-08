@@ -9,7 +9,7 @@
     "tsconfig": "^7.0.0"
   },
   "scripts": {
-    "prepublish": "tsc -p tsconfig.build.json"
+    "prepublish": "node ../../prebuild load-ts-config&& tsc -p tsconfig.build.json && node ../../prepare load-ts-config"
   },
   "repository": "https://github.com/mopedjs/moped/tree/master/packages/load-ts-config",
   "license": "MIT",

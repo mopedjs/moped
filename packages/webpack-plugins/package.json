@@ -19,7 +19,7 @@
     "webpack-manifest-plugin": "^1.3.2"
   },
   "scripts": {
-    "prepublish": "tsc -p tsconfig.build.json"
+    "prepublish": "node ../../prebuild webpack-plugins&& tsc -p tsconfig.build.json && node ../../prepare webpack-plugins"
   },
   "repository": "https://github.com/mopedjs/moped/tree/master/packages/webpack-plugins",
   "license": "MIT",

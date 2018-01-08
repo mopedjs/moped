@@ -1,3 +1,5 @@
+// @public
+
 import Base from './Base';
 
 const config = {
@@ -22,3 +24,11 @@ const config = {
   ]),
 };
 export default config;
+
+module.exports = config;
+Object.defineProperty(module.exports, 'default', {
+  configurable: false,
+  enumerable: false,
+  writable: false,
+  value: config,
+});

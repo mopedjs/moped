@@ -1,5 +1,7 @@
 // This is the entry point for your server side code when running
 // in production.
+// Loading sentry first ensures errors are always reported
+import '@moped/sentry';
 import serve from '@moped/serve-assets';
 import dbMigrations from './db-migrations/bundle';
 

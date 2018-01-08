@@ -10,7 +10,7 @@
     "@types/node": "^8.0.33"
   },
   "scripts": {
-    "prepublish": "tsc -p tsconfig.build.json"
+    "prepublish": "node ../../prebuild db-pg-schema&& tsc -p tsconfig.build.json && node ../../prepare db-pg-schema"
   },
   "repository": "https://github.com/mopedjs/moped/tree/master/packages/db-pg-schema",
   "license": "MIT",

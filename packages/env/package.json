@@ -9,7 +9,7 @@
     "dotenv": "^4.0.0"
   },
   "scripts": {
-    "prepublish": "tsc -p tsconfig.build.json"
+    "prepublish": "node ../../prebuild env&& tsc -p tsconfig.build.json && node ../../prepare env"
   },
   "repository": "https://github.com/mopedjs/moped/tree/master/packages/env",
   "license": "MIT",

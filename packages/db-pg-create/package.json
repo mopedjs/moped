@@ -14,7 +14,7 @@
     "dotenv": "^4.0.0"
   },
   "scripts": {
-    "prepublish": "tsc -p tsconfig.build.json"
+    "prepublish": "node ../../prebuild db-pg-create&& tsc -p tsconfig.build.json && node ../../prepare db-pg-create"
   },
   "bin": {
     "moped-db-pg-create": "./lib/cli.js"

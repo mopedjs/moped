@@ -17,7 +17,7 @@
     "tsconfig": "^7.0.0"
   },
   "scripts": {
-    "prepublish": "tsc -p tsconfig.build.json"
+    "prepublish": "node ../../prebuild rule-ts&& tsc -p tsconfig.build.json && node ../../prepare rule-ts"
   },
   "repository": "https://github.com/mopedjs/moped/tree/master/packages/rule-ts",
   "license": "MIT",

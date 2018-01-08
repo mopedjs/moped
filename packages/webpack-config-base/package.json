@@ -9,7 +9,7 @@
     "react-dev-utils": "^4.2.1"
   },
   "scripts": {
-    "prepublish": "tsc -p tsconfig.build.json"
+    "prepublish": "node ../../prebuild webpack-config-base&& tsc -p tsconfig.build.json && node ../../prepare webpack-config-base"
   },
   "repository": "https://github.com/mopedjs/moped/tree/master/packages/webpack-config-base",
   "license": "MIT",

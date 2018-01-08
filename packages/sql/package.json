@@ -9,7 +9,7 @@
     "pg-sql": "^1.1.0"
   },
   "scripts": {
-    "prepublish": "tsc -p tsconfig.build.json"
+    "prepublish": "node ../../prebuild sql&& tsc -p tsconfig.build.json && node ../../prepare sql"
   },
   "repository": "https://github.com/mopedjs/moped/tree/master/packages/sql",
   "license": "MIT",

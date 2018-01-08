@@ -272,6 +272,20 @@
     ts-node "^3.3.0"
     webpack "^3.10.0"
 
+"@moped/server-side-render@^0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@moped/server-side-render/-/server-side-render-0.0.1.tgz#d8f568b8d2821f68ae73b924b40ce3e972bb60d0"
+  dependencies:
+    "@types/express" "^4.11.0"
+    "@types/node" "^8.0.33"
+    "@types/react-loadable" "^5.3.0"
+    "@types/react-router-dom" "^4.2.3"
+    bicycle "^6.0.0"
+    js-stringify "^1.0.2"
+    react-bicycle "^3.1.2"
+    react-loadable "^5.3.1"
+    react-router-dom "^4.2.2"
+
 "@moped/sql@^0.0.1":
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/@moped/sql/-/sql-0.0.1.tgz#54213caef7f3eab7cb834a3127a64cce3af4e5f9"
@@ -285,6 +299,12 @@
   dependencies:
     "@types/node" "^8.0.33"
     ansi-to-html "^0.6.3"
+
+"@moped/status-code@^0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@moped/status-code/-/status-code-0.0.1.tgz#44f57562783c5c795cf3c33902cc67559be0e4a9"
+  dependencies:
+    "@types/node" "^8.0.33"
 
 "@moped/webpack-config-base@^0.0.6":
   version "0.0.6"
@@ -425,7 +445,7 @@
   dependencies:
     "@types/node" "*"
 
-"@types/express@*", "@types/express@^4.0.36", "@types/express@^4.0.39":
+"@types/express@*", "@types/express@^4.0.36", "@types/express@^4.0.39", "@types/express@^4.11.0":
   version "4.11.0"
   resolved "https://registry.yarnpkg.com/@types/express/-/express-4.11.0.tgz#234d65280af917cb290634b7a8d6bcac24aecbad"
   dependencies:
@@ -518,6 +538,12 @@
 "@types/qs@^6.2.31":
   version "6.5.1"
   resolved "https://registry.yarnpkg.com/@types/qs/-/qs-6.5.1.tgz#a38f69c62528d56ba7bd1f91335a8004988d72f7"
+
+"@types/react-loadable@^5.3.0":
+  version "5.3.0"
+  resolved "https://registry.yarnpkg.com/@types/react-loadable/-/react-loadable-5.3.0.tgz#1f69b24d0b4569eb45e90dafa568972b07b36d16"
+  dependencies:
+    "@types/react" "*"
 
 "@types/react-router-dom@^4.2.3":
   version "4.2.3"
@@ -1528,9 +1554,9 @@ bicycle@^4.0.1:
     then-request "^4.1.0"
     throat "^3.0.0"
 
-bicycle@^5.0.0:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/bicycle/-/bicycle-5.0.0.tgz#76d8cc95576fcb0d144008fac040cbfdfd6c9d18"
+bicycle@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/bicycle/-/bicycle-6.0.0.tgz#0f4c7fa0b68667fd0b9a6d8a66ab4c48d9e8b71f"
   dependencies:
     "@types/body-parser" "^1.16.4"
     "@types/deep-freeze" "^0.1.1"
@@ -3894,6 +3920,10 @@ js-string-escape@1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/js-string-escape/-/js-string-escape-1.0.1.tgz#e2625badbc0d67c7533e9edc1068c587ae4137ef"
 
+js-stringify@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/js-stringify/-/js-stringify-1.0.2.tgz#1736fddfd9724f28a3682adc6230ae7e4e9679db"
+
 js-tokens@^3.0.0, js-tokens@^3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/js-tokens/-/js-tokens-3.0.2.tgz#9866df395102130e38f7f996bceb65443209c25b"
@@ -5397,7 +5427,7 @@ promisify-call@^2.0.2:
   dependencies:
     with-callback "^1.0.2"
 
-prop-types@^15.5.10, prop-types@^15.5.4, prop-types@^15.6.0:
+prop-types@^15.5.0, prop-types@^15.5.10, prop-types@^15.5.4, prop-types@^15.6.0:
   version "15.6.0"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.6.0.tgz#ceaf083022fc46b4a35f69e13ef75aed0d639856"
   dependencies:
@@ -5510,6 +5540,10 @@ range-parser@^1.0.3, range-parser@~1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/range-parser/-/range-parser-1.2.0.tgz#f49be6b487894ddc40dcc94a322f611092e00d5e"
 
+raven-js@^3.21.0:
+  version "3.21.0"
+  resolved "https://registry.yarnpkg.com/raven-js/-/raven-js-3.21.0.tgz#609236eb0ec30faf696b552f842a80b426be6258"
+
 raw-body@2.3.2, raw-body@^2.2.0:
   version "2.3.2"
   resolved "https://registry.yarnpkg.com/raw-body/-/raw-body-2.3.2.tgz#bcd60c77d3eb93cde0050295c3f379389bc88f89"
@@ -5577,6 +5611,12 @@ react-dom@^16.2.0:
 react-error-overlay@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/react-error-overlay/-/react-error-overlay-3.0.0.tgz#c2bc8f4d91f1375b3dad6d75265d51cd5eeaf655"
+
+react-loadable@^5.3.1:
+  version "5.3.1"
+  resolved "https://registry.yarnpkg.com/react-loadable/-/react-loadable-5.3.1.tgz#9699e9a08fed49bacd69caaa282034b62a76bcdd"
+  dependencies:
+    prop-types "^15.5.0"
 
 react-router-dom@^4.2.2:
   version "4.2.2"

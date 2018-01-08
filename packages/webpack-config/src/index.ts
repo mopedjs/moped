@@ -261,11 +261,16 @@ export function getPlugins(
           //   logger: tsLogger,
           //   formatter: 'codeframe',
           // }),
-          new plugins.Env({
-            ...process.env,
-            BUILD_PLATFORM: platform,
-            PUBLIC_URL: options.publicUrl,
-          }),
+          new plugins.Env(
+            {
+              ...process.env,
+              BUILD_PLATFORM: platform,
+              PUBLIC_URL: options.publicUrl,
+              SERVER_SENTRY_DSN: undefined,
+              SENTRY_DSN: undefined,
+            },
+            {voidOtherEnvironmentVariables: true},
+          ),
           new plugins.Html({
             alwaysWriteToDisk: true,
             outputFileName: 'index.html',
@@ -284,11 +289,17 @@ export function getPlugins(
           new plugins.IgnoreMomentLocales(),
         ],
         production: [
-          new plugins.Env({
-            ...process.env,
-            BUILD_PLATFORM: platform,
-            PUBLIC_URL: options.publicUrl,
-          }),
+          new plugins.Env(
+            {
+              ...process.env,
+              BUILD_PLATFORM: platform,
+              PUBLIC_URL: options.publicUrl,
+              SERVER_SENTRY_DSN: undefined,
+              SENTRY_DSN:
+                process.env.CLIENT_SENTRY_DSN || process.env.SENTRY_DSN,
+            },
+            {voidOtherEnvironmentVariables: true},
+          ),
           new plugins.Html({
             outputFileName: 'index.html',
             templateFileName: options.htmlTemplateFileName,
@@ -340,6 +351,8 @@ export function getPlugins(
                         Platform.Client,
                       ) + '/index.html',
                     PUBLIC_URL: options.publicUrl,
+                    SENTRY_DSN: undefined,
+                    SERVER_SENTRY_DSN: undefined,
                   },
                 }),
               ]

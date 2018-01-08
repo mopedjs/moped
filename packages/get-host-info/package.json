@@ -10,7 +10,7 @@
     "react-dev-utils": "^4.1.0"
   },
   "scripts": {
-    "prepublish": "tsc -p tsconfig.build.json"
+    "prepublish": "node ../../prebuild get-host-info&& tsc -p tsconfig.build.json && node ../../prepare get-host-info"
   },
   "repository": "https://github.com/mopedjs/moped/tree/master/packages/get-host-info",
   "license": "MIT",

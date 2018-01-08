@@ -12,7 +12,7 @@
     "mkdirp": "^0.5.1"
   },
   "scripts": {
-    "prepublish": "tsc -p tsconfig.build.json"
+    "prepublish": "node ../../prebuild db-schema&& tsc -p tsconfig.build.json && node ../../prepare db-schema"
   },
   "repository": "https://github.com/mopedjs/moped/tree/master/packages/db-schema",
   "license": "MIT",

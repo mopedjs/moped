@@ -75,12 +75,11 @@ readdirSync(__dirname + '/packages').forEach(directory => {
   }
   pkg.dependencies['@types/node'] = dependencies['@types/node'];
   if (!/\-demo$/.test(directory)) {
-    pkg.scripts.prepublish = 'tsc -p tsconfig.build.json';
-    if (pkg['@moped/target'] === 'browser') {
-      pkg.scripts.prepublish =
-        'tsc -p tsconfig.build.json && node ../../prepare-for-browser ' +
-        directory;
-    }
+    pkg.scripts.prepublish =
+      'node ../../prebuild ' +
+      directory +
+      '&& tsc -p tsconfig.build.json && node ../../prepare ' +
+      directory;
   }
 
   pkg.repository =

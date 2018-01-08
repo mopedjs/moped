@@ -97,9 +97,7 @@ export default class BicycleContext {
 export function getBicycleContext(req: Request, res: Response) {
   return <T>(fn: (context: BicycleContext) => Promise<T>): Promise<T> =>
     db.task(async db => {
-      const sid = sessionCookie.get(req, res);
-      const session = sid == null ? null : await db.Sessions.get(sid);
-      const user = session == null ? null : await db.Users.get(session.userID);
+      const {session, user} = await loadSession(req, res, db);
       return await fn(
         new BicycleContext({
           db,
@@ -143,4 +141,15 @@ export function refreshSession(req: Request, res: Response) {
       console.warn('Failed to update lastSeen for session, ' + sid);
     });
   }
+}
+
+export async function loadSession(
+  req: Request,
+  res: Response,
+  database: DatabaseAPI = db,
+) {
+  const sid = sessionCookie.get(req, res);
+  const session = sid == null ? null : await db.Sessions.get(sid);
+  const user = session == null ? null : await db.Users.get(session.userID);
+  return {session, user};
 }

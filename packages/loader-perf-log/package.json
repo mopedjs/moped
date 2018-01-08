@@ -9,7 +9,7 @@
     "@types/webpack": "*"
   },
   "scripts": {
-    "prepublish": "tsc -p tsconfig.build.json"
+    "prepublish": "node ../../prebuild loader-perf-log&& tsc -p tsconfig.build.json && node ../../prepare loader-perf-log"
   },
   "repository": "https://github.com/mopedjs/moped/tree/master/packages/loader-perf-log",
   "license": "MIT",

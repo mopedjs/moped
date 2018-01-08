@@ -1,3 +1,5 @@
+// Loading sentry first ensures errors are always reported
+import '@moped/sentry';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import {BrowserRouter} from 'react-router-dom';
@@ -47,4 +49,11 @@ if ((module as any).hot) {
       document.getElementById('root'),
     );
   });
+}
+
+if (process.env.NODE_ENV === 'foo') {
+  console.log('Hello Code Elimination 1');
+}
+if (process.env.NOT_SPECIFIED_I_REALLY_REALLY_THINK !== undefined) {
+  console.log('Hello Code Elimination 2');
 }

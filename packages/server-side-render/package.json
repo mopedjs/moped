@@ -16,12 +16,12 @@
     "react-router-dom": "^4.2.2"
   },
   "scripts": {
-    "prepublish": "tsc -p tsconfig.build.json && node ../../prepare-for-browser server-side-render"
+    "prepublish": "node ../../prebuild server-side-render&& tsc -p tsconfig.build.json && node ../../prepare server-side-render"
   },
   "repository": "https://github.com/mopedjs/moped/tree/master/packages/server-side-render",
   "license": "MIT",
   "publishConfig": {
     "access": "public"
   },
-  "@moped/target": "browser"
+  "@moped/target": "server"
 }

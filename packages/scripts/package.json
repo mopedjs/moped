@@ -22,7 +22,7 @@
     "webpack": "^3.10.0"
   },
   "scripts": {
-    "prepublish": "tsc -p tsconfig.build.json"
+    "prepublish": "node ../../prebuild scripts&& tsc -p tsconfig.build.json && node ../../prepare scripts"
   },
   "bin": {
     "moped": "./lib/index.js"

@@ -9,7 +9,7 @@
     "prepare-response": "^2.1.0"
   },
   "scripts": {
-    "prepublish": "tsc -p tsconfig.build.json"
+    "prepublish": "node ../../prebuild serve-assets&& tsc -p tsconfig.build.json && node ../../prepare serve-assets"
   },
   "repository": "https://github.com/mopedjs/moped/tree/master/packages/serve-assets",
   "license": "MIT",

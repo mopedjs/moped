@@ -1,3 +1,5 @@
+// @public
+
 import {createHash} from 'crypto';
 import {createServer, IncomingMessage, ServerResponse} from 'http';
 import HotClient from './HotClient';
@@ -104,9 +106,7 @@ function handleRequest(req: IncomingMessage, res: ServerResponse) {
                 }
               }
             };        
-            xhr.open('POST', '/__/moped/start-server/ok/${
-              errorHashString
-            }', true);
+            xhr.open('POST', '/__/moped/start-server/ok/${errorHashString}', true);
             xhr.send('poll');
           }
           poll();
@@ -125,3 +125,6 @@ function handleRequest(req: IncomingMessage, res: ServerResponse) {
     requestHandler(req, res);
   }
 }
+
+module.exports = setServer;
+module.exports.default = setServer;
