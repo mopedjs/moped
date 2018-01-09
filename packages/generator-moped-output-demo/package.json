@@ -31,7 +31,7 @@
     "ts-bicycle": "^3.0.2"
   },
   "scripts": {
-    "postinstall": "moped db create && moped db up all && yarn bicycle",
+    "_postinstall": "moped db create && moped db up all && yarn bicycle",
     "precommit": "lint-staged",
     "bicycle": "ts-bicycle src/bicycle-schema src/bicycle",
     "start": "yarn bicycle && moped start",

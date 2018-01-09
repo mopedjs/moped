@@ -1,0 +1,1175 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`moped-generator 1`] = `
+"DIRECTORY: ./name-x
+FILE: ./name-x/.env
+
+# We use a local postgres database in development
+DATABASE_URL=\\"postgres://name-x@localhost/name-x\\"
+
+# If you are doing server sider rendering, you may want
+# to proxy html requests. If PROXY_HTML_REQUESTS is set
+# to \\"false\\", all GET requests where the path does not
+# start with \`/__/\` will be served the \\"index.html\\" file.
+PROXY_HTML_REQUESTS=\\"true\\"
+
+FILE: ./name-x/.gitignore
+
+# See https://help.github.com/ignore-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+
+# testing
+/coverage
+
+# production
+/build
+
+# misc
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+
+FILE: ./name-x/.prettierrc
+
+{
+  \\"bracketSpacing\\": false,
+  \\"singleQuote\\": true,
+  \\"trailingComma\\": \\"all\\"
+}
+
+
+FILE: ./name-x/package.json
+
+{
+  \\"name\\": \\"name-x\\",
+  \\"private\\": true,
+  \\"version\\": \\"0.0.0\\",
+  \\"dependencies\\": {
+    \\"@authentication/cookie\\": \\"^0.0.7\\",
+    \\"@authentication/passwordless\\": \\"^0.0.7\\",
+    \\"@authentication/send-message\\": \\"^0.0.1\\",
+    \\"@moped/db-pg\\": \\"^0.0.6\\",
+    \\"@moped/db-pg-migrations\\": \\"^0.0.6\\",
+    \\"@moped/sentry\\": \\"^0.0.1\\",
+    \\"@moped/sql\\": \\"^0.0.2\\",
+    \\"bicycle\\": \\"^6.0.0\\",
+    \\"express\\": \\"^4.16.2\\",
+    \\"styled-components\\": \\"^2.4.0\\"
+  },
+  \\"devDependencies\\": {
+    \\"@authentication/react-passwordless\\": \\"^0.0.9\\",
+    \\"@moped/server-side-render\\": \\"^0.0.2\\",
+    \\"@moped/status-code\\": \\"^0.0.2\\",
+    \\"@types/react-loadable\\": \\"^5.3.0\\",
+    \\"@types/react-router-dom\\": \\"^4.2.3\\",
+    \\"husky\\": \\"^0.14.3\\",
+    \\"moped\\": \\"^0.7.1\\",
+    \\"prettier\\": \\"^1.9.2\\",
+    \\"react\\": \\"^16.2.0\\",
+    \\"react-bicycle\\": \\"^3.1.2\\",
+    \\"react-dom\\": \\"^16.2.0\\",
+    \\"react-loadable\\": \\"^5.3.1\\",
+    \\"react-router-dom\\": \\"^4.2.2\\",
+    \\"ts-bicycle\\": \\"^3.0.2\\"
+  },
+  \\"scripts\\": {
+    \\"postinstall\\": \\"moped db create && moped db up all && yarn bicycle\\",
+    \\"precommit\\": \\"lint-staged\\",
+    \\"bicycle\\": \\"ts-bicycle src/bicycle-schema src/bicycle\\",
+    \\"start\\": \\"yarn bicycle && moped start\\",
+    \\"build\\": \\"yarn bicycle && moped build\\",
+    \\"db\\": \\"moped db\\"
+  },
+  \\"lint-staged\\": {
+    \\"*.tsx\\": [
+      \\"prettier --write\\",
+      \\"git add\\"
+    ]
+  }
+}
+
+
+DIRECTORY: ./name-x/src
+FILE: ./name-x/tsconfig.json
+
+{
+  \\"compilerOptions\\": {
+    \\"allowSyntheticDefaultImports\\": true,
+    \\"baseUrl\\": \\"\\",
+    \\"preserveConstEnums\\": true,
+    \\"target\\": \\"esnext\\",
+    \\"module\\": \\"esnext\\",
+    \\"moduleResolution\\": \\"node\\",
+    \\"declaration\\": false,
+    \\"paths\\": {
+      \\"src/*\\": [
+        \\"src/*\\"
+      ]
+    },
+    \\"pretty\\": true,
+    \\"rootDir\\": \\"src\\",
+    \\"sourceMap\\": true,
+    \\"suppressImplicitAnyIndexErrors\\": true,
+    \\"strict\\": true,
+    \\"noUnusedLocals\\": true,
+    \\"noUnusedParameters\\": false,
+    \\"noImplicitReturns\\": true,
+    \\"noFallthroughCasesInSwitch\\": true,
+    \\"jsx\\": \\"preserve\\",
+    \\"lib\\": [
+      \\"dom\\",
+      \\"es2015\\",
+      \\"es2016\\",
+      \\"es2017\\"
+    ]
+  }
+}
+
+DIRECTORY: ./name-x/src/authentication
+DIRECTORY: ./name-x/src/bicycle-schema
+FILE: ./name-x/src/client.tsx
+
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
+import {BrowserRouter} from 'react-router-dom';
+import {Provider as BicycleProvider} from 'react-bicycle';
+import Loadable from 'react-loadable';
+import BicycleClient from 'src/bicycle/client';
+import App from './components/App';
+
+const SERVER_SIDE_RENDERING = (window as any).SERVER_SIDE_RENDERING === true;
+
+const bicycle = new BicycleClient();
+
+// You can define some global optimistic updaters here:
+// bicycle.defineOptimisticUpdaters(OptimisticUpdaters);
+
+// You can debug the internal state by inspecting BICYCLE_CLIENT on the console
+(window as any).BICYCLE_CLIENT = bicycle;
+
+function render(AppComponent: typeof App) {
+  return (
+    <BicycleProvider client={bicycle}>
+      <BrowserRouter>
+        <AppComponent />
+      </BrowserRouter>
+    </BicycleProvider>
+  );
+}
+
+// If you are not using server side rendering, you can delete
+// the \\"if\\" condition here and just always do:
+//
+// ReactDOM.render(render(App), document.getElementById('root'));
+
+if (SERVER_SIDE_RENDERING) {
+  (window as any).main = async () => {
+    await Loadable.preloadReady();
+    ReactDOM.hydrate(render(App), document.getElementById('root'));
+  };
+} else {
+  ReactDOM.render(render(App), document.getElementById('root'));
+}
+
+if ((module as any).hot) {
+  (module as any).hot.accept('./components/App', () => {
+    ReactDOM.render(
+      render(require('./components/App').default),
+      document.getElementById('root'),
+    );
+  });
+}
+
+
+DIRECTORY: ./name-x/src/components
+FILE: ./name-x/src/db-connection.ts
+
+import connect from '@moped/db-pg';
+
+export default connect();
+
+
+DIRECTORY: ./name-x/src/db-migrations
+FILE: ./name-x/src/db.ts
+
+import connection from './db-connection';
+import DatabaseAPI from './db-schema';
+
+export default new DatabaseAPI(connection);
+
+
+FILE: ./name-x/src/email.ts
+
+import getTransport from '@authentication/send-message';
+
+/**
+ * The transport provides methods for sending e-mails.
+ *
+ * See: https://www.atauthentication.com/docs/send-message.html
+ */
+export default getTransport();
+
+
+FILE: ./name-x/src/index.html
+
+<!doctype html>
+<html lang=\\"en\\">
+
+<head>
+  <meta charset=\\"utf-8\\">
+  <meta name=\\"viewport\\" content=\\"width=device-width, initial-scale=1, shrink-to-fit=no\\">
+  <meta name=\\"theme-color\\" content=\\"#000000\\">
+  <!--
+      manifest.json provides metadata used when your web app is added to the
+      homescreen on Android. See https://developers.google.com/web/fundamentals/engage-and-retain/web-app-manifest/
+    -->
+  <link rel=\\"manifest\\" href=\\"%PUBLIC_URL%/manifest.json\\">
+  <link rel=\\"shortcut icon\\" href=\\"%PUBLIC_URL%/favicon.ico\\">
+  <!--
+      Notice the use of %PUBLIC_URL% in the tags above.
+      It will be replaced with the URL of the \`public\` folder during the build.
+      Only files inside the \`public\` folder can be referenced from the HTML.
+      Unlike \\"/favicon.ico\\" or \\"favicon.ico\\", \\"%PUBLIC_URL%/favicon.ico\\" will
+      work correctly both with client-side routing and a non-root public URL.
+      Learn how to configure a non-root public URL by running \`npm run build\`.
+    -->
+  <title>
+    name-x
+  </title>
+  <!--!STYLE_TAGS-->
+</head>
+
+<body>
+  <noscript>
+    You need to enable JavaScript to run this app.
+  </noscript>
+  <div id=\\"root\\">
+    <!--!LOADING-->
+  </div>
+  <!--
+      This HTML file is a template.
+      If you open it directly in the browser, you will see an empty page.
+      You can add webfonts, meta tags, or analytics to this file.
+      The build step will place the bundled scripts into the <body> tag.
+      To begin the development, run \`npm start\` or \`yarn start\`.
+      To create a production bundle, use \`npm run build\` or \`yarn build\`.
+    -->
+</body>
+
+</html>
+
+DIRECTORY: ./name-x/src/public
+FILE: ./name-x/src/server.dev.ts
+
+// This file is the entry point for your server side code when running
+// in development mode. It hot reloads your server for you
+
+import setServer from '@moped/start-server/dev-server';
+
+setServer(require('./server').default);
+
+if ((module as any).hot) {
+  (module as any).hot.accept('./server', () => {
+    setServer(require('./server').default);
+  });
+}
+
+
+FILE: ./name-x/src/server.prod.ts
+
+// This is the entry point for your server side code when running
+// in production.
+// Loading sentry first ensures errors are always reported
+import '@moped/sentry';
+import serve from '@moped/serve-assets';
+import dbMigrations from './db-migrations/bundle';
+
+async function prepareDatabase() {
+  // If you need to update the database schema, you can do so
+  // here before your application has actually started
+  await dbMigrations.upAll();
+}
+
+// serve immediately binds to a port and begins serving static assets
+// it is ok to take an extra second or two to start the dynamic server
+// this allows us to check the databse is properly updated
+serve(prepareDatabase().then(() => import('./server')));
+
+
+FILE: ./name-x/src/server.tsx
+
+import express, {Request, Response} from 'express';
+import sentry from '@moped/sentry/server';
+import severSideRenderer from '@moped/server-side-render';
+import * as React from 'react';
+import {passwordlessMiddleware} from './authentication/passwordless';
+import App from './components/App';
+import BicycleServer from './bicycle/server';
+import {
+  getBicycleContext,
+  refreshSession,
+  loadSession,
+} from './bicycle-schema/BicycleContext';
+
+const app = express();
+
+// sentry automatically records runtime exceptions for you
+// if you set the SENTRY_DSN environment variable to the URL
+// you get from https://sentry.io
+app.use(
+  sentry.requestHandler(async (req: Request, res: Response) => {
+    const {user} = await loadSession(req, res);
+    return user;
+  }),
+);
+
+app.use((req, res, next) => {
+  // Refreshing the session cookie on every request prevents the session
+  // expiring, providing the user visits the site regularly.
+  refreshSession(req, res);
+  next();
+});
+
+// place any custom middleware here, before bicycle
+
+/**
+ * Bicycle is a typed data fetching library for node.js / React
+ */
+const bicycle = new BicycleServer();
+app.post('/bicycle', bicycle.createMiddleware(getBicycleContext));
+
+app.use(passwordlessMiddleware);
+
+// place any custom request handlers here (e.g. to serve exports of data as PDFs)
+
+// If you are not doing server side rendering, you can delete this
+// if statement, along with the imports for:
+//  * @moped/server-side-render
+//  * react
+//  * ./components/App
+if (process.env.PROXY_HTML_REQUESTS === 'true') {
+  app.use(
+    severSideRenderer({
+      bicycle,
+      getBicycleContext,
+      render() {
+        return <App />;
+      },
+    }),
+  );
+}
+
+app.use(sentry.errorHandler());
+
+export default app;
+
+
+FILE: ./name-x/src/authentication/passwordless.ts
+
+import Passwordless, {
+  VerifyPassCodeStatusKind,
+} from '@authentication/passwordless';
+import {Router} from 'express';
+import db from 'src/db';
+import DatabaseAPI from 'src/db-schema';
+import {getBicycleContext} from 'src/bicycle-schema/BicycleContext';
+
+export interface PasswordlessState {
+  redirectURL: string;
+}
+
+export function findOrCreateUser(email: string, database: DatabaseAPI = db) {
+  return database.tx(async db => {
+    const existingRecord = await db.UserEmails.get(email);
+    if (existingRecord) {
+      return existingRecord;
+    }
+    const user = await db.Users.create({
+      name: email.split('@')[0],
+    });
+    return await db.UserEmails.create({
+      email,
+      userID: user.id,
+    });
+  });
+}
+
+const passwordless = new Passwordless<PasswordlessState>({
+  // we use the \`/__/\` prefix to bypass service workers
+  callbackURL: '/__/auth/verify-email',
+  store: {
+    tx(fn) {
+      return db.tx(connection =>
+        fn({
+          // tokens:
+
+          async saveToken(token) {
+            const t = await connection.Tokens.create({
+              attemptsRemaining: token.attemptsRemaining,
+              created: token.created,
+              dos: token.dos,
+              email: token.userID,
+              expiry: token.expiry,
+              passCodeHash: token.passCodeHash,
+              state: JSON.stringify(token.state) || '',
+              userAgent: token.userAgent,
+            });
+            return \`\${t.id}\`;
+          },
+          async loadToken(tokenID: string) {
+            const token = await connection.Tokens.get(parseInt(tokenID, 10));
+            if (!token) {
+              return null;
+            }
+            return {
+              attemptsRemaining: token.attemptsRemaining,
+              created: token.created,
+              dos: token.dos,
+              userID: token.email,
+              expiry: token.expiry,
+              passCodeHash: token.passCodeHash,
+              state: token.state ? JSON.parse(token.state) : undefined,
+              userAgent: token.userAgent,
+            };
+          },
+          async updateToken(tokenID, token) {
+            await connection.Tokens.update(parseInt(tokenID, 10), {
+              attemptsRemaining: token.attemptsRemaining,
+              created: token.created,
+              dos: token.dos,
+              email: token.userID,
+              expiry: token.expiry,
+              passCodeHash: token.passCodeHash,
+              state: JSON.stringify(token.state) || '',
+              userAgent: token.userAgent,
+            });
+          },
+          async removeToken(tokenID) {
+            await connection.Tokens.remove(parseInt(tokenID, 10));
+          },
+
+          // rate limits:
+
+          async saveRateLimit(id, state) {
+            if (await connection.RateLimitStates.get(id)) {
+              await connection.RateLimitStates.update(id, state);
+            } else {
+              await connection.RateLimitStates.create({id, ...state});
+            }
+          },
+          async loadRateLimit(id) {
+            return await connection.RateLimitStates.get(id);
+          },
+          async removeRateLimit(id) {
+            return await connection.RateLimitStates.remove(id);
+          },
+        }),
+      );
+    },
+  },
+});
+export default passwordless;
+
+export const passwordlessMiddleware = Router();
+passwordlessMiddleware.get(
+  passwordless.callbackPath,
+  async (req, res, next) => {
+    try {
+      const result = await passwordless.verifyPassCode(req, res);
+      if (result.verified) {
+        const {userID: email, state} = result;
+        await getBicycleContext(req, res)(async ctx => {
+          const emailRecord = await findOrCreateUser(email, ctx.db);
+          await ctx.setUser(emailRecord.userID);
+        });
+        res.redirect(state.redirectURL);
+      } else {
+        const {status} = result;
+        switch (status.kind) {
+          case VerifyPassCodeStatusKind.ExpiredToken:
+            // This error code is picked up by react-passwordless
+            // it is important that this redirect goes to a page with
+            // a login form
+            res.redirect('/?err=EXPIRED_TOKEN');
+            break;
+          default:
+            throw new Error(status.message);
+        }
+      }
+    } catch (ex) {
+      next(ex);
+    }
+  },
+);
+
+
+FILE: ./name-x/src/bicycle-schema/BicycleContext.ts
+
+import Cookie from '@authentication/cookie';
+import {Request, Response} from 'express';
+import * as PasswordlessTypes from '@authentication/passwordless';
+import Session from 'src/db-schema/tables/Sessions';
+import User from 'src/db-schema/tables/Users';
+import DatabaseAPI from 'src/db-schema';
+import db from 'src/db';
+import passwordless, {PasswordlessState} from 'src/authentication/passwordless';
+
+// sid short for Session ID, the session stores info about the currently
+// logged in user.
+// \`number\` is the type of the session ID.
+// maxAge, 1 month says that people should remain logged in for up to 1 month
+// after they last visited your site.
+const sessionCookie = new Cookie<number>('sid', {maxAge: '30 days'});
+
+export interface Options {
+  db: DatabaseAPI;
+  session?: Session;
+  user?: User;
+  setUser: (userID: number) => Promise<Session>;
+  logout: (session: Session) => Promise<void>;
+
+  createPasswordlessToken(
+    email: string,
+    state: PasswordlessState,
+  ): Promise<PasswordlessTypes.CreateTokenResult>;
+  verifyPassworldessToken(
+    passCode: string,
+  ): Promise<PasswordlessTypes.VerifyPassCodeResult<PasswordlessState>>;
+}
+
+/**
+ * Bicycle Context is used to track the context of a bicycle query/mutation
+ * It should contain information about the currently authenticated user, a
+ * way to change the currently authenticated user, and a database connection
+ * to be used throughout the query/mutation.
+ *
+ * It should not be possible for a malicious user to call arbitrary methods
+ * on this class.
+ */
+export default class BicycleContext {
+  private _setUser: (userID: number) => Promise<Session>;
+  private _logout: (session: Session) => Promise<void>;
+
+  db: DatabaseAPI;
+  session?: Session;
+  user?: User;
+
+  createPasswordlessToken: (
+    email: string,
+    state: PasswordlessState,
+  ) => Promise<PasswordlessTypes.CreateTokenResult>;
+  verifyPassworldessToken: (
+    passCode: string,
+  ) => Promise<PasswordlessTypes.VerifyPassCodeResult<PasswordlessState>>;
+
+  constructor(options: Options) {
+    this._setUser = options.setUser;
+    this._logout = options.logout;
+    this.db = options.db;
+    this.session = options.session;
+    this.user = options.user;
+    this.createPasswordlessToken = options.createPasswordlessToken;
+    this.verifyPassworldessToken = options.verifyPassworldessToken;
+  }
+
+  async setUser(userID: number): Promise<Session | null> {
+    const user = await this.db.Users.get(userID);
+    if (user) {
+      const session = await this._setUser(userID);
+      this.user = user;
+      this.session = session;
+      return session;
+    }
+    return null;
+  }
+  async logout(): Promise<void> {
+    if (this.session) {
+      await this._logout(this.session);
+      this.user = undefined;
+      this.session = undefined;
+    }
+  }
+}
+
+/**
+ * This method gets the default bicycle context used in all web requests.
+ * It is responsible for handling reading and writing the session data from
+ * the cookie.
+ *
+ * We intentionally don't pass the \`req\` and \`res\` into the \`BicycleContext\`
+ * class in case we want to re-use our bicycle schema outside of the context
+ * of a web request. In this case we wouldn't have an \`req\` and \`res to pass
+ * in.
+ */
+export function getBicycleContext(req: Request, res: Response) {
+  return <T>(fn: (context: BicycleContext) => Promise<T>): Promise<T> =>
+    db.task(async db => {
+      const {session, user} = await loadSession(req, res, db);
+      return await fn(
+        new BicycleContext({
+          db,
+          session: session || undefined,
+          user: user || undefined,
+          async setUser(userID) {
+            const session = await db.Sessions.create({
+              created: new Date(),
+              lastSeen: new Date(),
+              userID,
+              userAgent: '' + req.headers['user-agent'] || null,
+            });
+            sessionCookie.set(req, res, session.id);
+            return session;
+          },
+          async logout(session: Session) {
+            await db.Sessions.remove(session.id);
+            sessionCookie.remove(req, res);
+          },
+
+          createPasswordlessToken(email: string, state: PasswordlessState) {
+            return passwordless.createToken(req, res, email, state);
+          },
+          verifyPassworldessToken(passCode: string) {
+            return passwordless.verifyPassCode(req, res, {passCode});
+          },
+        }),
+      );
+    });
+}
+
+export function refreshSession(req: Request, res: Response) {
+  sessionCookie.refresh(req, res);
+  const sid = sessionCookie.get(req, res);
+  if (sid !== null) {
+    db.Sessions.update(sid, {
+      lastSeen: new Date(),
+    }).catch(ex => {
+      // we intentionally do not crash or wait for \`lastSeen\` to update
+      // as it is not super important
+      console.warn('Failed to update lastSeen for session, ' + sid);
+    });
+  }
+}
+
+export async function loadSession(
+  req: Request,
+  res: Response,
+  database: DatabaseAPI = db,
+) {
+  const sid = sessionCookie.get(req, res);
+  const session = sid == null ? null : await db.Sessions.get(sid);
+  const user = session == null ? null : await db.Users.get(session.userID);
+  return {session, user};
+}
+
+
+FILE: ./name-x/src/bicycle-schema/Root.ts
+
+import BaseObject from 'bicycle/BaseObject';
+import BicycleContext from './BicycleContext';
+import User from './User';
+
+/**
+ * All bicycle queries start at this, special, root object.
+ * It must be called \\"Root\\" or bicycle will not recognise it as
+ * the root object.
+ */
+export default class Root extends BaseObject<{}> {
+  // $auth defines which properties methods are exposed to users
+  $auth = {
+    // public allows all users, including un-authenticated users,
+    // to call a method/query a field
+    public: ['user', 'users'],
+  };
+  user(args: void, ctx: BicycleContext): User | null {
+    if (ctx.user) {
+      // we wrap the datbase user in a bicycle \\"User\\" object to
+      // expose it to queries
+      return new User(ctx.user);
+    }
+    return null;
+  }
+  async users(args: void, ctx: BicycleContext): Promise<User[]> {
+    const users = await ctx.db.Users.list();
+    // we wrap users in the bicycle \\"User\\" object to expose
+    // only the public properties to queries
+    return users
+      .sort((a, b) => (a.name < b.name ? 1 : -1))
+      .map(user => new User(user));
+  }
+}
+
+
+FILE: ./name-x/src/bicycle-schema/User.ts
+
+import BaseObject from 'bicycle/BaseObject';
+import * as tables from 'src/db-schema/tables';
+import * as passwordlessTypes from '@authentication/passwordless/types';
+import {
+  PasswordlessState,
+  findOrCreateUser,
+} from 'src/authentication/passwordless';
+import mailTransport from 'src/email';
+import BicycleContext from './BicycleContext';
+
+export default class User extends BaseObject<tables.Users> {
+  // $auth defines which properties methods are exposed to users
+  $auth = {
+    // public allows all users, including un-authenticated users,
+    // to call a method/query a field
+    public: ['id', 'name', 'publicStatus'],
+    // isOwnUser only allows users to query the field if $isOwnUser
+    // returns \`true\` (or a Promise that resolves to \`true\`)
+    isOwnUser: ['privateStatus'],
+  };
+  $isOwnUser(args: any, context: BicycleContext): boolean {
+    return context.user != null && context.user.id === this.data.id;
+  }
+
+  // Static APIs are used for updates/mutations
+  // static $auth defines which mutations are exposed to users
+  static $auth = {
+    public: ['createPasswordlessToken', 'verifyPasswordlessToken'],
+    // isAuthenticated only allows users to query the field if $isAuthenticated
+    // returns \`true\` (or a Promise that resolves to \`true\`)
+    isAuthenticated: [
+      'setName',
+      'setPublicStatus',
+      'setPrivateStatus',
+      'logout',
+    ],
+  };
+  static $isAuthenticated(args: any, ctx: BicycleContext): boolean {
+    return ctx.user != null;
+  }
+  static async setName(status: string, ctx: BicycleContext) {
+    await ctx.db.Users.update(ctx.user!.id, {
+      name: status,
+    });
+  }
+  static async setPublicStatus(status: string, ctx: BicycleContext) {
+    await ctx.db.Users.update(ctx.user!.id, {
+      publicStatus: status,
+    });
+  }
+  static async setPrivateStatus(status: string, ctx: BicycleContext) {
+    await ctx.db.Users.update(ctx.user!.id, {
+      privateStatus: status,
+    });
+  }
+
+  static async logout(args: void, ctx: BicycleContext) {
+    await ctx.logout();
+  }
+  static async createPasswordlessToken(
+    {email, state}: {email: string; state: PasswordlessState},
+    ctx: BicycleContext,
+  ): Promise<passwordlessTypes.CreateTokenStatus> {
+    const result = await ctx.createPasswordlessToken(email, state);
+    if (result.created) {
+      const {magicLink, passCode} = result;
+      await mailTransport.sendMail({
+        from: 'noreply@example.com',
+        to: email,
+        subject: 'Confirm your e-mail',
+        text:
+          'Thank your for signing in to ' +
+          magicLink.hostname +
+          '. Please enter the following code into the box provided:\\\\n\\\\n  ' +
+          passCode +
+          '\\\\n\\\\nor click this \\"magic\\" link:\\\\n\\\\n  ' +
+          magicLink.href,
+        html: \`
+        <p>
+          Thank your for signing in to
+          <a href=\\"\${magicLink.href}\\">\${magicLink.hostname}</a>.
+          Please enter the following code into the box provided:
+        </p>
+        <p style=\\"font-size: 40px; font-weight: bold; margin: 20px;\\">
+          \${passCode}
+        </p>
+        <p>or click:</p>
+        <a
+          style=\\"display:inline-block;background:blue;font-size:40px;font-weight:bold;margin:20px;padding:20px;border-radius:4px;color:white;text-decoration:none;\\"
+          href=\\"\${magicLink.href}\\"
+        >
+          Magic Link
+        </a>
+      \`,
+      });
+    }
+    return result.status;
+  }
+  static async verifyPasswordlessToken(
+    passCode: string,
+    ctx: BicycleContext,
+  ): Promise<passwordlessTypes.VerifyPassCodeStatus> {
+    const result = await ctx.verifyPassworldessToken(passCode);
+    if (result.verified) {
+      const email = result.userID;
+      const emailRecord = await findOrCreateUser(email, ctx.db);
+      await ctx.setUser(emailRecord.userID);
+    }
+    return result.status;
+  }
+}
+
+
+FILE: ./name-x/src/components/App.tsx
+
+import * as React from 'react';
+import {Switch, Route, Link} from 'react-router-dom';
+import styled from 'styled-components';
+import loadable from 'react-loadable';
+import ErrorBoundary from './ErrorBoundary';
+
+const Home = loadable({
+  loading: () => null,
+  loader: () => import('./Home'),
+});
+const ProfilePage = loadable({
+  loading: () => null,
+  loader: () => import('./ProfilePage'),
+});
+const PageNotFound = loadable({
+  loading: () => null,
+  loader: () => import('./PageNotFound'),
+});
+
+const Nav = styled.nav\`
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  background: darkblue;
+\`;
+const NavLink = styled(Link)\`
+  display: inline-block;
+  text-decoration: none;
+  padding: 1em;
+  color: white;
+\`;
+const NavContainer = styled.div\`
+  padding-top: 50px;
+\`;
+
+export default function App() {
+  return (
+    <NavContainer>
+      <Nav>
+        <NavLink to=\\"/\\">Home</NavLink>
+        <NavLink to=\\"/profile\\">Profile</NavLink>
+      </Nav>
+      <ErrorBoundary>
+        <Switch>
+          <Route path=\\"/\\" exact component={Home} />
+          <Route path=\\"/profile\\" exact component={ProfilePage} />
+          <Route component={PageNotFound} />
+        </Switch>
+      </ErrorBoundary>
+    </NavContainer>
+  );
+}
+
+
+FILE: ./name-x/src/components/ErrorBoundary.tsx
+
+import * as React from 'react';
+import sentry from '@moped/sentry';
+import styled from 'styled-components';
+
+const ReportButton = styled.button\`
+  border: none;
+  border-radius: 0;
+  font: inherit;
+  text-align: inherit;
+  background: red;
+  color: white;
+  padding: 1em;
+  margin: 0;
+\`;
+const ErrorPane = styled.div\`
+  background: red;
+  color: white;
+  padding: 1em;
+  margin: 0;
+\`;
+
+interface State {
+  error: null | Error;
+  errorInfo: null | React.ErrorInfo;
+}
+/**
+ * The error boundary component lets us catch all errors caused by rendering
+ * further down the tree, and render a more meaningful error.
+ */
+export default class ErrorBoundary extends React.Component {
+  state: State = {error: null, errorInfo: null};
+
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    this.setState({error, errorInfo});
+    sentry.captureException(error, {extra: errorInfo});
+  }
+
+  render() {
+    if (this.state.error) {
+      //render fallback UI
+      if (sentry.enabled) {
+        // If sentry is enabled, we can offer the option of reporting
+        // the error with more info. We can also reasure the user that
+        // the error has already been recorded.
+        return (
+          <ReportButton
+            type=\\"button\\"
+            onClick={() => sentry.showReportDialog && sentry.showReportDialog()}
+          >
+            <p>We're sorry — something's gone wrong.</p>
+            <p>Our team has been notified, but click here fill out a report.</p>
+            <p>
+              You could try refreshing the page, which may fix this problem.
+            </p>
+          </ReportButton>
+        );
+      } else if (process.env.NODE_ENV === 'development') {
+        return (
+          <ErrorPane>
+            <pre>
+              {this.state.errorInfo
+                ? this.state.errorInfo.componentStack + '\\\\n\\\\n'
+                : ''}
+              {this.state.error.stack ||
+                this.state.error.message ||
+                this.state.error}
+            </pre>
+          </ErrorPane>
+        );
+      } else {
+        // Without sentry (or some other alternative) we won't get notified of
+        // the error, but it is still important to at least give a suggestion
+        // for something that might fix the problem.
+        return (
+          <ErrorPane>
+            <p>We're sorry — something's gone wrong.</p>
+            <p>
+              You could try refreshing the page, which may fix this problem.
+            </p>
+          </ErrorPane>
+        );
+      }
+    }
+    //when there's not an error, render children untouched
+    return this.props.children;
+  }
+}
+
+
+FILE: ./name-x/src/components/Home.tsx
+
+import * as React from 'react';
+import {query} from 'react-bicycle';
+import * as q from 'src/bicycle/query';
+
+export const ProfilePageQuery = q.User.id.name.privateStatus.publicStatus;
+
+export default function Home() {
+  return query(q.Root.users(q.User.id.name.publicStatus), ({users}) => (
+    <ul>
+      {users.map(user => (
+        <li key={user.id}>
+          <strong>{user.name}</strong> - {user.publicStatus}
+        </li>
+      ))}
+    </ul>
+  ));
+}
+
+
+FILE: ./name-x/src/components/LoginPage.tsx
+
+import * as React from 'react';
+import {BicycleClient} from 'react-bicycle';
+import Passwordless from '@authentication/react-passwordless';
+import * as q from 'src/bicycle/query';
+
+export interface LoginPageProps {
+  client: BicycleClient;
+}
+export default class LoginPage extends React.Component<LoginPageProps> {
+  render() {
+    return (
+      <Passwordless
+        createToken={email =>
+          this.props.client.update(
+            q.User.createPasswordlessToken({
+              email,
+              state: {redirectURL: location.href},
+            }),
+          )
+        }
+        verifyPassCode={passCode =>
+          this.props.client.update(q.User.verifyPasswordlessToken(passCode))
+        }
+        onPassCodeVerified={() => {
+          // we don't need to do anything because the bicycle query in App will
+          // automatically update to hide this form once the verifyPasswordlessToken
+          // mutation returns
+        }}
+      />
+    );
+  }
+}
+
+
+FILE: ./name-x/src/components/ProfilePage.tsx
+
+import * as React from 'react';
+import {query, BicycleClient} from 'react-bicycle';
+import * as q from 'src/bicycle/query';
+import LoginPage from './LoginPage';
+
+export const ProfilePageQuery = q.User.id.name.privateStatus.publicStatus;
+
+export interface ProfilePageProps {
+  user: typeof ProfilePageQuery.$type;
+  client: BicycleClient;
+}
+export function ProfilePage({user, client}: ProfilePageProps) {
+  return (
+    <React.Fragment>
+      <button type=\\"button\\" onClick={() => client.update(q.User.logout())}>
+        Logout
+      </button>
+      <br />
+      <label>
+        Name
+        <input
+          type=\\"text\\"
+          value={user.name}
+          onChange={e => {
+            client.update(
+              q.User.setName(e.target.value, (mutation, cache) => {
+                cache
+                  .getObject('User', \`\${user.id}\`)
+                  .set('name', mutation.args);
+              }),
+            );
+          }}
+        />
+      </label>
+      <p>Your name is visible to everyone</p>
+      <label>
+        Public Status
+        <textarea
+          value={user.publicStatus}
+          onChange={e => {
+            client.update(
+              q.User.setPublicStatus(e.target.value, (mutation, cache) => {
+                cache
+                  .getObject('User', \`\${user.id}\`)
+                  .set('publicStatus', mutation.args);
+              }),
+            );
+          }}
+        />
+      </label>
+      <p>Your public status is visible to everyone</p>
+      <label>
+        Private Status
+        <textarea
+          value={user.privateStatus}
+          onChange={e => {
+            client.update(
+              q.User.setPrivateStatus(e.target.value, (mutation, cache) => {
+                cache
+                  .getObject('User', \`\${user.id}\`)
+                  .set('privateStatus', mutation.args);
+              }),
+            );
+          }}
+        />
+      </label>
+      <p>Your private status is only visible to you</p>
+    </React.Fragment>
+  );
+}
+
+export default function ProfilePageWithLogin() {
+  return query(q.Root.user(ProfilePageQuery), ({user}, client) => {
+    if (!user) {
+      return <LoginPage client={client} />;
+    }
+    return <ProfilePage user={user} client={client} />;
+  });
+}
+
+
+FILE: ./name-x/src/db-migrations/00001-init.ts
+
+import {Connection, sql} from '@moped/db-pg-migrations';
+
+export async function up(db: Connection) {
+  await db.query(sql\`
+    CREATE TABLE \\"Users\\" (
+      \\"id\\" BIGSERIAL NOT NULL PRIMARY KEY,
+      \\"name\\" TEXT NOT NULL,
+      \\"publicStatus\\" TEXT NOT NULL DEFAULT '',
+      \\"privateStatus\\" TEXT NOT NULL DEFAULT ''
+    );
+    CREATE TABLE \\"UserEmails\\" (
+      \\"email\\" TEXT NOT NULL PRIMARY KEY,
+      \\"userID\\" BIGINT NOT NULL
+    );
+
+    CREATE TABLE \\"Sessions\\" (
+      \\"id\\" BIGSERIAL NOT NULL PRIMARY KEY,
+      \\"userID\\" BIGINT NOT NULL,
+      \\"created\\" TIMESTAMP NOT NULL,
+      \\"lastSeen\\" TIMESTAMP NOT NULL,
+      \\"userAgent\\" TEXT
+    );
+    COMMENT ON COLUMN \\"Sessions\\".\\"userID\\" IS 'The user account that is logged in.';
+    COMMENT ON COLUMN \\"Sessions\\".\\"created\\" IS 'The time that the user logged in.';
+    COMMENT ON COLUMN \\"Sessions\\".\\"lastSeen\\" IS 'The time that the user last accessed the web site.';
+    COMMENT ON COLUMN \\"Sessions\\".\\"userAgent\\" IS 'The user agent of the browser this session is associated with.';
+
+    -- Tokens store temporary secure tokens used to verify e-mail addresses 
+    CREATE TABLE \\"Tokens\\" (
+      \\"id\\" BIGSERIAL NOT NULL PRIMARY KEY,
+      \\"email\\" TEXT NOT NULL,
+      \\"dos\\" TEXT NOT NULL,
+      \\"passCodeHash\\" TEXT NOT NULL,
+      \\"attemptsRemaining\\" BIGINT NOT NULL,
+      \\"created\\" BIGINT NOT NULL,
+      \\"expiry\\" BIGINT NOT NULL,
+      \\"userAgent\\" TEXT NOT NULL,
+      \\"state\\" TEXT NOT NULL
+    );
+    -- Rate limit states are used to rate limit various actions such as password
+    -- resets
+    CREATE TABLE \\"RateLimitStates\\" (
+      \\"id\\" TEXT NOT NULL PRIMARY KEY,
+      \\"value\\" BIGINT NOT NULL,
+      \\"timestamp\\" BIGINT NOT NULL
+    );
+  \`);
+}
+export async function down(db: Connection) {
+  await db.query(sql\`
+    DROP TABLE \\"Users\\";
+    DROP TABLE \\"UserEmails\\";
+    DROP TABLE \\"Sessions\\";
+    DROP TABLE \\"Tokens\\";
+    DROP TABLE \\"RateLimitStates\\";
+  \`);
+}
+
+"
+`;

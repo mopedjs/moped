@@ -383,7 +383,10 @@ export default async function generate(
           const importStatement = Object.keys(overriddenColumns).length
             ? 'import * as overrides from ' +
               JSON.stringify(
-                relative('/tables/', overrides || '').replace(/\.tsx?$/, ''),
+                relative(directory + '/tables/', overrides || '').replace(
+                  /\.tsx?$/,
+                  '',
+                ),
               ) +
               ';\n\n'
             : '';

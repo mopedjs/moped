@@ -1,0 +1,9 @@
+language: node_js
+
+node_js:
+  - "8"
+
+# Use faster Docker architecture on Travis.
+sudo: false
+
+script: yarn build:all && yarn test

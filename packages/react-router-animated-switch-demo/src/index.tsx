@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import styled from 'styled-components';
 import {BrowserRouter, Route, Link} from 'react-router-dom';
-import Switch from '@moped/react-router-animated-switch';
+import Switch from 'react-router-animated-switch';
 import ArticleA from './ArticleA';
 import ArticleB from './ArticleB';
 import ArticleC from './ArticleC';

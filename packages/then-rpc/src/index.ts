@@ -16,11 +16,8 @@ export interface Options<
   ) => Promise<TInitResult> | TInitResult;
   poolSize?: number;
 }
-export default class TypedWorker<
-  TModule,
-  TInitContext = void,
-  TInitResult = TModule
-> {
+
+export class TypedWorker<TModule, TInitContext = void, TInitResult = TModule> {
   private _pool: WorkerPool;
   constructor(options: Options<TModule, TInitContext, TInitResult>) {
     this._pool = new WorkerPool(WORKER_FILE, {
@@ -62,3 +59,39 @@ export default class TypedWorker<
     return this._pool.dispose();
   }
 }
+
+export class JestWorker<TModule, TInitContext = void, TInitResult = TModule> {
+  private _worker: Promise<TInitResult>;
+  constructor(options: Options<TModule, TInitContext, TInitResult>) {
+    let mod: Promise<TModule> = options.load
+      ? options.load()
+      : import(options.filename);
+    this._worker = mod.then(m => {
+      return options.init ? options.init(m, options.initContext!) : (m as any);
+    });
+  }
+  async run<TContext, TResult>(
+    context: TContext,
+    fn: (mod: TInitResult, context: TContext) => Promise<TResult> | TResult,
+  ): Promise<TResult> {
+    const worker = await this._worker;
+    return Promise.resolve(
+      new Function('mod,ctx', 'return (' + fn.toString() + ')(mod, ctx);')(
+        worker,
+        context,
+      ),
+    );
+  }
+  setPoolSize(size: number) {
+    return Promise.resolve();
+  }
+  dispose() {
+    return Promise.resolve();
+  }
+}
+
+if (typeof jest !== 'undefined') {
+  (TypedWorker as any) = JestWorker;
+}
+
+export default TypedWorker;

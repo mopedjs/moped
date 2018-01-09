@@ -4,15 +4,21 @@ const rimraf = require('rimraf').sync;
 
 lsr(__dirname + '/templates', {
   filter(entry) {
-    return entry.name !== 'node_modules' && entry.name !== 'yarn.lock';
+    return (
+      entry.name !== 'node_modules' &&
+      entry.name !== 'yarn.lock' &&
+      entry.name !== '.cache' &&
+      entry.name !== 'build' &&
+      entry.name !== 'yarn-error.lock'
+    );
   },
 }).forEach(entry => {
-  const match = /\.\/([^\/]+)\/?/.exec(entry.path);
+  const match = /^\.\/([^\/]+)\/?/.exec(entry.path);
   if (!match) {
     return;
   }
   const name = match[1];
-  const localPath = entry.path.replace(/\.\/[^\/]+\/?/, '');
+  const localPath = entry.path.replace(/^\.\/[^\/]+\/?/, '');
   const outputPath =
     __dirname +
     '/packages/generator-moped/generators/' +

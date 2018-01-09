@@ -15,7 +15,10 @@
     "yeoman-generator": "^1.0.0"
   },
   "scripts": {
-    "prepublish": "node ../../prebuild generator-moped&& tsc -p tsconfig.build.json && node ../../prepare generator-moped"
+    "prepublish": "node ../../prebuild generator-moped&& tsc -p tsconfig.build.json && node ../../prepare generator-moped",
+    "pretest": "node restore-postinstall",
+    "test": "cd ../generator-moped-output-demo && yarn db down all && cd ../ && yo moped generator-moped-output-demo --force",
+    "posttest": "node clear-postinstall"
   },
   "repository": "https://github.com/mopedjs/moped/tree/master/packages/generator-moped",
   "license": "MIT",
@@ -29,8 +32,12 @@
     "@authentication/cookie": "^0.0.4",
     "@moped/db-pg": "^0.0.6",
     "@types/chalk": "^2.2.0",
+    "@types/fs-extra": "^5.0.0",
     "@types/node": "^8.0.33",
     "@types/yeoman-generator": "^2.0.0",
-    "bicycle": "^4.5.0"
+    "@types/yeoman-test": "^1.7.3",
+    "bicycle": "^4.5.0",
+    "fs-extra": "^5.0.0",
+    "yeoman-test": "^1.7.0"
   }
 }

@@ -9,10 +9,11 @@
     "build": "git add . && lerna run prepublish --since master && node prepare-templates",
     "build:all": "lerna run prepublish && node prepare-templates",
     "postrelease": "node version-preserve",
-    "prerelease": "yarn build:all && node version-restore",
+    "prerelease": "node build-generator && yarn build:all && node version-restore",
     "prettier": "prettier --write \"packages/*/src/**/*.{ts,tsx}\"",
     "release": "lerna publish",
-    "test": "jest && lerna run test --parallel",
+    "test": "yarn jest && lerna run test --parallel",
+    "jest": "jest --forceExit",
     "watch:jest": "jest --watch",
     "clean": "rimraf packages/*/lib && rimraf packages/*/build && rimraf packages/*/node_modules && rimraf node_modules"
   },
@@ -25,20 +26,26 @@
     "@types/rimraf": "^2.0.2",
     "@types/webpack": "*",
     "babel-core": "^6.26.0",
-    "jest": "^21.2.1",
+    "jest": "^22.0.5",
     "lerna": "^2.4.0",
     "lsr": "^2.0.0",
     "prettier": "^1.8.2",
     "rimraf": "^2.6.2",
-    "ts-jest": "^21.1.4",
-    "typescript": "^2.5.3"
+    "ts-jest": "^22.0.1",
+    "typescript": "^2.5.3",
+    "weak": "^1.0.1"
   },
   "jest": {
+    "globals": {
+      "ts-jest": {
+        "useBabelrc": true
+      }
+    },
     "transformIgnorePatterns": [
       "<rootDir>.*(node_modules)(?!.*moped.*).*$"
     ],
     "transform": {
-      "^.+\\.tsx?$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+      "^.+\\.tsx?$": "ts-jest"
     },
     "testRegex": "/__tests__/.+\\.test\\.(tsx?)$",
     "moduleFileExtensions": [
