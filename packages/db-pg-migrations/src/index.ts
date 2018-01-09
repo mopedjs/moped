@@ -1,9 +1,6 @@
 import connect, {Connection} from '@moped/db-pg';
 import sql from '@moped/sql';
 import chalk from 'chalk';
-import buildPackage from './build-package';
-
-export {buildPackage};
 
 export {Connection, sql};
 

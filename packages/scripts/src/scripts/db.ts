@@ -1,18 +1,9 @@
 // Do this as the first thing so that any code reading it knows the right env.});
 import '@moped/env/development';
-import NodeExternals from '@moped/node-builtins';
-import getConfig, {
-  Environment,
-  Platform,
-  SourceKind,
-  ExternalMode,
-} from '@moped/webpack-config';
 import {prompt} from 'inquirer';
-import * as webpack from 'webpack';
 import chalk from 'chalk';
-import {readdirSync} from 'fs';
 import * as Paths from '../helpers/Paths';
-const formatWebpackMessages = require('react-dev-utils/formatWebpackMessages');
+import * as spawn from '../helpers/spawn';
 
 const CI = process.env.CI;
 const isCI = CI && CI.toLowerCase() !== 'false';
@@ -84,11 +75,8 @@ async function create() {
 }
 
 async function buildMigrations() {
-  const {buildPackage} = await import('@moped/db-pg-migrations');
-  await buildPackage({
-    migrationsDirectory: Paths.dbMigrations,
-    outputFile: Paths.dbMigrationsBundle,
-  });
+  const {default: buildPackage} = await import('../helpers/build-migrations');
+  await buildPackage();
 }
 
 function getUpScript(count: 'all' | 'one' | 'last') {
@@ -126,8 +114,9 @@ function getScript(direction: 'up' | 'down', count: 'all' | 'one' | 'last') {
 }
 async function runMigrations(direction: 'up' | 'down') {
   let count: string = args[1];
+  let promptResult: null | Promise<any> = null;
   if (!count && !isCI) {
-    const {answer} = await prompt({
+    promptResult = prompt({
       name: 'answer',
       type: 'list',
       message: 'How many database migrations should you run?',
@@ -161,6 +150,14 @@ async function runMigrations(direction: 'up' | 'down') {
               },
             ],
     });
+    // we handle errors later
+    promptResult.catch(() => {});
+  }
+  const webpackBundlePromise = webpackBuildBundle();
+  // we handle errors later
+  webpackBundlePromise.catch(() => {});
+  if (promptResult) {
+    const {answer} = await promptResult;
     count = answer;
   }
   if (count !== 'all' && count !== 'one' && count !== 'last') {
@@ -170,70 +167,18 @@ async function runMigrations(direction: 'up' | 'down') {
     process.exit(1);
     throw new Error('Invalid count');
   }
-  await buildMigrations();
   const method = getScript(direction, count);
-
-  (global as any).AUTO_RUN_DB_MIGRATION_PROCESS = method;
-  const dependencies = readdirSync(Paths.appNodeModulesDirectory);
-  const compiler = webpack(
-    getConfig({
-      appNodeModulesDirectory: Paths.appNodeModulesDirectory,
-      appSourceDirectory: Paths.appSourceDirectory,
-      buildDirectory: Paths.appBuildDirectory + '/temp-db',
-      entryPoint: Paths.dbMigrationsBundle,
-      environment: Environment.Development,
-      externals: (context, request) => {
-        if (NodeExternals.indexOf(request) !== -1) {
-          return {mode: ExternalMode.commonjs, name: request};
-        }
-        if (
-          dependencies.some(name => request.substr(0, name.length) === name)
-        ) {
-          return {mode: ExternalMode.commonjs, name: request};
-        }
-        if (request[0] !== '.') {
-          try {
-            if (require.resolve(request).indexOf('node_modules') !== -1) {
-              return {mode: ExternalMode.commonjs, name: request};
-            }
-          } catch (ex) {}
-        }
-        return null;
-      },
-      platform: Platform.Server,
-      htmlTemplateFileName: Paths.appHtml,
-      sourceKind: SourceKind.TypeScript,
-      startServer: false,
-    }),
-  );
-  const {warnings} = await new Promise<{
-    stats: webpack.Stats;
-    warnings: string[];
-  }>((resolve, reject) => {
-    compiler.run((err, stats) => {
-      if (err) {
-        return reject(err);
-      }
-      const messages = formatWebpackMessages((stats as any).toJson({}, true));
-      if (messages.errors.length) {
-        return reject(new Error(messages.errors.join('\n\n')));
-      }
-      if (isCI && messages.warnings.length) {
-        console.log(
-          chalk.yellow(
-            '\nTreating warnings as errors because process.env.CI = true.\n' +
-              'Most CI servers set it automatically.\n',
-          ),
-        );
-        return reject(new Error(messages.warnings.join('\n\n')));
-      }
-      return resolve({
-        stats,
-        warnings: messages.warnings,
-      });
-    });
-  });
+  const {warnings} = await webpackBundlePromise;
   if (warnings.length) {
+    if (isCI && warnings.length) {
+      console.log(
+        chalk.yellow(
+          '\nTreating warnings as errors because process.env.CI = true.\n' +
+            'Most CI servers set it automatically.\n',
+        ),
+      );
+      throw new Error(warnings.join('\n\n'));
+    }
     console.log(chalk.yellow('Compiled with warnings.\n'));
     console.log(warnings.join('\n\n'));
     console.log(
@@ -248,6 +193,7 @@ async function runMigrations(direction: 'up' | 'down') {
     );
   }
   await new Promise((resolve, reject) => {
+    (global as any).AUTO_RUN_DB_MIGRATION_PROCESS = method;
     (global as any).AUTO_RUN_DB_MIGRATION_PROCESS_DONE = resolve;
     require(Paths.appBuildDirectory + '/temp-db/server');
   });
@@ -260,7 +206,13 @@ async function generateSchema() {
   await writeSchema(
     schema,
     Paths.appSourceDirectory + '/db-schema',
-    // TODO: this should resolve from a bunch of possibilities
-    Paths.appSourceDirectory + '/db-overrides.tsx',
+    Paths.dbOverrides || undefined,
   );
+}
+
+async function webpackBuildBundle(): Promise<{warnings: string[]}> {
+  const str = await spawn.spawnAsync('node', [
+    require.resolve('../helpers/build-webpack-migrations-bundle'),
+  ]);
+  return JSON.parse(str.substring(str.indexOf('{'), str.lastIndexOf('}') + 1));
 }

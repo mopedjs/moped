@@ -4,8 +4,8 @@ import {readFileSync, writeFile} from 'fs';
 import {resolve} from 'path';
 import {prompt} from 'inquirer';
 import {gt} from 'semver';
+import * as spawn from './helpers/spawn';
 const getLatestVersionAsync = require('latest-version');
-const spawn = require('react-dev-utils/crossSpawn');
 
 async function updateLatestVersion() {
   const version = await getLatestVersionAsync('moped');
@@ -31,24 +31,6 @@ function getLocalVersion(): string | null {
     return null;
   }
 }
-function spawnSync(cmd: string, args: string[] = []) {
-  const result = spawn.sync('node', args, {stdio: 'inherit'});
-  if (result.signal) {
-    if (result.signal === 'SIGKILL') {
-      console.log(
-        'The build failed because the process exited too early. ' +
-          'This probably means the system ran out of memory or someone called ' +
-          '`kill -9` on the process.',
-      );
-    } else if (result.signal === 'SIGTERM') {
-      console.log(
-        'The build failed because the process exited too early. ' +
-          'Someone might have called `kill` or `killall`, or the system could ' +
-          'be shutting down.',
-      );
-    }
-  }
-}
 
 updateLatestVersion();
 
@@ -64,18 +46,17 @@ async function run() {
       default: true,
     });
     if (answer) {
-      spawnSync('yarn', ['add', '-D', 'moped']);
+      await spawn.spawnAsyncInherit('yarn', ['add', '-D', 'moped']);
     }
   }
+
   // TODO: Handle case where there is a local dependency in package.json
   //       but it is not installed.
 
   // TODO: Handle case where there is no package.json but global version
   //       is out of date.
 
-  // TODO: spawn this async so `updateLatestVersion` can make
-  // use of this process
-  spawnSync(
+  await spawn.spawnAsyncInherit(
     'node',
     [
       localVersion

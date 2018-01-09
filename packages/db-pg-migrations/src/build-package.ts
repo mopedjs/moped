@@ -1,3 +1,5 @@
+// @public
+
 import {relative, resolve, join, dirname} from 'path';
 import {readdirSync, statSync, readFileSync, writeFileSync} from 'fs';
 import chalk from 'chalk';

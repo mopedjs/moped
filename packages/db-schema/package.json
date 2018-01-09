@@ -9,7 +9,8 @@
     "@types/mkdirp": "^0.5.1",
     "@types/node": "^8.0.33",
     "@types/rimraf": "^2.0.2",
-    "mkdirp": "^0.5.1"
+    "mkdirp": "^0.5.1",
+    "then-rpc": "^0.0.0"
   },
   "scripts": {
     "prepublish": "node ../../prebuild db-schema&& tsc -p tsconfig.build.json && node ../../prepare db-schema"

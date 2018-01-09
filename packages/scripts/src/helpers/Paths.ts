@@ -46,7 +46,8 @@ function firstExistingInApp(
     while (part !== path.substr(0, part.length)) {
       part = part.substr(0, part.length - 1);
     }
-    return part;
+
+    return part.substring(0, part.lastIndexOf('/') + 1);
   });
 
   console.log(
@@ -123,3 +124,10 @@ export const appServerProd = firstExistingInApp(
 export const appPackageJson = resolveApp('package.json', {required: true});
 export const dbMigrations = resolveApp('src/db-migrations');
 export const dbMigrationsBundle = resolveApp('src/db-migrations/bundle.ts');
+
+export const dbOverrides = firstExistingInApp([
+  'src/db-overrides/index.tsx',
+  'src/db-overrides/index.ts',
+  'src/db-overrides.tsx',
+  'src/db-overrides.ts',
+]);
