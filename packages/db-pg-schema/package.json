@@ -1,12 +1,12 @@
 {
   "name": "@moped/db-pg-schema",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "dependencies": {
-    "@moped/db-pg": "^0.0.5",
-    "@moped/sql": "^0.0.1",
+    "@moped/db-pg": "^0.0.6",
+    "@moped/sql": "^0.0.2",
     "@types/node": "^8.0.33"
   },
   "scripts": {
