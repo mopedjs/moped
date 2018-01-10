@@ -9,7 +9,6 @@
     "chalk": "^2.3.0"
   },
   "scripts": {
-    "postinstall": "moped-db-pg-create",
     "prepublish": "node ../../prebuild db-pg-migrations&& tsc -p tsconfig.build.json && node ../../prepare db-pg-migrations"
   },
   "repository": "https://github.com/mopedjs/moped/tree/master/packages/db-pg-migrations",

@@ -1,11 +1,17 @@
-import connect from '@moped/db-pg';
+import createDb from '@moped/db-pg-create';
+import connect, {Connection} from '@moped/db-pg';
 import sql from '@moped/sql';
 import output from './output';
 
 process.env.DATABASE_URL =
   'postgres://moped-db-pg-migrations@localhost/moped-db-pg-migrations';
 
-const db = connect();
+let db: Connection = null as any;
+
+test('create database', async () => {
+  await createDb();
+  db = connect();
+});
 
 test('clean database', async () => {
   await db.query(sql`
