@@ -54,6 +54,7 @@ export interface Options {
 
 export class MigrationsPackage {
   public readonly migrations: ReadonlyArray<Migration>;
+  private _supportsOn = true;
   constructor(migrations: Migration[]) {
     this.migrations = migrations;
   }
@@ -116,27 +117,67 @@ export class MigrationsPackage {
     );
   }
   async setMigrationStatus(db: Connection, status: MigrationStatus) {
-    await db.query(sql`
-      INSERT INTO "MopedMigrations" (
-        "id",
-        "name",
-        "isApplied",
-        "lastUp",
-        "lastDown"
-      )
-      VALUES (
-        ${status.id},
-        ${status.name},
-        ${status.isApplied},
-        ${status.lastUp},
-        ${status.lastDown}
-      )
-      ON CONFLICT ("id") DO UPDATE SET
-        "name" = ${status.name},
-        "isApplied" = ${status.isApplied},
-        "lastUp" = ${status.lastUp},
-        "lastDown" = ${status.lastDown};
-    `);
+    if (this._supportsOn) {
+      try {
+        await db.query(sql`
+          INSERT INTO "MopedMigrations" (
+            "id",
+            "name",
+            "isApplied",
+            "lastUp",
+            "lastDown"
+          )
+          VALUES (
+            ${status.id},
+            ${status.name},
+            ${status.isApplied},
+            ${status.lastUp},
+            ${status.lastDown}
+          )
+          ON CONFLICT ("id") DO UPDATE SET
+            "name" = ${status.name},
+            "isApplied" = ${status.isApplied},
+            "lastUp" = ${status.lastUp},
+            "lastDown" = ${status.lastDown};
+        `);
+      } catch (ex) {
+        if (!this._supportsOn || !/syntax error at or near/.test(ex.message)) {
+          throw ex;
+        }
+        this._supportsOn = false;
+        await this.setMigrationStatus(db, status);
+      }
+    } else {
+      try {
+        await db.query(sql`
+          INSERT INTO "MopedMigrations" (
+            "id",
+            "name",
+            "isApplied",
+            "lastUp",
+            "lastDown"
+          )
+          VALUES (
+            ${status.id},
+            ${status.name},
+            ${status.isApplied},
+            ${status.lastUp},
+            ${status.lastDown}
+          );
+        `);
+      } catch (ex) {
+        if (/duplicate key/.test(ex.message)) {
+          await db.query(sql`
+            UPDATE "MopedMigrations" SET
+              "name" = ${status.name},
+              "isApplied" = ${status.isApplied},
+              "lastUp" = ${status.lastUp},
+              "lastDown" = ${status.lastDown}
+            WHERE "id" = ${status.id};
+          `);
+        }
+      }
+    }
   }
 
   private runOperation(
