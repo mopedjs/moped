@@ -83,30 +83,34 @@ export default async () => {
   }
   const [, userName, dbName] = match;
 
-  if (process.platform !== 'darwin') {
-    console.log(
-      'You need to create the postgres database: ' + chalk.cyan(dbConnection),
-    );
-    return;
-  }
+  // if (process.platform !== 'darwin') {
+  //   console.log(
+  //     'You need to create the postgres database: ' + chalk.cyan(dbConnection),
+  //   );
+  //   return;
+  // }
 
   let listing = '';
+  let hasBrew = false;
   try {
     listing = await run('brew', ['list'], true);
+    hasBrew = true;
   } catch (ex) {
-    console.warn(
-      'brew was not installed, so moped could not setup postgresql.',
-    );
-    console.warn('To install brew, run:');
-    console.warn(
-      '  ' +
-        chalk.cyan(
-          '/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"',
-        ),
-    );
-    return;
+    if (process.platform === 'darwin') {
+      console.warn(
+        'brew was not installed, so moped could not setup postgresql.',
+      );
+      console.warn('To install brew, run:');
+      console.warn(
+        '  ' +
+          chalk.cyan(
+            '/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"',
+          ),
+      );
+      return;
+    }
   }
-  if (!/\bpostgresql\b/.test(listing)) {
+  if (!/\bpostgresql\b/.test(listing) && hasBrew) {
     console.log('Installing postgresql...');
     await run('brew', ['install', 'postgresql']);
   }
@@ -114,8 +118,10 @@ export default async () => {
     console.log('Initialising database...');
     await run('initdb', ['/usr/local/var/postgres', '-E', 'utf8']);
   }
-  console.log('Starting postgresql service...');
-  await run('brew', ['services', 'start', 'postgresql']);
+  if (hasBrew) {
+    console.log('Starting postgresql service...');
+    await run('brew', ['services', 'start', 'postgresql']);
+  }
   try {
     console.log('Creating user...');
     await run('createuser', [userName], true);
