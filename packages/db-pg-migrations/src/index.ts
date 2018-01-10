@@ -64,7 +64,7 @@ export class MigrationsPackage {
   ) {
     const db = connect(connectionString);
     const result = await db.task(async task => {
-      task.query(sql`
+      await task.query(sql`
         CREATE TABLE IF NOT EXISTS "MopedMigrations" (
           "id" INTEGER NOT NULL PRIMARY KEY,
           "name" VARCHAR NOT NULL,
@@ -73,6 +73,15 @@ export class MigrationsPackage {
           "lastDown" TIMESTAMP
         );
       `);
+
+      // e.g. PostgreSQL 10.1 on x86_64-apple-darwin16.7.0, compiled by Apple LLVM version 9.0.0 (clang-900.0.38), 64-bit
+      const [{version}] = await task.query(sql`SELECT version();`);
+      const match = /PostgreSQL (\d+).(\d+)/.exec(version);
+      if (match) {
+        const [, major] = match;
+        this._supportsOn = parseInt(major, 10) >= 10;
+      }
+
       return await operation(task);
     });
     db.dispose();
@@ -118,37 +127,43 @@ export class MigrationsPackage {
   }
   async setMigrationStatus(db: Connection, status: MigrationStatus) {
     if (this._supportsOn) {
-      try {
+      await db.query(sql`
+        INSERT INTO "MopedMigrations" (
+          "id",
+          "name",
+          "isApplied",
+          "lastUp",
+          "lastDown"
+        )
+        VALUES (
+          ${status.id},
+          ${status.name},
+          ${status.isApplied},
+          ${status.lastUp},
+          ${status.lastDown}
+        )
+        ON CONFLICT ("id") DO UPDATE SET
+          "name" = ${status.name},
+          "isApplied" = ${status.isApplied},
+          "lastUp" = ${status.lastUp},
+          "lastDown" = ${status.lastDown};
+      `);
+    } else {
+      const [{migrationExists}] = await db.query(sql`
+        SELECT count(1) AS "migrationExists"
+        FROM "MopedMigrations"
+        WHERE id = ${status.id};
+      `);
+      if (migrationExists) {
         await db.query(sql`
-          INSERT INTO "MopedMigrations" (
-            "id",
-            "name",
-            "isApplied",
-            "lastUp",
-            "lastDown"
-          )
-          VALUES (
-            ${status.id},
-            ${status.name},
-            ${status.isApplied},
-            ${status.lastUp},
-            ${status.lastDown}
-          )
-          ON CONFLICT ("id") DO UPDATE SET
+          UPDATE "MopedMigrations" SET
             "name" = ${status.name},
             "isApplied" = ${status.isApplied},
             "lastUp" = ${status.lastUp},
-            "lastDown" = ${status.lastDown};
+            "lastDown" = ${status.lastDown}
+          WHERE "id" = ${status.id};
         `);
-      } catch (ex) {
-        if (!this._supportsOn || !/syntax error at or near/.test(ex.message)) {
-          throw ex;
-        }
-        this._supportsOn = false;
-        await this.setMigrationStatus(db, status);
-      }
-    } else {
-      try {
+      } else {
         await db.query(sql`
           INSERT INTO "MopedMigrations" (
             "id",
@@ -165,17 +180,6 @@ export class MigrationsPackage {
             ${status.lastDown}
           );
         `);
-      } catch (ex) {
-        if (/duplicate key/.test(ex.message)) {
-          await db.query(sql`
-            UPDATE "MopedMigrations" SET
-              "name" = ${status.name},
-              "isApplied" = ${status.isApplied},
-              "lastUp" = ${status.lastUp},
-              "lastDown" = ${status.lastDown}
-            WHERE "id" = ${status.id};
-          `);
-        }
       }
     }
   }

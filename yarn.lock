@@ -6766,6 +6766,10 @@ pg-connection-string@0.1.3:
   version "0.1.3"
   resolved "https://registry.yarnpkg.com/pg-connection-string/-/pg-connection-string-0.1.3.tgz#da1847b20940e42ee1492beaf65d49d91b245df7"
 
+pg-error-constants@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/pg-error-constants/-/pg-error-constants-1.0.0.tgz#8169a9649b55d1cfd1452eaabb3fedadaf6f35d5"
+
 pg-minify@^0.4.1:
   version "0.4.5"
   resolved "https://registry.yarnpkg.com/pg-minify/-/pg-minify-0.4.5.tgz#d3e92fb690f9283b8a37866e4566fce9fed26150"
@@ -7192,6 +7196,10 @@ prepend-http@^1.0.0, prepend-http@^1.0.1:
 preserve@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/preserve/-/preserve-0.2.0.tgz#815ed1f6ebc65926f865b310c0713bcb3315ce4b"
+
+prettier@^1.10.1:
+  version "1.10.1"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.10.1.tgz#01423fea6957ea23618d37d339ef0e7f7c967fc6"
 
 prettier@^1.6.0, prettier@^1.8.2, prettier@^1.9.2:
   version "1.9.2"
