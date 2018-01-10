@@ -5,11 +5,11 @@
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "dependencies": {
-    "@moped/db-pg-create": "^0.0.5",
     "@types/node": "^8.0.33",
     "chalk": "^2.3.0"
   },
   "scripts": {
+    "postinstall": "moped-db-pg-create",
     "prepublish": "node ../../prebuild db-pg-migrations&& tsc -p tsconfig.build.json && node ../../prepare db-pg-migrations"
   },
   "repository": "https://github.com/mopedjs/moped/tree/master/packages/db-pg-migrations",
@@ -18,6 +18,7 @@
     "access": "public"
   },
   "devDependencies": {
+    "@moped/db-pg-create": "^0.0.5",
     "lsr": "^2.0.0"
   }
 }
