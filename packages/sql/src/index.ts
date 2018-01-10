@@ -27,3 +27,7 @@ const modifiedSQL: SQL = Object.assign(
 );
 
 export default modifiedSQL;
+
+module.exports = modifiedSQL;
+module.exports.default = modifiedSQL;
+module.exports.SQLQuery = SQLQuery;
