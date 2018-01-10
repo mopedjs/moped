@@ -116,7 +116,16 @@ export default async () => {
   }
   if (!existsSync('/usr/local/var/postgres')) {
     console.log('Initialising database...');
-    await run('initdb', ['/usr/local/var/postgres', '-E', 'utf8']);
+    try {
+      await run('initdb', ['/usr/local/var/postgres', '-E', 'utf8']);
+    } catch (ex) {
+      if (ex.code !== 'ENOENT') {
+        throw ex;
+      }
+      console.error(
+        'Unable to find "initdb" command. Continuing anyway in case a postgres db was already created.',
+      );
+    }
   }
   if (hasBrew) {
     console.log('Starting postgresql service...');
