@@ -1,3 +1,4 @@
+import {isSQLError} from '@moped/db-pg-errors';
 import {SQLQuery} from '@moped/sql';
 import pg = require('pg-promise');
 
@@ -25,7 +26,18 @@ class ConnectionImplementation {
         ),
       );
     }
-    return this.connection.value.query(query);
+    return this.connection.value.query(query).catch(ex => {
+      // if (isSQLError(ex)) {
+      //   const position = parseInt(ex.position, 10);
+      //   const q = query.compile();
+      //   let space = '';
+      //   for (let i = 0; i < position; i++) {
+      //     space += ' ';
+      //   }
+      //   console.log(q.text + '\n' + space + '^');
+      // }
+      throw ex;
+    });
   }
   task<T>(
     fn: (connection: ConnectionImplementation) => Promise<T>,
