@@ -27,7 +27,7 @@ class ConnectionImplementation {
         ),
       );
     }
-    if (process.env.NODE_ENV === 'development') {
+    if (process.env.NODE_ENV !== 'production') {
       query.disableMinifying();
     }
     return this.connection.value.query(query).catch(ex => {
