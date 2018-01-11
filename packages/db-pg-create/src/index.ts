@@ -5,7 +5,11 @@ import chalk from 'chalk';
 import {spawn as nodeSpawn} from 'child_process';
 const spawn: typeof nodeSpawn = require('cross-spawn');
 
-function run(command: string, args?: string[], allowFailure: boolean = false) {
+function runCommand(
+  command: string,
+  args?: string[],
+  allowFailure: boolean = false,
+) {
   return new Promise<string>((resolve, reject) => {
     const output: {kind: 'stdout' | 'stderr'; chunk: string | Buffer}[] = [];
     let result = '';
@@ -57,7 +61,7 @@ async function isWorking(dbConnection: string): Promise<boolean> {
   }
 }
 
-export default async () => {
+export default async function run() {
   const dbConnection = process.env.DATABASE_URL;
   if (!dbConnection) {
     console.warn(
@@ -90,41 +94,52 @@ export default async () => {
   //   return;
   // }
 
-  let listing = '';
-  let hasBrew = false;
-  try {
-    listing = await run('brew', ['list'], true);
-    hasBrew = true;
-  } catch (ex) {
-    if (process.platform === 'darwin') {
-      console.warn(
-        'brew was not installed, so moped could not setup postgresql.',
-      );
-      console.warn('To install brew, run:');
-      console.warn(
-        '  ' +
-          chalk.cyan(
-            '/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"',
-          ),
-      );
-      return;
+  if (process.env.TRAVIS !== 'true') {
+    let listing = '';
+    let hasBrew = false;
+    try {
+      listing = await runCommand('brew', ['list'], true);
+      hasBrew = true;
+    } catch (ex) {
+      if (process.platform === 'darwin') {
+        console.warn(
+          'brew was not installed, so moped could not setup postgresql.',
+        );
+        console.warn('To install brew, run:');
+        console.warn(
+          '  ' +
+            chalk.cyan(
+              '/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"',
+            ),
+        );
+        return;
+      }
     }
-  }
-  if (!/\bpostgresql\b/.test(listing) && hasBrew) {
-    console.log('Installing postgresql...');
-    await run('brew', ['install', 'postgresql']);
-  }
-  if (!existsSync('/usr/local/var/postgres')) {
-    console.log('Initialising database...');
-    await run('initdb', ['/usr/local/var/postgres', '-E', 'utf8']);
-  }
-  if (hasBrew) {
-    console.log('Starting postgresql service...');
-    await run('brew', ['services', 'start', 'postgresql']);
+    if (!/\bpostgresql\b/.test(listing) && hasBrew) {
+      console.log('Installing postgresql...');
+      await runCommand('brew', ['install', 'postgresql']);
+    }
+    if (!existsSync('/usr/local/var/postgres')) {
+      console.log('Initialising database...');
+      try {
+        await runCommand('initdb', ['/usr/local/var/postgres', '-E', 'utf8']);
+      } catch (ex) {
+        if (ex.code !== 'ENOENT') {
+          throw ex;
+        }
+        console.error(
+          'Unable to find "initdb" command. Continuing anyway in case a postgres db was already created.',
+        );
+      }
+    }
+    if (hasBrew) {
+      console.log('Starting postgresql service...');
+      await runCommand('brew', ['services', 'start', 'postgresql']);
+    }
   }
   try {
     console.log('Creating user...');
-    await run('createuser', [userName], true);
+    await runCommand('createuser', [userName], true);
   } catch (ex) {
     if (!/already exists/.test(ex.message)) {
       throw ex;
@@ -132,7 +147,7 @@ export default async () => {
   }
   try {
     console.log('Creating database...');
-    await run('createdb', [dbName], true);
+    await runCommand('createdb', [dbName], true);
   } catch (ex) {
     if (!/already exists/.test(ex.message)) {
       throw ex;
@@ -143,4 +158,7 @@ export default async () => {
     return;
   }
   console.warn('Failed to create the database ' + chalk.cyan(dbConnection));
-};
+}
+
+module.exports = run;
+module.exports.default = run;

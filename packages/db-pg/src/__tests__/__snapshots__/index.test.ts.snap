@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`error messages 1`] = `
+"syntax error at or near \\"FRM\\"
+
+  2 |       SELECT * FROM foo;
+  3 |       SELECT * FROM bar WHERE id = $1;
+> 4 |       SELECT * FRM baz;
+    |                ^^^
+  5 |       SELECT * FROM bing;
+  6 |     
+"
+`;

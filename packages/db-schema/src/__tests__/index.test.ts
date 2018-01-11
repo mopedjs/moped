@@ -2,6 +2,8 @@ import {readFileSync} from 'fs';
 import {lsrSync} from 'lsr';
 import generate from '../';
 
+jest.setTimeout(30000);
+
 // for some reason prettier in jest fails if this isn't required before it is used
 require('prettier/parser-typescript');
 

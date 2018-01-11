@@ -22,7 +22,7 @@
     "@types/react-router-dom": "^4.2.3",
     "husky": "^0.14.3",
     "moped": "^0.7.1",
-    "prettier": "^1.9.2",
+    "prettier": "^1.10.1",
     "react": "^16.2.0",
     "react-bicycle": "^3.1.2",
     "react-dom": "^16.2.0",

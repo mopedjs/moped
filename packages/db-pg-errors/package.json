@@ -1,0 +1,23 @@
+{
+  "name": "@moped/db-pg-errors",
+  "version": "0.0.0",
+  "description": "",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "dependencies": {
+    "@types/node": "^8.0.33"
+  },
+  "scripts": {
+    "prepublish": "node ../../prebuild db-pg-errors&& tsc -p tsconfig.build.json && node ../../prepare db-pg-errors",
+    "build": "node build"
+  },
+  "repository": "https://github.com/mopedjs/moped/tree/master/packages/db-pg-errors",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "pg-error-constants": "^1.0.0",
+    "prettier": "^1.10.1"
+  }
+}

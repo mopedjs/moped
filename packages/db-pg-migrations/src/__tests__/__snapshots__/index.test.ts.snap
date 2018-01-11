@@ -1,6 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`downAll 1`] = `"relation \\"users\\" does not exist"`;
+exports[`downAll 1`] = `
+"relation \\"users\\" does not exist
+
+> 1 | SELECT * FROM users
+    |               ^^^^^
+"
+`;
 
 exports[`downLast 1`] = `
 Array [
@@ -29,7 +35,13 @@ Array [
 ]
 `;
 
-exports[`downOne 2`] = `"relation \\"users\\" does not exist"`;
+exports[`downOne 2`] = `
+"relation \\"users\\" does not exist
+
+> 1 | SELECT * FROM users
+    |               ^^^^^
+"
+`;
 
 exports[`upAll 1`] = `
 Array [

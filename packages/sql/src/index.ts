@@ -1,4 +1,4 @@
-import {sql, SQLQuery} from 'pg-sql';
+import SQLQuery from './SQLQuery';
 
 export {SQLQuery};
 
@@ -17,13 +17,17 @@ export interface SQL {
 // Create the SQL interface we export.
 const modifiedSQL: SQL = Object.assign(
   (strings: TemplateStringsArray, ...values: Array<any>): SQLQuery =>
-    sql(strings, ...values),
+    SQLQuery.query(strings, ...values),
   {
-    join: sql.join,
-    __dangerous__rawValue: sql.raw,
-    value: sql.value,
-    ident: sql.ident,
+    join: SQLQuery.join,
+    __dangerous__rawValue: SQLQuery.raw,
+    value: SQLQuery.value,
+    ident: SQLQuery.ident,
   },
 );
 
 export default modifiedSQL;
+
+module.exports = modifiedSQL;
+module.exports.default = modifiedSQL;
+module.exports.SQLQuery = SQLQuery;
