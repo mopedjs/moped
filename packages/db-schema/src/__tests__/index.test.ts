@@ -1,3 +1,4 @@
+import leaks from './catch-leaks';
 import {readFileSync} from 'fs';
 import {lsrSync} from 'lsr';
 import generate from '../';
@@ -6,6 +7,12 @@ import generate from '../';
 require('prettier/parser-typescript');
 
 test('generate', async () => {
+  setTimeout(() => {
+    const l = leaks.pop();
+    if (l) {
+      console.error(l.stack);
+    }
+  }, 5000);
   await generate(
     [
       {
