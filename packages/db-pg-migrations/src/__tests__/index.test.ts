@@ -3,6 +3,8 @@ import connect, {Connection} from '@moped/db-pg';
 import sql from '@moped/sql';
 import output from './output';
 
+jest.setTimeout(30000);
+
 process.env.DATABASE_URL =
   'postgres://moped-db-pg-migrations@localhost/moped-db-pg-migrations';
 

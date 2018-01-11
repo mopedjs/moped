@@ -1,6 +1,8 @@
 import connect, {Connection} from '../';
 import sql from '@moped/sql';
 
+jest.setTimeout(30000);
+
 const createDb = require('@moped/db-pg-create');
 
 process.env.DATABASE_URL = 'postgres://moped-db-pg@localhost/moped-db-pg';

@@ -1,18 +1,13 @@
-import leaks from './catch-leaks';
 import {readFileSync} from 'fs';
 import {lsrSync} from 'lsr';
 import generate from '../';
+
+jest.setTimeout(30000);
 
 // for some reason prettier in jest fails if this isn't required before it is used
 require('prettier/parser-typescript');
 
 test('generate', async () => {
-  setTimeout(() => {
-    const l = leaks.pop();
-    if (l) {
-      console.error(l.stack);
-    }
-  }, 5000);
   await generate(
     [
       {
