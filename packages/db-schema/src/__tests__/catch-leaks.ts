@@ -5,7 +5,8 @@ Promise.prototype.then = function(...args: any[]) {
   const result = then.call(this, ...args);
   const e = new Error('Then Call Timeout');
   errors.push(e);
-  result.then(
+  then.call(
+    result,
     () => {
       errors.splice(errors.indexOf(e), 1);
     },
