@@ -1,6 +1,7 @@
 import {isSQLError} from '@moped/db-pg-errors';
 import {SQLQuery} from '@moped/sql';
 import pg = require('pg-promise');
+const {codeFrameColumns} = require('@babel/code-frame');
 
 export interface Connection {
   query(query: SQLQuery): Promise<any[]>;
@@ -26,16 +27,35 @@ class ConnectionImplementation {
         ),
       );
     }
+    if (process.env.NODE_ENV === 'development') {
+      query.disableMinifying();
+    }
     return this.connection.value.query(query).catch(ex => {
-      // if (isSQLError(ex)) {
-      //   const position = parseInt(ex.position, 10);
-      //   const q = query.compile();
-      //   let space = '';
-      //   for (let i = 0; i < position; i++) {
-      //     space += ' ';
-      //   }
-      //   console.log(q.text + '\n' + space + '^');
-      // }
+      if (isSQLError(ex) && ex.position) {
+        const position = parseInt(ex.position, 10);
+        const q = query.compile();
+        const match =
+          /syntax error at or near \"([^\"\n]+)\"/.exec(ex.message) ||
+          /relation \"([^\"\n]+)\" does not exist/.exec(ex.message);
+        let column = 0;
+        let line = 1;
+        for (let i = 0; i < position; i++) {
+          if (q.text[i] === '\n') {
+            line++;
+            column = 0;
+          } else {
+            column++;
+          }
+        }
+
+        const start = {line, column};
+        let end: void | {line: number; column: number} = undefined;
+        if (match) {
+          end = {line, column: column + match[1].length};
+        }
+
+        ex.message += '\n\n' + codeFrameColumns(q.text, {start, end}) + '\n';
+      }
       throw ex;
     });
   }

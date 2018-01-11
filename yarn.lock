@@ -106,7 +106,7 @@
     esutils "^2.0.2"
     js-tokens "^3.0.0"
 
-"@babel/code-frame@^7.0.0-beta.35":
+"@babel/code-frame@^7.0.0-beta.35", "@babel/code-frame@^7.0.0-beta.37":
   version "7.0.0-beta.37"
   resolved "https://registry.yarnpkg.com/@babel/code-frame/-/code-frame-7.0.0-beta.37.tgz#2da1dd3b1b57bfdea777ddc378df7cd12fe40171"
   dependencies:
@@ -6770,11 +6770,7 @@ pg-error-constants@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/pg-error-constants/-/pg-error-constants-1.0.0.tgz#8169a9649b55d1cfd1452eaabb3fedadaf6f35d5"
 
-pg-minify@^0.4.1:
-  version "0.4.5"
-  resolved "https://registry.yarnpkg.com/pg-minify/-/pg-minify-0.4.5.tgz#d3e92fb690f9283b8a37866e4566fce9fed26150"
-
-pg-minify@~0.5.3:
+pg-minify@^0.5.3, pg-minify@~0.5.3:
   version "0.5.3"
   resolved "https://registry.yarnpkg.com/pg-minify/-/pg-minify-0.5.3.tgz#aa09befa3cbe29fab6461bf819100e0471215011"
 
@@ -6790,12 +6786,6 @@ pg-promise@^7.2.0:
     pg "~7.4.0"
     pg-minify "~0.5.3"
     spex "~2.0.1"
-
-pg-sql@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/pg-sql/-/pg-sql-1.1.0.tgz#1271608aff8b1ecd87b4f63f413184d9fc345703"
-  dependencies:
-    pg-minify "^0.4.1"
 
 pg-types@~1.12.1:
   version "1.12.1"
