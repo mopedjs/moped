@@ -94,46 +94,48 @@ export default async function run() {
   //   return;
   // }
 
-  let listing = '';
-  let hasBrew = false;
-  try {
-    listing = await runCommand('brew', ['list'], true);
-    hasBrew = true;
-  } catch (ex) {
-    if (process.platform === 'darwin') {
-      console.warn(
-        'brew was not installed, so moped could not setup postgresql.',
-      );
-      console.warn('To install brew, run:');
-      console.warn(
-        '  ' +
-          chalk.cyan(
-            '/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"',
-          ),
-      );
-      return;
-    }
-  }
-  if (!/\bpostgresql\b/.test(listing) && hasBrew) {
-    console.log('Installing postgresql...');
-    await runCommand('brew', ['install', 'postgresql']);
-  }
-  if (!existsSync('/usr/local/var/postgres')) {
-    console.log('Initialising database...');
+  if (process.env.TRAVIS !== 'true') {
+    let listing = '';
+    let hasBrew = false;
     try {
-      await runCommand('initdb', ['/usr/local/var/postgres', '-E', 'utf8']);
+      listing = await runCommand('brew', ['list'], true);
+      hasBrew = true;
     } catch (ex) {
-      if (ex.code !== 'ENOENT') {
-        throw ex;
+      if (process.platform === 'darwin') {
+        console.warn(
+          'brew was not installed, so moped could not setup postgresql.',
+        );
+        console.warn('To install brew, run:');
+        console.warn(
+          '  ' +
+            chalk.cyan(
+              '/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"',
+            ),
+        );
+        return;
       }
-      console.error(
-        'Unable to find "initdb" command. Continuing anyway in case a postgres db was already created.',
-      );
     }
-  }
-  if (hasBrew) {
-    console.log('Starting postgresql service...');
-    await runCommand('brew', ['services', 'start', 'postgresql']);
+    if (!/\bpostgresql\b/.test(listing) && hasBrew) {
+      console.log('Installing postgresql...');
+      await runCommand('brew', ['install', 'postgresql']);
+    }
+    if (!existsSync('/usr/local/var/postgres')) {
+      console.log('Initialising database...');
+      try {
+        await runCommand('initdb', ['/usr/local/var/postgres', '-E', 'utf8']);
+      } catch (ex) {
+        if (ex.code !== 'ENOENT') {
+          throw ex;
+        }
+        console.error(
+          'Unable to find "initdb" command. Continuing anyway in case a postgres db was already created.',
+        );
+      }
+    }
+    if (hasBrew) {
+      console.log('Starting postgresql service...');
+      await runCommand('brew', ['services', 'start', 'postgresql']);
+    }
   }
   try {
     console.log('Creating user...');
