@@ -3,14 +3,22 @@ import {sync as mkdirp} from 'mkdirp';
 import {basename} from 'path';
 import Generator = require('yeoman-generator');
 
-interface Props {
-  name?: string;
-}
+const pkg = require('../../package.json');
+
 interface Options {
   name?: string;
 }
+const versions: {[key: string]: string} = {};
+Object.keys(pkg.dependencies).forEach(name => {
+  versions['version_' + name.replace(/[^a-zA-Z]/g, '_')] =
+    pkg.dependencies[name];
+});
+Object.keys(pkg.devDependencies).forEach(name => {
+  versions['version_' + name.replace(/[^a-zA-Z]/g, '_')] =
+    pkg.devDependencies[name];
+});
 module.exports = class MopedGenerator extends Generator {
-  props: Props = {};
+  props: {[key: string]: string} = {...versions};
   options: Options;
   constructor(args: string | string[], options: {}) {
     super(args, options);

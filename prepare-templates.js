@@ -2,6 +2,30 @@ const fs = require('fs');
 const lsr = require('lsr').lsrSync;
 const rimraf = require('rimraf').sync;
 
+function sortObject(obj) {
+  return Object.keys(obj)
+    .sort()
+    .reduce((output, name) => {
+      output[name] = obj[name];
+      return output;
+    }, {});
+}
+
+const mopedVersions = {};
+fs.readdirSync(__dirname + '/packages/').forEach(dirname => {
+  if (fs.statSync(__dirname + '/packages/' + dirname).isDirectory()) {
+    const dirPkg = JSON.parse(
+      fs.readFileSync(
+        __dirname + '/packages/' + dirname + '/package.json',
+        'utf8',
+      ),
+    );
+    mopedVersions[dirPkg.name] = '^' + dirPkg.version;
+  }
+});
+
+const usedMopedVersions = {};
+
 lsr(__dirname + '/templates', {
   filter(entry) {
     return (
@@ -37,11 +61,27 @@ lsr(__dirname + '/templates', {
     }
   }
   if (entry.isFile()) {
-    if (/package\.json$/.test(entry.path)) {
+    if (entry.name === 'package.json') {
       const pkg = JSON.parse(fs.readFileSync(entry.fullPath, 'utf8'));
       pkg.name = '<%= name %>';
+      Object.keys(pkg.dependencies || {}).forEach(name => {
+        if (mopedVersions[name]) {
+          pkg.dependencies[name] =
+            '<%= version_' + name.replace(/[^a-zA-Z]/g, '_') + '%>';
+          usedMopedVersions[name] = mopedVersions[name];
+        }
+      });
+      Object.keys(pkg.devDependencies || {}).forEach(name => {
+        if (mopedVersions[name]) {
+          pkg.devDependencies[name] =
+            '<%= version_' + name.replace(/[^a-zA-Z]/g, '_') + '%>';
+          usedMopedVersions[name] = mopedVersions[name];
+        }
+      });
+      pkg.dependencies = sortObject(pkg.dependencies);
+      pkg.devDependencies = sortObject(pkg.devDependencies);
       fs.writeFileSync(outputPath, JSON.stringify(pkg, null, '  ') + '\n');
-    } else if (/\.env$/.test(entry.path)) {
+    } else if (entry.name === '.env') {
       fs.writeFileSync(
         outputPath,
         fs
@@ -53,3 +93,21 @@ lsr(__dirname + '/templates', {
     }
   }
 });
+
+const pkg = JSON.parse(
+  fs.readFileSync(__dirname + '/packages/generator-moped/package.json', 'utf8'),
+);
+Object.keys(usedMopedVersions).forEach(name => {
+  if (pkg.dependencies[name]) {
+    pkg.dependencies[name] = usedMopedVersions[name];
+  } else {
+    pkg.devDependencies[name] = usedMopedVersions[name];
+  }
+});
+pkg.dependencies = sortObject(pkg.dependencies);
+pkg.devDependencies = sortObject(pkg.devDependencies);
+
+fs.writeFileSync(
+  __dirname + '/packages/generator-moped/package.json',
+  JSON.stringify(pkg, null, '  ') + '\n',
+);

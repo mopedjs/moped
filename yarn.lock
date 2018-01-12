@@ -913,17 +913,11 @@
     "@types/tapable" "*"
     "@types/uglify-js" "*"
 
-"@types/yeoman-generator@*":
+"@types/yeoman-generator@*", "@types/yeoman-generator@^2.0.0":
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/@types/yeoman-generator/-/yeoman-generator-2.0.1.tgz#e64c43062894f463dcd0f83e43340db947eedb95"
   dependencies:
     "@types/events" "*"
-    "@types/inquirer" "*"
-
-"@types/yeoman-generator@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@types/yeoman-generator/-/yeoman-generator-2.0.0.tgz#822a692ac947c4c4da1591114b05e1fded483cbf"
-  dependencies:
     "@types/inquirer" "*"
 
 "@types/yeoman-test@^1.7.3":
