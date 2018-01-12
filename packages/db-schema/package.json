@@ -1,6 +1,6 @@
 {
   "name": "@moped/db-schema",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "description": "",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -10,7 +10,7 @@
     "@types/node": "^8.0.33",
     "@types/rimraf": "^2.0.2",
     "mkdirp": "^0.5.1",
-    "then-rpc": "^0.0.1"
+    "then-rpc": "^0.0.2"
   },
   "scripts": {
     "prepublish": "node ../../prebuild db-schema&& tsc -p tsconfig.build.json && node ../../prepare db-schema"

@@ -1,11 +1,11 @@
 {
   "name": "@moped/webpack-config",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "dependencies": {
-    "@moped/babel-preset": "^0.0.4",
+    "@moped/babel-preset": "^0.0.5",
     "@moped/enums": "^0.0.6",
     "@moped/polyfills": "^0.0.3",
     "@moped/rule-css": "^0.0.11",

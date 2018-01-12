@@ -1,13 +1,13 @@
 {
   "name": "@moped/db-pg",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "dependencies": {
     "@babel/code-frame": "^7.0.0-beta.37",
-    "@moped/db-pg-errors": "^0.0.0",
-    "@moped/sql": "^0.0.2",
+    "@moped/db-pg-errors": "^0.0.1",
+    "@moped/sql": "^0.0.3",
     "@types/node": "^8.0.33",
     "pg-promise": "^7.2.0"
   },
@@ -20,6 +20,6 @@
     "access": "public"
   },
   "devDependencies": {
-    "@moped/db-pg-create": "^0.0.5"
+    "@moped/db-pg-create": "^0.0.6"
   }
 }
