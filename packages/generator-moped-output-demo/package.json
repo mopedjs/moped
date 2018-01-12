@@ -1,7 +1,7 @@
 {
   "name": "generator-moped-output-demo",
   "private": true,
-  "version": "0.0.5",
+  "version": "0.0.6",
   "dependencies": {
     "@authentication/cookie": "^0.0.7",
     "@authentication/passwordless": "^0.0.7",
