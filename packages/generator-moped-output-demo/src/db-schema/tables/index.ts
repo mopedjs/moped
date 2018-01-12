@@ -7,7 +7,6 @@ import Sessions from './Sessions';
 import Tokens from './Tokens';
 import UserEmails from './UserEmails';
 import Users from './Users';
-import numbers from './numbers';
 
 export {MopedMigrations};
 export {MopedMigrationsVersion};
@@ -16,4 +15,3 @@ export {Sessions};
 export {Tokens};
 export {UserEmails};
 export {Users};
-export {numbers};
