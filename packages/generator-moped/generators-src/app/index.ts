@@ -42,6 +42,7 @@ module.exports = class MopedGenerator extends Generator {
       ]);
       this.props.name = name;
     }
+    this.props.dbname = this.props.name.replace(/[^a-z]/gi, '_');
   }
 
   directory() {

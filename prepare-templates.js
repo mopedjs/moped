@@ -86,7 +86,7 @@ lsr(__dirname + '/templates', {
         outputPath,
         fs
           .readFileSync(entry.fullPath, 'utf8')
-          .replace(/app\-name/g, '<%= name %>'),
+          .replace(/app\-name/g, '<%= dbname %>'),
       );
     } else {
       fs.writeFileSync(outputPath, fs.readFileSync(entry.fullPath));
