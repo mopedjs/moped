@@ -11,7 +11,7 @@ const spawn: SpawnType = {
 
 export function spawnAsync(cmd: string, args: string[] = []) {
   const stdout: Buffer[] = [];
-  const result = spawn.async('node', args, {
+  const result = spawn.async(cmd, args, {
     stdio: ['inherit', 'pipe', 'inherit'],
   });
   result.stdout.on('data', data =>
@@ -46,7 +46,7 @@ export function spawnAsync(cmd: string, args: string[] = []) {
 }
 
 export function spawnAsyncInherit(cmd: string, args: string[] = []) {
-  const result = spawn.async('node', args, {
+  const result = spawn.async(cmd, args, {
     stdio: 'inherit',
   });
   return new Promise<void>((resolve, reject) => {
@@ -79,7 +79,7 @@ export function spawnAsyncInherit(cmd: string, args: string[] = []) {
 }
 
 export function spawnSyncInherit(cmd: string, args: string[] = []) {
-  const result = spawn.sync('node', args, {stdio: 'inherit'});
+  const result = spawn.sync(cmd, args, {stdio: 'inherit'});
   if (result.signal) {
     if (result.signal === 'SIGKILL') {
       console.error(

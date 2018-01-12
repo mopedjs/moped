@@ -1,3 +1,5 @@
+// this file generates a tar.gz file of the generator, but it's not really used.
+
 const fs = require('fs');
 const cp = require('child_process');
 const crypto = require('crypto');
