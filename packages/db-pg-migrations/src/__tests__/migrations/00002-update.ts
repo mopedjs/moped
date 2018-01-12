@@ -10,3 +10,6 @@ export async function down(db: Connection) {
     DELETE FROM "users" WHERE "name" = 'Eleanor Brodie';
   `);
 }
+
+// Do not edit this unique ID
+export const id = 'd000jcbsfkyrhtasvyy8';

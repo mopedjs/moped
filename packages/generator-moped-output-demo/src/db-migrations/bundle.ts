@@ -7,7 +7,8 @@ import migrations, {
 
 export {MigrationsPackage};
 export default migrations({
-  id: 1,
+  id: 'd000jcbucsxfuugtdoq9',
+  index: 1,
   name: '00001-init.ts',
   operation: async () => operation(await import('./00001-init')),
 });

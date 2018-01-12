@@ -14,3 +14,6 @@ export async function down(db: Connection) {
     DROP TABLE users;
   `);
 }
+
+// Do not edit this unique ID
+export const id = 'd000jcbsfkyjcwricki6';

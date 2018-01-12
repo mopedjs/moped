@@ -29,9 +29,11 @@ enum NumberOfOperations {
 export interface Operation {
   up: (db: Connection) => Promise<{} | null | void>;
   down: (db: Connection) => Promise<{} | null | void>;
+  id: string;
 }
 export interface Migration {
-  id: number;
+  id: string;
+  index: number;
   name: string;
   operation: () => Promise<Operation>;
 }
@@ -41,7 +43,8 @@ export function operation(op: Operation): Operation {
 }
 
 export interface MigrationStatus {
-  id: number;
+  id: string;
+  index: number;
   name: string;
   isApplied: boolean;
   lastUp: Date | null;
@@ -58,25 +61,104 @@ export class MigrationsPackage {
   constructor(migrations: Migration[]) {
     this.migrations = migrations;
   }
+  private async getDefaultVersion(db: Connection) {
+    const hasMigrationsTable = await db.query(sql`
+      SELECT 1 FROM information_schema.tables
+      WHERE table_name = 'MopedMigrations'
+    `);
+    return hasMigrationsTable.length ? 1 : 0;
+  }
   private async run<T>(
     connectionString: string | void,
     operation: (db: Connection) => Promise<T>,
   ) {
     const db = connect(connectionString);
     const result = await db.task(async task => {
-      await task.query(sql`
-        CREATE TABLE IF NOT EXISTS "MopedMigrations" (
-          "id" INTEGER NOT NULL PRIMARY KEY,
-          "name" VARCHAR NOT NULL,
-          "isApplied" BOOLEAN NOT NULL DEFAULT FALSE,
-          "lastUp" TIMESTAMP,
-          "lastDown" TIMESTAMP
+      await task.tx(async tx => {
+        await tx.query(sql`
+          CREATE TABLE IF NOT EXISTS "MopedMigrationsVersion" (
+            "id" INTEGER NOT NULL PRIMARY KEY,
+            "version" INTEGER
+          );
+        `);
+        const v = await tx.query(
+          sql`SELECT "version" FROM "MopedMigrationsVersion" WHERE "id" = 0`,
         );
-      `);
+        const version: number = v.length
+          ? v[0].version
+          : await this.getDefaultVersion(tx);
+
+        if (version === 0) {
+          await tx.query(sql`
+            CREATE TABLE "MopedMigrations" (
+              "id" TEXT NOT NULL PRIMARY KEY,
+              "index" INTEGER NOT NULL,
+              "name" TEXT NOT NULL,
+              "isApplied" BOOLEAN NOT NULL DEFAULT FALSE,
+              "lastUp" TIMESTAMP,
+              "lastDown" TIMESTAMP
+            );
+          `);
+          await tx.query(
+            sql`INSERT INTO "MopedMigrationsVersion" ("id", "version") VALUES (0, 2);`,
+          );
+        } else {
+          if (version < 2) {
+            const oldMigrations = await tx.query(sql`
+              SELECT * FROM "MopedMigrations";
+            `);
+            await tx.query(sql`DROP TABLE "MopedMigrations";`);
+            await tx.query(sql`
+              CREATE TABLE "MopedMigrations" (
+                "id" TEXT NOT NULL PRIMARY KEY,
+                "index" INTEGER NOT NULL,
+                "name" TEXT NOT NULL,
+                "isApplied" BOOLEAN NOT NULL DEFAULT FALSE,
+                "lastUp" TIMESTAMP,
+                "lastDown" TIMESTAMP
+              );
+            `);
+            if (oldMigrations.length) {
+              await tx.query(
+                sql.join(
+                  oldMigrations.map(migration => {
+                    const index: number = migration.id;
+                    const id = this.migrations.find(m => m.index === index)!.id;
+                    return sql`
+                      INSERT INTO "MopedMigrations" (
+                        "id",
+                        "index",
+                        "name",
+                        "isApplied",
+                        "lastUp",
+                        "lastDown"
+                      )
+                      VALUES (
+                        ${id},
+                        ${index},
+                        ${migration.name},
+                        ${migration.isApplied},
+                        ${migration.lastUp},
+                        ${migration.lastDown}
+                      );
+                    `;
+                  }),
+                  '',
+                ),
+              );
+            }
+            await tx.query(
+              sql`INSERT INTO "MopedMigrationsVersion" ("id", "version") VALUES (0, 2);`,
+            );
+          }
+        }
+      });
 
       // e.g. PostgreSQL 10.1 on x86_64-apple-darwin16.7.0, compiled by Apple LLVM version 9.0.0 (clang-900.0.38), 64-bit
-      const [{version}] = await task.query(sql`SELECT version();`);
-      const match = /PostgreSQL (\d+).(\d+)/.exec(version);
+      const [{version: sqlVersionString}] = await task.query(
+        sql`SELECT version();`,
+      );
+      const match = /PostgreSQL (\d+).(\d+)/.exec(sqlVersionString);
       if (match) {
         const [, major] = match;
         this._supportsOn = parseInt(major, 10) >= 10;
@@ -87,49 +169,50 @@ export class MigrationsPackage {
     db.dispose();
     return result;
   }
-  getMigrationStatus(id: number, name: string): Promise<MigrationStatus | null>;
+  getMigrationStatus(migration: Migration): Promise<MigrationStatus>;
   getMigrationStatus(
     connectionString: string,
-    id: number,
-    name: string,
+    migration: Migration,
   ): Promise<MigrationStatus>;
   getMigrationStatus(
     db: Connection,
-    id: number,
-    name: string,
+    migration: Migration,
   ): Promise<MigrationStatus>;
   getMigrationStatus(
-    db: Connection | number | string,
-    id?: number | string,
-    name?: string,
+    db: Connection | string | Migration,
+    migration?: Migration,
   ): Promise<MigrationStatus> {
-    if (typeof db === 'number') {
-      const i = db;
-      return this.run(undefined, db =>
-        this.getMigrationStatus(db, i, id as string),
+    if (arguments.length === 1) {
+      return this.run(undefined, d =>
+        this.getMigrationStatus(d, db as Migration),
       );
     }
     if (typeof db === 'string') {
-      return this.run(db, db =>
-        this.getMigrationStatus(db, id as number, name as string),
+      return this.run(db, d =>
+        this.getMigrationStatus(d, migration as Migration),
       );
     }
-    return db.query(sql`SELECT * FROM "MopedMigrations" WHERE "id"=${id}`).then(
-      result =>
-        result[0] || {
-          id,
-          name,
+    const d = db as Connection;
+    const m = migration as Migration;
+    return d
+      .query(sql`SELECT * FROM "MopedMigrations" WHERE "id"=${m.id}`)
+      .then(result => ({
+        ...(result[0] || {
           isApplied: false,
           lastUp: null,
           lastDown: null,
-        },
-    );
+        }),
+        id: m.id,
+        index: m.index,
+        name: m.name,
+      }));
   }
   async setMigrationStatus(db: Connection, status: MigrationStatus) {
     if (this._supportsOn) {
       await db.query(sql`
         INSERT INTO "MopedMigrations" (
           "id",
+          "index",
           "name",
           "isApplied",
           "lastUp",
@@ -137,12 +220,14 @@ export class MigrationsPackage {
         )
         VALUES (
           ${status.id},
+          ${status.index},
           ${status.name},
           ${status.isApplied},
           ${status.lastUp},
           ${status.lastDown}
         )
         ON CONFLICT ("id") DO UPDATE SET
+          "index" = ${status.index},
           "name" = ${status.name},
           "isApplied" = ${status.isApplied},
           "lastUp" = ${status.lastUp},
@@ -157,6 +242,7 @@ export class MigrationsPackage {
       if (migrationExists) {
         await db.query(sql`
           UPDATE "MopedMigrations" SET
+            "index" = ${status.index},
             "name" = ${status.name},
             "isApplied" = ${status.isApplied},
             "lastUp" = ${status.lastUp},
@@ -167,6 +253,7 @@ export class MigrationsPackage {
         await db.query(sql`
           INSERT INTO "MopedMigrations" (
             "id",
+            "index",
             "name",
             "isApplied",
             "lastUp",
@@ -174,6 +261,7 @@ export class MigrationsPackage {
           )
           VALUES (
             ${status.id},
+            ${status.index},
             ${status.name},
             ${status.isApplied},
             ${status.lastUp},
@@ -200,11 +288,7 @@ export class MigrationsPackage {
             ? takeLast(this.migrations)
             : this.migrations
           ).map(async migration => {
-            const status = await this.getMigrationStatus(
-              db,
-              migration.id,
-              migration.name,
-            );
+            const status = await this.getMigrationStatus(db, migration);
             return {migration, status};
           }),
         ))
@@ -243,11 +327,7 @@ export class MigrationsPackage {
                   chalk.cyan(migration.name),
               );
             }
-            const status = await this.getMigrationStatus(
-              db,
-              migration.id,
-              migration.name,
-            );
+            const status = await this.getMigrationStatus(db, migration);
             if (status.isApplied === (direction === Direction.down)) {
               // migration definitely not yet run, and we're in a transaction, so lets run it
               await (direction === Direction.up

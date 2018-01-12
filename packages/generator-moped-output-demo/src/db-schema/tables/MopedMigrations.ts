@@ -4,7 +4,8 @@ export default interface DbMopedMigrations {
   /**
    * Primary Key
    */
-  id: number;
+  id: string;
+  index: number;
 
   /**
    * Default Value: false

@@ -19,6 +19,7 @@ test('clean database', async () => {
   await db.query(sql`
     DROP TABLE IF EXISTS users;
     DROP TABLE IF EXISTS "MopedMigrations";
+    DROP TABLE IF EXISTS "MopedMigrationsVersion";
   `);
 });
 test('upAll', async () => {

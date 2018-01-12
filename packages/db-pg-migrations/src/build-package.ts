@@ -3,6 +3,7 @@
 import {relative, resolve, join, dirname} from 'path';
 import {readdirSync, statSync, readFileSync, writeFileSync} from 'fs';
 import chalk from 'chalk';
+import getID from './getID';
 const prettier = require('prettier');
 
 export interface Options {
@@ -35,7 +36,12 @@ export default async function buildPackage(options: Options) {
     writeFileSync(filename, formatted);
   };
 
-  const migrations = notNull<{id: number; fullPath: string; name: string}>(
+  const migrations = notNull<{
+    index: number;
+    fullPath: string;
+    name: string;
+    id: string;
+  }>(
     readdirSync(migrationsDirectory).map(name => {
       const fullPath = join(migrationsDirectory, name);
       if (fullPath === outputFile) {
@@ -45,23 +51,36 @@ export default async function buildPackage(options: Options) {
       if (!stat.isFile()) {
         return;
       }
-      const match = /(\d+)\-/.exec(name);
+      const match = /^(\d+)\-/.exec(name);
       if (!match) {
         return;
       }
-      const id = parseInt(match[1], 10);
-      return {id, fullPath, name};
+      const index = parseInt(match[1], 10);
+      const src = readFileSync(fullPath, 'utf8');
+      const match2 = /^export const id[\s\r\n]*=[\s\r\n]*['"]([0-9a-zA-Z]*)['"](?:\;|$)/m.exec(
+        src,
+      );
+      const id = match2 ? match2[1] : getID();
+      if (!match2) {
+        writeFile(
+          fullPath,
+          src +
+            `\n\n// Do not edit this unique ID\n` +
+            `export const id = '${id}';\n`,
+        );
+      }
+      return {index, fullPath, name, id};
     }),
-  ).sort((a, b) => a.id - b.id);
+  ).sort((a, b) => a.index - b.index);
   migrations.forEach((migration, index, migrations) => {
-    if (migration.id < 1) {
+    if (migration.index < 1) {
       throw new Error(
         'Migration IDs should start at 0. Please rename:\n\n' +
           ' ' +
           chalk.cyan(migration.name),
       );
     }
-    if (migration.id > index + 1) {
+    if (migration.index > index + 1) {
       throw new Error(
         'There does not seem to be a migration with id ' +
           (index + 1) +
@@ -72,10 +91,10 @@ export default async function buildPackage(options: Options) {
           chalk.cyan(migration.name),
       );
     }
-    if (migration.id < index + 1 && index > 0) {
+    if (migration.index < index + 1 && index > 0) {
       throw new Error(
         'There seem to be two migrations with id ' +
-          migration.id +
+          migration.index +
           '. ' +
           "Each migration should have a unique id otherwise we can't " +
           'which order they should execute in. Please rename one of:\n\n' +
@@ -99,14 +118,17 @@ export default async function buildPackage(options: Options) {
       ${migrations
         .map(
           migration =>
-            `{id: ${migration.id}, name: ${JSON.stringify(
-              migration.name,
-            )}, operation: async () => operation(await import(${JSON.stringify(
-              relative(dirname(outputFile), migration.fullPath)
-                .replace(/\\/g, '/')
-                .replace(/^([^\.])/, './$1')
-                .replace(/\.[^\.]+$/, ''),
-            )}))},`,
+            `{
+              id: ${JSON.stringify(migration.id)},
+              index: ${migration.index},
+              name: ${JSON.stringify(migration.name)},
+              operation: async () => operation(await import(${JSON.stringify(
+                relative(dirname(outputFile), migration.fullPath)
+                  .replace(/\\/g, '/')
+                  .replace(/^([^\.])/, './$1')
+                  .replace(/\.[^\.]+$/, ''),
+              )})),
+            },`,
         )
         .join('\n')}
     );

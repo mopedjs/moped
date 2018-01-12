@@ -2,6 +2,7 @@
 
 import sql, {SQLQuery} from '@moped/sql';
 import MopedMigrations from './tables/MopedMigrations';
+import MopedMigrationsVersion from './tables/MopedMigrationsVersion';
 import RateLimitStates from './tables/RateLimitStates';
 import Sessions from './tables/Sessions';
 import Tokens from './tables/Tokens';
@@ -35,6 +36,7 @@ export class APIBase {
 export class MopedMigrationsAPI extends APIBase {
   create(mopedMigrations: {
     id: MopedMigrations['id'];
+    index: MopedMigrations['index'];
     isApplied?: MopedMigrations['isApplied'];
     lastDown?: MopedMigrations['lastDown'];
     lastUp?: MopedMigrations['lastUp'];
@@ -45,6 +47,7 @@ export class MopedMigrationsAPI extends APIBase {
       .filter(
         name =>
           name === 'id' ||
+          name === 'index' ||
           name === 'isApplied' ||
           name === 'lastDown' ||
           name === 'lastUp' ||
@@ -78,6 +81,7 @@ export class MopedMigrationsAPI extends APIBase {
           .filter(
             fieldName =>
               fieldName === 'id' ||
+              fieldName === 'index' ||
               fieldName === 'isApplied' ||
               fieldName === 'lastDown' ||
               fieldName === 'lastUp' ||
@@ -92,6 +96,7 @@ export class MopedMigrationsAPI extends APIBase {
   get(
     id: MopedMigrations['id'],
     query?: {
+      index?: MopedMigrations['index'];
       isApplied?: MopedMigrations['isApplied'];
       lastDown?: MopedMigrations['lastDown'];
       lastUp?: MopedMigrations['lastUp'];
@@ -111,6 +116,7 @@ export class MopedMigrationsAPI extends APIBase {
               .sort()
               .filter(
                 fieldName =>
+                  fieldName === 'index' ||
                   fieldName === 'isApplied' ||
                   fieldName === 'lastDown' ||
                   fieldName === 'lastUp' ||
@@ -129,12 +135,14 @@ export class MopedMigrationsAPI extends APIBase {
   update(
     id: MopedMigrations['id'],
     mopedMigrations: {
+      index?: MopedMigrations['index'];
       isApplied?: MopedMigrations['isApplied'];
       lastDown?: MopedMigrations['lastDown'];
       lastUp?: MopedMigrations['lastUp'];
       name?: MopedMigrations['name'];
     },
     query?: {
+      index?: MopedMigrations['index'];
       isApplied?: MopedMigrations['isApplied'];
       lastDown?: MopedMigrations['lastDown'];
       lastUp?: MopedMigrations['lastUp'];
@@ -146,6 +154,7 @@ export class MopedMigrationsAPI extends APIBase {
         .sort()
         .filter(
           fieldName =>
+            fieldName === 'index' ||
             fieldName === 'isApplied' ||
             fieldName === 'lastDown' ||
             fieldName === 'lastUp' ||
@@ -175,6 +184,7 @@ export class MopedMigrationsAPI extends APIBase {
               .sort()
               .filter(
                 fieldName =>
+                  fieldName === 'index' ||
                   fieldName === 'isApplied' ||
                   fieldName === 'lastDown' ||
                   fieldName === 'lastUp' ||
@@ -193,6 +203,7 @@ export class MopedMigrationsAPI extends APIBase {
   remove(
     id: MopedMigrations['id'],
     query?: {
+      index?: MopedMigrations['index'];
       isApplied?: MopedMigrations['isApplied'];
       lastDown?: MopedMigrations['lastDown'];
       lastUp?: MopedMigrations['lastUp'];
@@ -212,11 +223,153 @@ export class MopedMigrationsAPI extends APIBase {
               .sort()
               .filter(
                 fieldName =>
+                  fieldName === 'index' ||
                   fieldName === 'isApplied' ||
                   fieldName === 'lastDown' ||
                   fieldName === 'lastUp' ||
                   fieldName === 'name',
               )
+              .map(
+                field => sql`${sql.ident(field)} = ${(query as any)[field]}`,
+              ),
+          ),
+          ' AND ',
+        ),
+      )
+      .then(noop);
+  }
+}
+
+export class MopedMigrationsVersionAPI extends APIBase {
+  create(mopedMigrationsVersion: {
+    id: MopedMigrationsVersion['id'];
+    version?: MopedMigrationsVersion['version'];
+  }): Promise<MopedMigrationsVersion> {
+    const columns = Object.keys(mopedMigrationsVersion)
+      .sort()
+      .filter(name => name === 'id' || name === 'version')
+      .map(name => ({name, value: (mopedMigrationsVersion as any)[name]}));
+    const data = columns.length
+      ? sql`(${sql.join(
+          columns.map(c => sql.ident(c.name)),
+          ',',
+        )}) VALUES (${sql.join(columns.map(c => sql`${c.value}`), ',')})`
+      : sql`DEFAULT VALUES`;
+    let s = sql`INSERT INTO "MopedMigrationsVersion" ${data} RETURNING *;`;
+    return this.db.query(s).then(results => results[0]);
+  }
+
+  where(query: SQLQuery): Promise<MopedMigrationsVersion[]> {
+    return this.db.query(
+      sql.join([sql`SELECT * FROM "MopedMigrationsVersion"`, query], ' WHERE '),
+    );
+  }
+
+  list(
+    query?: Partial<MopedMigrationsVersion>,
+  ): Promise<MopedMigrationsVersion[]> {
+    if (query === undefined) {
+      return this.db.query(sql`SELECT * FROM "MopedMigrationsVersion"`);
+    }
+    return this.where(
+      sql.join(
+        Object.keys(query)
+          .sort()
+          .filter(fieldName => fieldName === 'id' || fieldName === 'version')
+          .map(field => sql`${sql.ident(field)} = ${(query as any)[field]}`),
+        ' AND ',
+      ),
+    );
+  }
+
+  get(
+    id: MopedMigrationsVersion['id'],
+    query?: {version?: MopedMigrationsVersion['version']},
+  ): Promise<MopedMigrationsVersion | null> {
+    if (query === undefined) {
+      return this.db
+        .query(sql`SELECT * FROM "MopedMigrationsVersion" WHERE "id" = ${id}`)
+        .then(getOneResult);
+    }
+    return this.db
+      .query(
+        sql.join(
+          [
+            sql`SELECT * FROM "MopedMigrationsVersion" WHERE "id" = ${id}`,
+          ].concat(
+            Object.keys(query)
+              .sort()
+              .filter(fieldName => fieldName === 'version')
+              .map(
+                field => sql`${sql.ident(field)} = ${(query as any)[field]}`,
+              ),
+          ),
+          ' AND ',
+        ),
+      )
+      .then(getOneResult);
+  }
+
+  update(
+    id: MopedMigrationsVersion['id'],
+    mopedMigrationsVersion: {version?: MopedMigrationsVersion['version']},
+    query?: {version?: MopedMigrationsVersion['version']},
+  ): Promise<void> {
+    const updateColumns = sql.join(
+      Object.keys(mopedMigrationsVersion)
+        .sort()
+        .filter(fieldName => fieldName === 'version')
+        .map(
+          field =>
+            sql`${sql.ident(field)} = ${
+              (mopedMigrationsVersion as any)[field]
+            }`,
+        ),
+      ', ',
+    );
+
+    if (query === undefined) {
+      return this.db
+        .query(
+          sql`UPDATE "MopedMigrationsVersion" SET ${updateColumns} WHERE "id" = ${id}`,
+        )
+        .then(noop);
+    }
+    return this.db
+      .query(
+        sql.join(
+          [
+            sql`UPDATE "MopedMigrationsVersion" SET ${updateColumns} WHERE "id" = ${id}`,
+          ].concat(
+            Object.keys(query)
+              .sort()
+              .filter(fieldName => fieldName === 'version')
+              .map(
+                field => sql`${sql.ident(field)} = ${(query as any)[field]}`,
+              ),
+          ),
+          ' AND ',
+        ),
+      )
+      .then(noop);
+  }
+
+  remove(
+    id: MopedMigrationsVersion['id'],
+    query?: {version?: MopedMigrationsVersion['version']},
+  ): Promise<void> {
+    if (!query) {
+      return this.db
+        .query(sql`DELETE FROM "MopedMigrationsVersion" WHERE "id" = ${id}`)
+        .then(noop);
+    }
+    return this.db
+      .query(
+        sql.join(
+          [sql`DELETE FROM "MopedMigrationsVersion" WHERE "id" = ${id}`].concat(
+            Object.keys(query)
+              .sort()
+              .filter(fieldName => fieldName === 'version')
               .map(
                 field => sql`${sql.ident(field)} = ${(query as any)[field]}`,
               ),
@@ -1123,6 +1276,7 @@ export class UsersAPI extends APIBase {
 
 export default class Database extends APIBase {
   private _MopedMigrations: MopedMigrationsAPI | void;
+  private _MopedMigrationsVersion: MopedMigrationsVersionAPI | void;
   private _RateLimitStates: RateLimitStatesAPI | void;
   private _Sessions: SessionsAPI | void;
   private _Tokens: TokensAPI | void;
@@ -1133,6 +1287,13 @@ export default class Database extends APIBase {
     return (
       this._MopedMigrations ||
       (this._MopedMigrations = new MopedMigrationsAPI(this.db))
+    );
+  }
+
+  get MopedMigrationsVersion(): MopedMigrationsVersionAPI {
+    return (
+      this._MopedMigrationsVersion ||
+      (this._MopedMigrationsVersion = new MopedMigrationsVersionAPI(this.db))
     );
   }
 
