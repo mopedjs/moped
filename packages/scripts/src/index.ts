@@ -81,6 +81,7 @@ async function run() {
           'generator-moped',
         ]);
         await spawn.spawnAsyncInherit('yo', ['moped']);
+        return;
       } else {
         process.exit(1);
       }
