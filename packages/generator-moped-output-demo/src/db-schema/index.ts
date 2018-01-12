@@ -8,6 +8,7 @@ import Sessions from './tables/Sessions';
 import Tokens from './tables/Tokens';
 import UserEmails from './tables/UserEmails';
 import Users from './tables/Users';
+import numbers from './tables/numbers';
 
 function getOneResult<T>(results: T[]): T | null {
   if (results.length === 0) {
@@ -1274,6 +1275,133 @@ export class UsersAPI extends APIBase {
   }
 }
 
+export class numbersAPI extends APIBase {
+  create(numbers: {
+    id?: numbers['id'];
+    value: numbers['value'];
+  }): Promise<numbers> {
+    const columns = Object.keys(numbers)
+      .sort()
+      .filter(name => name === 'id' || name === 'value')
+      .map(name => ({name, value: (numbers as any)[name]}));
+    const data = columns.length
+      ? sql`(${sql.join(
+          columns.map(c => sql.ident(c.name)),
+          ',',
+        )}) VALUES (${sql.join(columns.map(c => sql`${c.value}`), ',')})`
+      : sql`DEFAULT VALUES`;
+    let s = sql`INSERT INTO "numbers" ${data} RETURNING *;`;
+    return this.db.query(s).then(results => results[0]);
+  }
+
+  where(query: SQLQuery): Promise<numbers[]> {
+    return this.db.query(
+      sql.join([sql`SELECT * FROM "numbers"`, query], ' WHERE '),
+    );
+  }
+
+  list(query?: Partial<numbers>): Promise<numbers[]> {
+    if (query === undefined) {
+      return this.db.query(sql`SELECT * FROM "numbers"`);
+    }
+    return this.where(
+      sql.join(
+        Object.keys(query)
+          .sort()
+          .filter(fieldName => fieldName === 'id' || fieldName === 'value')
+          .map(field => sql`${sql.ident(field)} = ${(query as any)[field]}`),
+        ' AND ',
+      ),
+    );
+  }
+
+  get(
+    id: numbers['id'],
+    query?: {value?: numbers['value']},
+  ): Promise<numbers | null> {
+    if (query === undefined) {
+      return this.db
+        .query(sql`SELECT * FROM "numbers" WHERE "id" = ${id}`)
+        .then(getOneResult);
+    }
+    return this.db
+      .query(
+        sql.join(
+          [sql`SELECT * FROM "numbers" WHERE "id" = ${id}`].concat(
+            Object.keys(query)
+              .sort()
+              .filter(fieldName => fieldName === 'value')
+              .map(
+                field => sql`${sql.ident(field)} = ${(query as any)[field]}`,
+              ),
+          ),
+          ' AND ',
+        ),
+      )
+      .then(getOneResult);
+  }
+
+  update(
+    id: numbers['id'],
+    numbers: {value?: numbers['value']},
+    query?: {value?: numbers['value']},
+  ): Promise<void> {
+    const updateColumns = sql.join(
+      Object.keys(numbers)
+        .sort()
+        .filter(fieldName => fieldName === 'value')
+        .map(field => sql`${sql.ident(field)} = ${(numbers as any)[field]}`),
+      ', ',
+    );
+
+    if (query === undefined) {
+      return this.db
+        .query(sql`UPDATE "numbers" SET ${updateColumns} WHERE "id" = ${id}`)
+        .then(noop);
+    }
+    return this.db
+      .query(
+        sql.join(
+          [
+            sql`UPDATE "numbers" SET ${updateColumns} WHERE "id" = ${id}`,
+          ].concat(
+            Object.keys(query)
+              .sort()
+              .filter(fieldName => fieldName === 'value')
+              .map(
+                field => sql`${sql.ident(field)} = ${(query as any)[field]}`,
+              ),
+          ),
+          ' AND ',
+        ),
+      )
+      .then(noop);
+  }
+
+  remove(id: numbers['id'], query?: {value?: numbers['value']}): Promise<void> {
+    if (!query) {
+      return this.db
+        .query(sql`DELETE FROM "numbers" WHERE "id" = ${id}`)
+        .then(noop);
+    }
+    return this.db
+      .query(
+        sql.join(
+          [sql`DELETE FROM "numbers" WHERE "id" = ${id}`].concat(
+            Object.keys(query)
+              .sort()
+              .filter(fieldName => fieldName === 'value')
+              .map(
+                field => sql`${sql.ident(field)} = ${(query as any)[field]}`,
+              ),
+          ),
+          ' AND ',
+        ),
+      )
+      .then(noop);
+  }
+}
+
 export default class Database extends APIBase {
   private _MopedMigrations: MopedMigrationsAPI | void;
   private _MopedMigrationsVersion: MopedMigrationsVersionAPI | void;
@@ -1282,6 +1410,7 @@ export default class Database extends APIBase {
   private _Tokens: TokensAPI | void;
   private _UserEmails: UserEmailsAPI | void;
   private _Users: UsersAPI | void;
+  private _numbers: numbersAPI | void;
 
   get MopedMigrations(): MopedMigrationsAPI {
     return (
@@ -1318,6 +1447,10 @@ export default class Database extends APIBase {
 
   get Users(): UsersAPI {
     return this._Users || (this._Users = new UsersAPI(this.db));
+  }
+
+  get numbers(): numbersAPI {
+    return this._numbers || (this._numbers = new numbersAPI(this.db));
   }
 
   task<T>(fn: (connection: Database) => Promise<T>): Promise<T> {

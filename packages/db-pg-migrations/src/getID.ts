@@ -1,3 +1,5 @@
+// @public
+
 const base = 36;
 const blockSize = 4;
 const discreteValues = Math.pow(base, blockSize);

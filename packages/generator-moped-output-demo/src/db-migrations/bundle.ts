@@ -6,9 +6,17 @@ import migrations, {
 } from '@moped/db-pg-migrations';
 
 export {MigrationsPackage};
-export default migrations({
-  id: 'd000jcbucsxfuugtdoq9',
-  index: 1,
-  name: '00001-init.ts',
-  operation: async () => operation(await import('./00001-init')),
-});
+export default migrations(
+  {
+    id: 'd000jcbyi08ktdk0glnc',
+    index: 1,
+    name: '00001-init.ts',
+    operation: async () => operation(await import('./00001-init')),
+  },
+  {
+    id: 'd000jcc03b1ekt4zsfvz',
+    index: 2,
+    name: '00002-add-numbers.ts',
+    operation: async () => operation(await import('./00002-add-numbers')),
+  },
+);

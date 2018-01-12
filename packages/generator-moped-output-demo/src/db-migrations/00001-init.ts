@@ -46,6 +46,7 @@ export async function up(db: Connection) {
     );
   `);
 }
+
 export async function down(db: Connection) {
   await db.query(sql`
     DROP TABLE "Users";
@@ -57,4 +58,4 @@ export async function down(db: Connection) {
 }
 
 // Do not edit this unique ID
-export const id = 'd000jcbucsxfuugtdoq9';
+export const id = 'd000jcbyi08ktdk0glnc';
