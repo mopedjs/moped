@@ -57,8 +57,10 @@ module.exports = class MopedGenerator extends Generator {
           '\n' +
           "I'll automatically create this folder.",
       );
-      mkdirp(name);
-      this.destinationRoot(this.destinationPath(name));
+      const dir = this.destinationPath(name);
+      mkdirp(dir);
+      this.destinationRoot(dir);
+      process.chdir(dir);
     }
   }
 
