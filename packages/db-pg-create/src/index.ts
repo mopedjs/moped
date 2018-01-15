@@ -62,6 +62,20 @@ async function isWorking(dbConnection: string): Promise<boolean> {
   }
 }
 
+async function whenStarted<T>(fn: () => Promise<T>): Promise<T> {
+  const timeout = Date.now() + 20 * 1000;
+  while (Date.now() < timeout) {
+    try {
+      return await fn();
+    } catch (ex) {
+      if (!/the database system is starting up/.test(ex.message)) {
+        throw ex;
+      }
+    }
+  }
+  return await fn();
+}
+
 export default async function run() {
   const dbConnection = process.env.DATABASE_URL;
   if (!dbConnection) {
@@ -140,7 +154,7 @@ export default async function run() {
   }
   try {
     console.log('Creating user...');
-    await runCommand('createuser', [userName], true);
+    await whenStarted(() => runCommand('createuser', [userName], true));
   } catch (ex) {
     if (
       hasBrew &&
@@ -151,7 +165,7 @@ export default async function run() {
       await runCommand('brew', ['services', 'stop', 'postgresql']);
       rimraf('/usr/local/var/postgres/postmaster.pid');
       await runCommand('brew', ['services', 'start', 'postgresql']);
-      await runCommand('createuser', [userName], true);
+      await whenStarted(() => runCommand('createuser', [userName], true));
     } else if (!/already exists/.test(ex.message)) {
       throw ex;
     }
