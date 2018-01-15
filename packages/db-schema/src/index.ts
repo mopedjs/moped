@@ -346,8 +346,10 @@ export default async function generate(
               `,
             )
             .join('\n')}
-          
-          
+
+          query<T = any>(query: SQLQuery): Promise<T[]> {
+            return this.db.query(query);
+          }
           task<T>(fn: (connection: Database) => Promise<T>): Promise<T> {
             return this.db.task(db => fn(new Database(db)));
           }
