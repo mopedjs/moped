@@ -1,11 +1,11 @@
 {
   "name": "@moped/db-pg-create",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "dependencies": {
-    "@moped/db-pg": "^0.0.7",
+    "@moped/db-pg": "^0.0.8",
     "@moped/env": "^0.1.2",
     "@moped/sql": "^0.0.3",
     "@types/node": "^8.0.33",
