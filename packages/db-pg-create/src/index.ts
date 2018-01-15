@@ -1,4 +1,5 @@
 import {existsSync} from 'fs';
+import {sync as rimraf} from 'rimraf';
 import connect from '@moped/db-pg';
 import sql from '@moped/sql';
 import chalk from 'chalk';
@@ -94,9 +95,9 @@ export default async function run() {
   //   return;
   // }
 
+  let hasBrew = false;
   if (process.env.TRAVIS !== 'true') {
     let listing = '';
-    let hasBrew = false;
     try {
       listing = await runCommand('brew', ['list'], true);
       hasBrew = true;
@@ -141,7 +142,17 @@ export default async function run() {
     console.log('Creating user...');
     await runCommand('createuser', [userName], true);
   } catch (ex) {
-    if (!/already exists/.test(ex.message)) {
+    if (
+      hasBrew &&
+      /createuser\: could not connect to database postgres\: could not connect to server\: No such file or directory/i.test(
+        ex.message,
+      )
+    ) {
+      await runCommand('brew', ['services', 'stop', 'postgresql']);
+      rimraf('/usr/local/var/postgres/postmaster.pid');
+      await runCommand('brew', ['services', 'start', 'postgresql']);
+      await runCommand('createuser', [userName], true);
+    } else if (!/already exists/.test(ex.message)) {
       throw ex;
     }
   }
