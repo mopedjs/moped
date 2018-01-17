@@ -1,0 +1,20 @@
+{
+  "name": "@moped/react-broadcast",
+  "version": "0.0.0",
+  "description": "",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "dependencies": {
+    "@types/node": "^8.0.33",
+    "react-broadcast": "^0.6.1"
+  },
+  "scripts": {
+    "prepublish": "node ../../prebuild react-broadcast&& tsc -p tsconfig.build.json && node ../../prepare react-broadcast"
+  },
+  "repository": "https://github.com/mopedjs/moped/tree/master/packages/react-broadcast",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "@moped/target": "browser"
+}

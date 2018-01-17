@@ -3,10 +3,11 @@ import {query, BicycleClient} from 'react-bicycle';
 import * as q from 'src/bicycle/query';
 import LoginPage from './LoginPage';
 
-export const ProfilePageQuery = q.User.id.name.privateStatus.publicStatus;
+const ProfileQuery = q.User.id.name.privateStatus.publicStatus;
+const RootQuery = q.Root.user(ProfileQuery);
 
 export interface ProfilePageProps {
-  user: typeof ProfilePageQuery.$type;
+  user: typeof ProfileQuery.$type;
   client: BicycleClient;
 }
 export function ProfilePage({user, client}: ProfilePageProps) {
@@ -70,7 +71,7 @@ export function ProfilePage({user, client}: ProfilePageProps) {
 }
 
 export default function ProfilePageWithLogin() {
-  return query(q.Root.user(ProfilePageQuery), ({user}, client) => {
+  return query(RootQuery, ({user}, client) => {
     if (!user) {
       return <LoginPage client={client} />;
     }
