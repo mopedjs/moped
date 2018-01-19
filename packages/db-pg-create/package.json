@@ -12,11 +12,11 @@
     "@types/rimraf": "^2.0.2",
     "chalk": "^2.3.0",
     "cross-spawn": "^5.1.0",
-    "dotenv": "^4.0.0",
     "rimraf": "^2.6.2"
   },
   "scripts": {
-    "prepublish": "node ../../prebuild db-pg-create&& tsc -p tsconfig.build.json && node ../../prepare db-pg-create"
+    "prepublish": "node ../../prebuild db-pg-create&& tsc -p tsconfig.build.json && node ../../prepare db-pg-create",
+    "dependency-check": "dependency-check package.json --quiet && dependency-check ./package.json --quiet --unused --no-dev --ignore-module \"@types/node\" --ignore-module \"@types/rimraf\""
   },
   "bin": {
     "moped-db-pg-create": "./lib/cli.js"

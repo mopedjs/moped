@@ -8,7 +8,8 @@
     "@types/node": "^8.0.33"
   },
   "scripts": {
-    "prepublish": "node ../../prebuild enums&& tsc -p tsconfig.build.json && node ../../prepare enums"
+    "prepublish": "node ../../prebuild enums&& tsc -p tsconfig.build.json && node ../../prepare enums",
+    "dependency-check": "dependency-check package.json --quiet && dependency-check ./package.json --quiet --unused --no-dev --ignore-module \"@types/node\""
   },
   "repository": "https://github.com/mopedjs/moped/tree/master/packages/enums",
   "license": "MIT",

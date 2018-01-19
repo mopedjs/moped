@@ -11,7 +11,8 @@
     "whatwg-fetch": "^2.0.3"
   },
   "scripts": {
-    "prepublish": "node ../../prebuild polyfills&& tsc -p tsconfig.build.json && node ../../prepare polyfills"
+    "prepublish": "node ../../prebuild polyfills&& tsc -p tsconfig.build.json && node ../../prepare polyfills",
+    "dependency-check": "dependency-check package.json --quiet && dependency-check ./package.json --quiet --unused --no-dev --ignore-module \"@types/node\""
   },
   "repository": "https://github.com/mopedjs/moped/tree/master/packages/polyfills",
   "license": "MIT",

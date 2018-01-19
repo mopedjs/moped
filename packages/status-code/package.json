@@ -16,7 +16,8 @@
     "react-router-dom": "*"
   },
   "scripts": {
-    "prepublish": "node ../../prebuild status-code&& tsc -p tsconfig.build.json && node ../../prepare status-code"
+    "prepublish": "node ../../prebuild status-code&& tsc -p tsconfig.build.json && node ../../prepare status-code",
+    "dependency-check": "dependency-check package.json --quiet && dependency-check ./package.json --quiet --unused --no-dev --ignore-module \"@types/node\""
   },
   "repository": "https://github.com/mopedjs/moped/tree/master/packages/status-code",
   "license": "MIT",

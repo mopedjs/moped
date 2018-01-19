@@ -14,7 +14,8 @@
     "secure-password": "^2.1.1"
   },
   "scripts": {
-    "prepublish": "node ../../prebuild passwords&& tsc -p tsconfig.build.json && node ../../prepare passwords"
+    "prepublish": "node ../../prebuild passwords&& tsc -p tsconfig.build.json && node ../../prepare passwords",
+    "dependency-check": "dependency-check package.json --quiet && dependency-check ./package.json --quiet --unused --no-dev --ignore-module \"@types/bytes\" --ignore-module \"@types/ms\" --ignore-module \"@types/node\""
   },
   "repository": "https://github.com/mopedjs/moped/tree/master/packages/passwords",
   "license": "MIT",

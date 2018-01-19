@@ -6,14 +6,23 @@
   "types": "./lib/index.d.ts",
   "dependencies": {
     "@types/node": "^8.0.33",
-    "ansi-to-html": "^0.6.3"
+    "ansi-to-html": "^0.6.3",
+    "react-dev-utils": "^5.0.0"
+  },
+  "peerDependencies": {
+    "webpack": "*"
   },
   "scripts": {
-    "prepublish": "node ../../prebuild start-server&& tsc -p tsconfig.build.json && node ../../prepare start-server"
+    "prepublish": "node ../../prebuild start-server&& tsc -p tsconfig.build.json && node ../../prepare start-server",
+    "dependency-check": "dependency-check package.json \"./dev-server.js\" \"./hot-entry.js\" --quiet && dependency-check ./package.json \"./dev-server.js\" \"./hot-entry.js\" --quiet --unused --no-dev --ignore-module \"@types/node\""
   },
   "repository": "https://github.com/mopedjs/moped/tree/master/packages/start-server",
   "license": "MIT",
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "dependency-check-entries": [
+    "./dev-server.js",
+    "./hot-entry.js"
+  ]
 }

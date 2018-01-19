@@ -25,11 +25,11 @@
     "ms": "^2.0.0",
     "react-dev-utils": "^4.2.1",
     "semver": "^5.4.1",
-    "ts-node": "^3.3.0",
     "webpack": "^3.10.0"
   },
   "scripts": {
-    "prepublish": "node ../../prebuild scripts&& tsc -p tsconfig.build.json && node ../../prepare scripts"
+    "prepublish": "node ../../prebuild scripts&& tsc -p tsconfig.build.json && node ../../prepare scripts",
+    "dependency-check": "dependency-check package.json \"./lib/helpers/build-webpack-migrations-bundle.js\" \"./lib/scripts/build.js\" \"./lib/scripts/db.js\" \"./lib/scripts/start.js\" --quiet && dependency-check ./package.json \"./lib/helpers/build-webpack-migrations-bundle.js\" \"./lib/scripts/build.js\" \"./lib/scripts/db.js\" \"./lib/scripts/start.js\" --quiet --unused --no-dev --ignore-module \"@types/inquirer\" --ignore-module \"@types/node\" --ignore-module \"@types/semver\""
   },
   "bin": {
     "moped": "./lib/index.js"
@@ -38,5 +38,11 @@
   "license": "MIT",
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "dependency-check-entries": [
+    "./lib/helpers/build-webpack-migrations-bundle.js",
+    "./lib/scripts/build.js",
+    "./lib/scripts/db.js",
+    "./lib/scripts/start.js"
+  ]
 }

@@ -21,7 +21,8 @@
     "react-loadable": "^5.3.1"
   },
   "scripts": {
-    "prepublish": "node ../../prebuild babel-preset&& tsc -p tsconfig.build.json && node ../../prepare babel-preset"
+    "prepublish": "node ../../prebuild babel-preset&& tsc -p tsconfig.build.json && node ../../prepare babel-preset",
+    "dependency-check": "dependency-check package.json --quiet"
   },
   "repository": "https://github.com/mopedjs/moped/tree/master/packages/babel-preset",
   "license": "MIT",

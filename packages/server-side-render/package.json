@@ -15,8 +15,14 @@
     "react-loadable": "^5.3.1",
     "react-router-dom": "^4.2.2"
   },
+  "peerDependencies": {
+    "react": "*",
+    "react-dom": "*",
+    "styled-components": "*"
+  },
   "scripts": {
-    "prepublish": "node ../../prebuild server-side-render&& tsc -p tsconfig.build.json && node ../../prepare server-side-render"
+    "prepublish": "node ../../prebuild server-side-render&& tsc -p tsconfig.build.json && node ../../prepare server-side-render",
+    "dependency-check": "dependency-check package.json --quiet && dependency-check ./package.json --quiet --unused --no-dev --ignore-module \"@types/express\" --ignore-module \"@types/node\" --ignore-module \"@types/react-loadable\" --ignore-module \"@types/react-router-dom\" --ignore-module \"bicycle\""
   },
   "repository": "https://github.com/mopedjs/moped/tree/master/packages/server-side-render",
   "license": "MIT",

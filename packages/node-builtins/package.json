@@ -8,7 +8,8 @@
     "@types/node": "^8.0.33"
   },
   "scripts": {
-    "prepublish": "node ../../prebuild node-builtins&& tsc -p tsconfig.build.json && node ../../prepare node-builtins"
+    "prepublish": "node ../../prebuild node-builtins&& tsc -p tsconfig.build.json && node ../../prepare node-builtins",
+    "dependency-check": "dependency-check package.json --quiet && dependency-check ./package.json --quiet --unused --no-dev --ignore-module \"@types/node\""
   },
   "repository": "https://github.com/mopedjs/moped/tree/master/packages/node-builtins",
   "license": "MIT",

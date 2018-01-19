@@ -5,12 +5,18 @@
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "dependencies": {
-    "@types/jest": "^21.1.5",
     "@types/node": "^8.0.33",
-    "typescript": "^2.5.3"
+    "invariant": "^2.2.2",
+    "prop-types": "^15.6.0",
+    "react-router": "^4.2.0",
+    "warning": "^3.0.0"
+  },
+  "peerDependencies": {
+    "react": "*"
   },
   "scripts": {
-    "prepublish": "node ../../prebuild react-router-animated-switch&& tsc -p tsconfig.build.json && node ../../prepare react-router-animated-switch"
+    "prepublish": "node ../../prebuild react-router-animated-switch&& tsc -p tsconfig.build.json && node ../../prepare react-router-animated-switch",
+    "dependency-check": "dependency-check package.json --quiet && dependency-check ./package.json --quiet --unused --no-dev --ignore-module \"@types/node\" --ignore-module \"@types/invariant\" --ignore-module \"@types/jest\" --ignore-module \"@types/prop-types\" --ignore-module \"@types/react-router\" --ignore-module \"@types/warning\""
   },
   "repository": "https://github.com/mopedjs/moped/tree/master/packages/react-router-animated-switch",
   "license": "MIT",
@@ -19,9 +25,11 @@
   },
   "devDependencies": {
     "@types/invariant": "^2.2.29",
+    "@types/jest": "^21.1.5",
     "@types/prop-types": "^15.5.2",
     "@types/react-router": "^4.0.19",
-    "@types/warning": "^3.0.0"
+    "@types/warning": "^3.0.0",
+    "typescript": "^2.5.3"
   },
   "@moped/target": "browser"
 }

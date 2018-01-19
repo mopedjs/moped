@@ -80,6 +80,29 @@ readdirSync(__dirname + '/packages').forEach(directory => {
       directory +
       '&& tsc -p tsconfig.build.json && node ../../prepare ' +
       directory;
+    const entries = pkg['dependency-check-entries'] || [];
+    const checkRequired =
+      'dependency-check package.json' +
+      entries.map(e => ' "' + e + '"').join('') +
+      ' --quiet';
+    const checkUsed =
+      'dependency-check ./package.json' +
+      entries.map(e => ' "' + e + '"').join('') +
+      ' --quiet --unused --no-dev' +
+      Object.keys(pkg.dependencies || {})
+        .concat(Object.keys(pkg.devDependencies || {}))
+        .filter(name => name.startsWith('@types') || name === 'bicycle')
+        .map(name => ' --ignore-module "' + name + '"')
+        .join('');
+    if (
+      directory !== 'babel-preset' &&
+      !directory.startsWith('rule-') &&
+      directory !== 'webpack-config'
+    ) {
+      pkg.scripts['dependency-check'] = checkRequired + ' && ' + checkUsed;
+    } else {
+      pkg.scripts['dependency-check'] = checkRequired;
+    }
   }
 
   pkg.repository =

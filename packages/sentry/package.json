@@ -9,14 +9,18 @@
     "@types/node": "^8.0.33",
     "@types/raven": "^2.1.3",
     "raven": "^2.3.0",
-    "raven-js": "^3.21.0"
+    "raven-js": "^3.22.1"
   },
   "scripts": {
-    "prepublish": "node ../../prebuild sentry&& tsc -p tsconfig.build.json && node ../../prepare sentry"
+    "prepublish": "node ../../prebuild sentry&& tsc -p tsconfig.build.json && node ../../prepare sentry",
+    "dependency-check": "dependency-check package.json \"./lib/index-browser.js\" --quiet && dependency-check ./package.json \"./lib/index-browser.js\" --quiet --unused --no-dev --ignore-module \"@types/node\" --ignore-module \"@types/raven\""
   },
   "repository": "https://github.com/mopedjs/moped/tree/master/packages/sentry",
   "license": "MIT",
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "dependency-check-entries": [
+    "./lib/index-browser.js"
+  ]
 }

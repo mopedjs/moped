@@ -8,10 +8,14 @@
     "@types/express": "^4.0.39",
     "@types/node": "^8.0.33",
     "@types/webpack-dev-server": "^2.9.1",
+    "address": "^1.0.3",
+    "chalk": "^2.3.0",
+    "react-dev-utils": "^5.0.0",
     "webpack-dev-server": "^2.9.4"
   },
   "scripts": {
-    "prepublish": "node ../../prebuild webpack-dev-server&& tsc -p tsconfig.build.json && node ../../prepare webpack-dev-server"
+    "prepublish": "node ../../prebuild webpack-dev-server&& tsc -p tsconfig.build.json && node ../../prepare webpack-dev-server",
+    "dependency-check": "dependency-check package.json --quiet && dependency-check ./package.json --quiet --unused --no-dev --ignore-module \"@types/express\" --ignore-module \"@types/node\" --ignore-module \"@types/webpack-dev-server\""
   },
   "repository": "https://github.com/mopedjs/moped/tree/master/packages/webpack-dev-server",
   "license": "MIT",

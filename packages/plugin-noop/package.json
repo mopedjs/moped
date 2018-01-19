@@ -5,11 +5,14 @@
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "dependencies": {
-    "@types/node": "^8.0.33",
+    "@types/node": "^8.0.33"
+  },
+  "devDependencies": {
     "webpack": "^3.10.0"
   },
   "scripts": {
-    "prepublish": "node ../../prebuild plugin-noop&& tsc -p tsconfig.build.json && node ../../prepare plugin-noop"
+    "prepublish": "node ../../prebuild plugin-noop&& tsc -p tsconfig.build.json && node ../../prepare plugin-noop",
+    "dependency-check": "dependency-check package.json --quiet && dependency-check ./package.json --quiet --unused --no-dev --ignore-module \"@types/node\""
   },
   "repository": "https://github.com/mopedjs/moped/tree/master/packages/plugin-noop",
   "license": "MIT",

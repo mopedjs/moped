@@ -9,7 +9,8 @@
   },
   "scripts": {
     "prepublish": "node ../../prebuild db-pg-errors&& tsc -p tsconfig.build.json && node ../../prepare db-pg-errors",
-    "build": "node build"
+    "build": "node build",
+    "dependency-check": "dependency-check package.json \"build.js\" --quiet && dependency-check ./package.json \"build.js\" --quiet --unused --no-dev --ignore-module \"@types/node\""
   },
   "repository": "https://github.com/mopedjs/moped/tree/master/packages/db-pg-errors",
   "license": "MIT",
@@ -19,5 +20,8 @@
   "devDependencies": {
     "pg-error-constants": "^1.0.0",
     "prettier": "^1.10.1"
-  }
+  },
+  "dependency-check-entries": [
+    "build.js"
+  ]
 }

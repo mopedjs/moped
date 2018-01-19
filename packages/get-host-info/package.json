@@ -10,7 +10,8 @@
     "react-dev-utils": "^4.1.0"
   },
   "scripts": {
-    "prepublish": "node ../../prebuild get-host-info&& tsc -p tsconfig.build.json && node ../../prepare get-host-info"
+    "prepublish": "node ../../prebuild get-host-info&& tsc -p tsconfig.build.json && node ../../prepare get-host-info",
+    "dependency-check": "dependency-check package.json --quiet && dependency-check ./package.json --quiet --unused --no-dev --ignore-module \"@types/node\""
   },
   "repository": "https://github.com/mopedjs/moped/tree/master/packages/get-host-info",
   "license": "MIT",

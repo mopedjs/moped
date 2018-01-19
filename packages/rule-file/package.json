@@ -10,7 +10,8 @@
     "file-loader": "^1.1.5"
   },
   "scripts": {
-    "prepublish": "node ../../prebuild rule-file&& tsc -p tsconfig.build.json && node ../../prepare rule-file"
+    "prepublish": "node ../../prebuild rule-file&& tsc -p tsconfig.build.json && node ../../prepare rule-file",
+    "dependency-check": "dependency-check package.json --quiet"
   },
   "repository": "https://github.com/mopedjs/moped/tree/master/packages/rule-file",
   "license": "MIT",

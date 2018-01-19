@@ -19,7 +19,8 @@
     "webpack-manifest-plugin": "^1.3.2"
   },
   "scripts": {
-    "prepublish": "node ../../prebuild webpack-plugins&& tsc -p tsconfig.build.json && node ../../prepare webpack-plugins"
+    "prepublish": "node ../../prebuild webpack-plugins&& tsc -p tsconfig.build.json && node ../../prepare webpack-plugins",
+    "dependency-check": "dependency-check package.json --quiet && dependency-check ./package.json --quiet --unused --no-dev --ignore-module \"@types/node\" --ignore-module \"@types/react-loadable\""
   },
   "repository": "https://github.com/mopedjs/moped/tree/master/packages/webpack-plugins",
   "license": "MIT",

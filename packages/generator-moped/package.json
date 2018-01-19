@@ -18,7 +18,8 @@
     "prepublish": "node ../../prebuild generator-moped&& tsc -p tsconfig.build.json && node ../../prepare generator-moped",
     "pretest": "node restore-postinstall",
     "test": "cd ../generator-moped-output-demo && yarn db down all && cd ../ && yo moped generator-moped-output-demo --force",
-    "posttest": "node clear-postinstall"
+    "posttest": "node clear-postinstall",
+    "dependency-check": "dependency-check package.json \"./generators/app/index.js\" --quiet && dependency-check ./package.json \"./generators/app/index.js\" --quiet --unused --no-dev --ignore-module \"@types/node\" --ignore-module \"@types/chalk\" --ignore-module \"@types/fs-extra\" --ignore-module \"@types/node\" --ignore-module \"@types/yeoman-generator\" --ignore-module \"@types/yeoman-test\" --ignore-module \"bicycle\""
   },
   "repository": "https://github.com/mopedjs/moped/tree/master/packages/generator-moped",
   "license": "MIT",
@@ -46,5 +47,8 @@
     "fs-extra": "^5.0.0",
     "moped": "^0.7.6",
     "yeoman-test": "^1.7.0"
-  }
+  },
+  "dependency-check-entries": [
+    "./generators/app/index.js"
+  ]
 }

@@ -8,7 +8,8 @@
     "@types/node": "^8.0.33"
   },
   "scripts": {
-    "prepublish": "node ../../prebuild register-service-worker&& tsc -p tsconfig.build.json && node ../../prepare register-service-worker"
+    "prepublish": "node ../../prebuild register-service-worker&& tsc -p tsconfig.build.json && node ../../prepare register-service-worker",
+    "dependency-check": "dependency-check package.json --quiet && dependency-check ./package.json --quiet --unused --no-dev --ignore-module \"@types/node\""
   },
   "repository": "https://github.com/mopedjs/moped/tree/master/packages/register-service-worker",
   "license": "MIT",

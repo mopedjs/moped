@@ -18,8 +18,12 @@
     "react-dev-utils": "^4.2.1",
     "url-loader": "^0.6.2"
   },
+  "peerDependencies": {
+    "webpack": "*"
+  },
   "scripts": {
-    "prepublish": "node ../../prebuild webpack-config&& tsc -p tsconfig.build.json && node ../../prepare webpack-config"
+    "prepublish": "node ../../prebuild webpack-config&& tsc -p tsconfig.build.json && node ../../prepare webpack-config",
+    "dependency-check": "dependency-check package.json --quiet"
   },
   "repository": "https://github.com/mopedjs/moped/tree/master/packages/webpack-config",
   "license": "MIT",

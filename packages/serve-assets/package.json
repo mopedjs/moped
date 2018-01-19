@@ -9,11 +9,15 @@
     "prepare-response": "^2.1.0"
   },
   "scripts": {
-    "prepublish": "node ../../prebuild serve-assets&& tsc -p tsconfig.build.json && node ../../prepare serve-assets"
+    "prepublish": "node ../../prebuild serve-assets&& tsc -p tsconfig.build.json && node ../../prepare serve-assets",
+    "dependency-check": "dependency-check package.json --quiet && dependency-check ./package.json --quiet --unused --no-dev --ignore-module \"@types/node\""
   },
   "repository": "https://github.com/mopedjs/moped/tree/master/packages/serve-assets",
   "license": "MIT",
   "publishConfig": {
     "access": "public"
+  },
+  "devDependencies": {
+    "lsr": "^2.0.0"
   }
 }

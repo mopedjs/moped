@@ -10,7 +10,8 @@
     "throat": "^4.1.0"
   },
   "scripts": {
-    "prepublish": "node ../../prebuild then-rpc&& tsc -p tsconfig.build.json && node ../../prepare then-rpc"
+    "prepublish": "node ../../prebuild then-rpc&& tsc -p tsconfig.build.json && node ../../prepare then-rpc",
+    "dependency-check": "dependency-check package.json --quiet && dependency-check ./package.json --quiet --unused --no-dev --ignore-module \"@types/node\""
   },
   "repository": "https://github.com/mopedjs/moped/tree/master/packages/then-rpc",
   "license": "MIT",

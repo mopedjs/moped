@@ -21,7 +21,8 @@
     "webpack": "^3.10.0"
   },
   "scripts": {
-    "prepublish": "node ../../prebuild rule-css&& tsc -p tsconfig.build.json && node ../../prepare rule-css"
+    "prepublish": "node ../../prebuild rule-css&& tsc -p tsconfig.build.json && node ../../prepare rule-css",
+    "dependency-check": "dependency-check package.json --quiet"
   },
   "repository": "https://github.com/mopedjs/moped/tree/master/packages/rule-css",
   "license": "MIT",
