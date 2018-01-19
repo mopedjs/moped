@@ -1,6 +1,6 @@
 {
   "name": "generator-moped",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "description": "",
   "files": [
     "generators"
@@ -31,13 +31,13 @@
   "types": "./lib/index.d.ts",
   "devDependencies": {
     "@authentication/cookie": "^0.0.4",
-    "@moped/db-pg": "^0.0.9",
-    "@moped/db-pg-migrations": "^0.0.10",
-    "@moped/sentry": "^0.0.1",
-    "@moped/serve-assets": "^0.0.4",
-    "@moped/server-side-render": "^0.0.2",
-    "@moped/sql": "^0.0.3",
-    "@moped/status-code": "^0.0.2",
+    "@moped/db-pg": "^0.0.10",
+    "@moped/db-pg-migrations": "^0.0.11",
+    "@moped/sentry": "^0.0.2",
+    "@moped/serve-assets": "^0.0.5",
+    "@moped/server-side-render": "^0.0.3",
+    "@moped/sql": "^0.0.4",
+    "@moped/status-code": "^0.0.3",
     "@types/chalk": "^2.2.0",
     "@types/fs-extra": "^5.0.0",
     "@types/node": "^8.0.33",
@@ -45,7 +45,7 @@
     "@types/yeoman-test": "^1.7.3",
     "bicycle": "^4.5.0",
     "fs-extra": "^5.0.0",
-    "moped": "^0.7.6",
+    "moped": "^0.7.7",
     "yeoman-test": "^1.7.0"
   },
   "dependency-check-entries": [

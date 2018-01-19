@@ -1,12 +1,12 @@
 {
   "name": "@moped/db-pg-migrations",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "dependencies": {
-    "@moped/db-pg": "^0.0.9",
-    "@moped/sql": "^0.0.3",
+    "@moped/db-pg": "^0.0.10",
+    "@moped/sql": "^0.0.4",
     "@types/node": "^8.0.33",
     "chalk": "^2.3.0"
   },
@@ -20,7 +20,7 @@
     "access": "public"
   },
   "devDependencies": {
-    "@moped/db-pg-create": "^0.0.8",
+    "@moped/db-pg-create": "^0.0.9",
     "lsr": "^2.0.0"
   }
 }
