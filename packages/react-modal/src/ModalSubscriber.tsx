@@ -12,11 +12,18 @@ export default class ModalSubscriber extends React.Component<
 > {
   state = this.props.getState();
   _unsubscribe = () => {};
+  _key = 0;
   componentDidMount() {
     this._unsubscribe = this.props.subscribe(this._onUpdate);
   }
   _onUpdate = () => {
-    this.setState(this.props.getState());
+    const newState = this.props.getState();
+    if (!this.state.open && newState.open) {
+      // each time the dialog is re-opened, force all content to be discarded
+      // re-created
+      this._key++;
+    }
+    this.setState(newState);
   };
   componentWillUnmount() {
     this._unsubscribe();
@@ -25,7 +32,12 @@ export default class ModalSubscriber extends React.Component<
     return this.props.render({
       animating: this.state.animating,
       open: this.state.open,
-      children: this.state.children(),
+      children:
+        this.state.open || this.state.animating ? (
+          <React.Fragment key={this._key}>
+            {this.state.children()}
+          </React.Fragment>
+        ) : null,
       onClose: this.state.onClose,
     });
   }
