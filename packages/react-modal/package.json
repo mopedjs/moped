@@ -1,11 +1,11 @@
 {
   "name": "@moped/react-modal",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "dependencies": {
-    "@moped/react-broadcast": "^1.0.1",
+    "@moped/react-broadcast": "^1.0.2",
     "@types/node": "^8.0.33"
   },
   "peerDependencies": {
