@@ -1,3 +1,4 @@
+import * as React from 'react';
 import createBroadcast from '@moped/react-broadcast';
 
 export default interface Context {
@@ -6,10 +7,10 @@ export default interface Context {
   close: () => void;
 };
 
-const {Broadcast, Subscriber} = createBroadcast<Context>({
+const pair = createBroadcast<Context>({
   open: () => {},
   updateContent: () => {},
   close: () => {},
 });
-
-export {Broadcast, Subscriber};
+export const Broadcast = pair.Broadcast;
+export const Subscriber = pair.Subscriber;
