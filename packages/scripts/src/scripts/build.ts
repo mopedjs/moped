@@ -194,7 +194,9 @@ function buildServer() {
 }
 
 function copyPublicFolder() {
-  fs.copySync(Paths.appPublicDirectory, Paths.appBuildDirectoryClient, {
-    dereference: true,
-  });
+  if (fs.existsSync(Paths.appPublicDirectory)) {
+    fs.copySync(Paths.appPublicDirectory, Paths.appBuildDirectoryClient, {
+      dereference: true,
+    });
+  }
 }
