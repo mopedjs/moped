@@ -22,5 +22,6 @@
   },
   "dependency-check-entries": [
     "./lib/index-browser.js"
-  ]
+  ],
+  "@moped/target": "browser"
 }
