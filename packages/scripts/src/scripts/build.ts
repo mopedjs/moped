@@ -63,6 +63,11 @@ const WARN_AFTER_CHUNK_GZIP_SIZE = 1024 * 1024; // 1MB
   Object.keys(appPkg.dependencies).forEach(name => {
     prodPkg.dependencies[name] = require(name + '/package.json').version;
   });
+  if (!('source-map-support' in prodPkg.dependencies)) {
+    prodPkg.dependencies[
+      'source-map-support'
+    ] = require('source-map-support/package.json').version;
+  }
   fs.writeFileSync(
     Paths.appBuildDirectory + '/package.json',
     JSON.stringify(prodPkg, null, '  '),

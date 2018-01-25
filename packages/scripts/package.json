@@ -25,6 +25,7 @@
     "ms": "^2.0.0",
     "react-dev-utils": "^4.2.1",
     "semver": "^5.4.1",
+    "source-map-support": "^0.5.3",
     "webpack": "^3.10.0"
   },
   "scripts": {
