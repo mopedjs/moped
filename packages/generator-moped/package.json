@@ -43,7 +43,6 @@
     "@types/node": "^8.0.33",
     "@types/yeoman-generator": "^2.0.0",
     "@types/yeoman-test": "^1.7.3",
-    "bicycle": "^4.5.0",
     "fs-extra": "^5.0.0",
     "moped": "^0.7.10",
     "yeoman-test": "^1.7.0"

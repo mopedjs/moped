@@ -10,7 +10,7 @@
     "@moped/db-pg-migrations": "^0.0.6",
     "@moped/sentry": "^0.0.1",
     "@moped/sql": "^0.0.2",
-    "bicycle": "^6.0.0",
+    "bicycle": "^7.0.0",
     "express": "^4.16.2",
     "styled-components": "^2.4.0"
   },
