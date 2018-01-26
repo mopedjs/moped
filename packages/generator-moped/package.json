@@ -1,6 +1,6 @@
 {
   "name": "generator-moped",
-  "version": "0.0.16",
+  "version": "0.0.17",
   "description": "",
   "files": [
     "generators"
@@ -35,7 +35,7 @@
     "@moped/db-pg-migrations": "^0.0.11",
     "@moped/sentry": "^0.0.3",
     "@moped/serve-assets": "^0.0.5",
-    "@moped/server-side-render": "^0.0.3",
+    "@moped/server-side-render": "^0.0.4",
     "@moped/sql": "^0.0.4",
     "@moped/status-code": "^0.0.3",
     "@types/chalk": "^2.2.0",
