@@ -91,6 +91,7 @@ readdirSync(__dirname + '/packages').forEach(directory => {
       ' --quiet --unused --no-dev' +
       Object.keys(pkg.dependencies || {})
         .concat(Object.keys(pkg.devDependencies || {}))
+        .concat(Object.keys(pkg.peerDependencies || {}))
         .filter(name => name.startsWith('@types') || name === 'bicycle')
         .map(name => ' --ignore-module "' + name + '"')
         .join('');
