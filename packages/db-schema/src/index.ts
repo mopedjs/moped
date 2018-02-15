@@ -332,7 +332,9 @@ export default async function generate(
           ${tables
             .map(
               table =>
-                `private _${table.tableName}: ${table.tableName}API | void;`,
+                `private _${table.tableName}: ${
+                  table.tableName
+                }API | undefined;`,
             )
             .join('\n')}
           ${tables
