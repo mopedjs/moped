@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Dialog from './Dialog';
 import ModalRenderProps from './ModalRenderProps';
 
 export default function ModalDialogView(props: ModalRenderProps) {
@@ -24,7 +23,7 @@ export default function ModalDialogView(props: ModalRenderProps) {
       }}
       onClick={props.onClose}
     >
-      <Dialog
+      <dialog
         open={props.open}
         style={{
           transform: props.open ? 'translate(0,0)' : 'translate(0,-100vh)',
@@ -45,7 +44,7 @@ export default function ModalDialogView(props: ModalRenderProps) {
         onClick={e => e.stopPropagation()}
       >
         {props.children}
-      </Dialog>
+      </dialog>
     </div>
   );
 }
