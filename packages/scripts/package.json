@@ -1,6 +1,6 @@
 {
   "name": "moped",
-  "version": "0.7.10",
+  "version": "0.7.11",
   "description": "",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -8,7 +8,7 @@
     "@moped/db-pg-create": "^0.0.9",
     "@moped/db-pg-migrations": "^0.0.11",
     "@moped/db-pg-schema": "^0.0.11",
-    "@moped/db-schema": "^0.0.14",
+    "@moped/db-schema": "^0.0.15",
     "@moped/env": "^0.1.3",
     "@moped/get-host-info": "^0.0.6",
     "@moped/node-builtins": "^0.0.5",
