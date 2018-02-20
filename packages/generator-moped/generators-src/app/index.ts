@@ -20,8 +20,9 @@ Object.keys(pkg.devDependencies).forEach(name => {
 module.exports = class MopedGenerator extends Generator {
   props: {[key: string]: string} = {...versions};
   options: Options;
-  constructor(args: string | string[], options: {}) {
+  constructor(args: string | string[], options: Options) {
     super(args, options);
+    this.options = options;
 
     this.argument('name', {type: String, required: false});
   }

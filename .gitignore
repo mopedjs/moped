@@ -30,6 +30,8 @@ packages/*/.cache
 packages/*/generators/
 templates/app/.cache
 templates/app/build
+templates/library/coverage
+templates/library/lib
 !packages/babel-preset/lib
 
 .DS_Store

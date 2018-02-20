@@ -33,6 +33,8 @@ lsr(__dirname + '/templates', {
       entry.name !== 'yarn.lock' &&
       entry.name !== '.cache' &&
       entry.name !== 'build' &&
+      entry.name !== 'lib' &&
+      entry.name !== 'coverage' &&
       entry.name !== 'yarn-error.lock'
     );
   },
@@ -64,6 +66,10 @@ lsr(__dirname + '/templates', {
     if (entry.name === 'package.json') {
       const pkg = JSON.parse(fs.readFileSync(entry.fullPath, 'utf8'));
       pkg.name = '<%= name %>';
+      if (pkg.repository) {
+        pkg.repository.url =
+          'https://github.com/<%= ownerName %>/<%= name %>.git';
+      }
       Object.keys(pkg.dependencies || {}).forEach(name => {
         if (mopedVersions[name]) {
           pkg.dependencies[name] =

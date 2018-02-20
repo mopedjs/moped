@@ -1,0 +1,48 @@
+{
+  "name": "app-name",
+  "version": "0.0.0",
+  "dependencies": {},
+  "devDependencies": {
+    "@types/jest": "^22.1.3",
+    "@types/node": "*",
+    "husky": "^0.14.3",
+    "jest": "^22.4.0",
+    "lint-staged": "^6.0.0",
+    "prettier": "^1.10.1",
+    "ts-jest": "^22.0.4",
+    "typescript": "^2.7.1"
+  },
+  "scripts": {
+    "precommit": "lint-staged && yarn build",
+    "prepublish": "yarn build",
+    "prettier": "prettier --write \"**/*.{ts,tsx}\"",
+    "build": "tsc",
+    "test": "jest"
+  },
+  "lint-staged": {
+    "*.tsx": [
+      "prettier --write",
+      "git add"
+    ]
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": "(\\.|/)(test|spec)\\.(jsx?|tsx?)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/owner-name/app-name.git"
+  },
+  "author": "ForbesLindesay",
+  "license": "MIT"
+}
