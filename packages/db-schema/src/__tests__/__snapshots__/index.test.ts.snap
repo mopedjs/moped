@@ -600,10 +600,10 @@ export class OnlyPrimaryKeyAPI extends APIBase {
 }
 
 export default class Database extends APIBase {
-  private _User: UserAPI | void;
-  private _Food: FoodAPI | void;
-  private _FavouriteFood: FavouriteFoodAPI | void;
-  private _OnlyPrimaryKey: OnlyPrimaryKeyAPI | void;
+  private _User: UserAPI | undefined;
+  private _Food: FoodAPI | undefined;
+  private _FavouriteFood: FavouriteFoodAPI | undefined;
+  private _OnlyPrimaryKey: OnlyPrimaryKeyAPI | undefined;
 
   get User(): UserAPI {
     return this._User || (this._User = new UserAPI(this.db));
