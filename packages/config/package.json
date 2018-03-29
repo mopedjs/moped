@@ -1,0 +1,27 @@
+{
+  "name": "@moped/config",
+  "version": "0.0.0",
+  "description": "",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "dependencies": {
+    "@types/ajv": "^1.0.0",
+    "@types/cosmiconfig": "^4.0.0",
+    "@types/node": "^8.0.33",
+    "ajv": "^6.4.0",
+    "cosmiconfig": "^4.0.0"
+  },
+  "scripts": {
+    "prebuild": "json-schema-to-typescript moped-schema.json src/moped-schema.d.ts",
+    "prepublish": "node ../../prebuild config&& tsc -p tsconfig.build.json && node ../../prepare config",
+    "dependency-check": "dependency-check package.json --quiet && dependency-check ./package.json --quiet --unused --no-dev --ignore-module \"@types/ajv\" --ignore-module \"@types/cosmiconfig\" --ignore-module \"@types/node\""
+  },
+  "repository": "https://github.com/mopedjs/moped/tree/master/packages/config",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "json-schema-to-typescript-cli": "^3.0.0"
+  }
+}

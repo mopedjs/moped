@@ -1,0 +1,51 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`invalid - additional-properties.json 1`] = `"additional-properties.json should NOT have additional properties"`;
+
+exports[`invalid - empty-monorepo.json 1`] = `"empty-monorepo.json .monorepo should be equal to constant"`;
+
+exports[`invalid - incorrect-type.json 1`] = `"incorrect-type.json .disableClient should be boolean"`;
+
+exports[`valid - basic.json 1`] = `
+Object {
+  "config": Object {
+    "clientEntryPoint": null,
+    "dbMigrations": null,
+    "dbOverrides": null,
+    "htmlTemplate": null,
+    "port": 3000,
+    "publicDirectory": null,
+    "serverEntryPointDev": "src/server.tsx",
+    "serverEntryPointProd": "src/server.tsx",
+  },
+  "monorepo": false,
+}
+`;
+
+exports[`valid - monorepo.json 1`] = `
+Object {
+  "configs": Object {
+    "app": Object {
+      "clientEntryPoint": "src/client.tsx",
+      "dbMigrations": "src/db-migrations",
+      "dbOverrides": "src/db-overrides/index.ts",
+      "htmlTemplate": "src/index.html",
+      "port": 3000,
+      "publicDirectory": "src/public",
+      "serverEntryPointDev": "src/server.tsx",
+      "serverEntryPointProd": "src/server.tsx",
+    },
+    "some-backend-service": Object {
+      "clientEntryPoint": null,
+      "dbMigrations": "src/db-migrations",
+      "dbOverrides": "src/db-overrides/index.ts",
+      "htmlTemplate": null,
+      "port": 3000,
+      "publicDirectory": null,
+      "serverEntryPointDev": "src/some-backend-service.ts",
+      "serverEntryPointProd": "src/some-backend-service.ts",
+    },
+  },
+  "monorepo": true,
+}
+`;

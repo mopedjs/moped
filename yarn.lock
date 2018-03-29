@@ -506,6 +506,12 @@
   dependencies:
     acorn "^5.2.1"
 
+"@types/ajv@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@types/ajv/-/ajv-1.0.0.tgz#4fb2440742f2f6c30e7fb0797b839fc6f696682a"
+  dependencies:
+    ajv "*"
+
 "@types/autoprefixer@^6.7.3":
   version "6.7.3"
   resolved "https://registry.yarnpkg.com/@types/autoprefixer/-/autoprefixer-6.7.3.tgz#1bd7c1e2bb0fcfde46011545ddc5f177d7efdd98"
@@ -588,6 +594,10 @@
     "@types/express" "*"
     "@types/keygrip" "*"
     "@types/node" "*"
+
+"@types/cosmiconfig@^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@types/cosmiconfig/-/cosmiconfig-4.0.0.tgz#0bfa24fc423932fb1530bf605c50e192d259104e"
 
 "@types/deep-freeze@^0.1.1":
   version "0.1.1"
@@ -1006,6 +1016,15 @@ agent-base@^4.1.0:
 ajv-keywords@^2.0.0, ajv-keywords@^2.1.0:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/ajv-keywords/-/ajv-keywords-2.1.1.tgz#617997fc5f60576894c435f940d819e135b80762"
+
+ajv@*, ajv@^6.4.0:
+  version "6.4.0"
+  resolved "https://registry.yarnpkg.com/ajv/-/ajv-6.4.0.tgz#d3aff78e9277549771daf0164cff48482b754fc6"
+  dependencies:
+    fast-deep-equal "^1.0.0"
+    fast-json-stable-stringify "^2.0.0"
+    json-schema-traverse "^0.3.0"
+    uri-js "^3.0.2"
 
 ajv@^4.9.1:
   version "4.11.8"
@@ -2913,6 +2932,15 @@ cosmiconfig@^3.1.0:
     is-directory "^0.3.1"
     js-yaml "^3.9.0"
     parse-json "^3.0.0"
+    require-from-string "^2.0.1"
+
+cosmiconfig@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/cosmiconfig/-/cosmiconfig-4.0.0.tgz#760391549580bbd2df1e562bc177b13c290972dc"
+  dependencies:
+    is-directory "^0.3.1"
+    js-yaml "^3.9.0"
+    parse-json "^4.0.0"
     require-from-string "^2.0.1"
 
 cpx@^1.5.0:
@@ -5609,9 +5637,16 @@ json-loader@^0.5.4:
   version "0.5.7"
   resolved "https://registry.yarnpkg.com/json-loader/-/json-loader-0.5.7.tgz#dca14a70235ff82f0ac9a3abeb60d337a365185d"
 
-json-parse-better-errors@^1.0.0:
+json-parse-better-errors@^1.0.0, json-parse-better-errors@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/json-parse-better-errors/-/json-parse-better-errors-1.0.1.tgz#50183cd1b2d25275de069e9e71b467ac9eab973a"
+
+json-schema-to-typescript-cli@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/json-schema-to-typescript-cli/-/json-schema-to-typescript-cli-3.0.0.tgz#231200fd1865a2bb2541d1a7296219e48e73ae1d"
+  dependencies:
+    commander "^2.9.0"
+    lodash "^4.6.1"
 
 json-schema-traverse@^0.3.0:
   version "0.3.1"
@@ -6009,6 +6044,10 @@ lodash.uniq@^4.5.0:
 "lodash@^3.0.1 || ^2.0.0", lodash@^3.3.1:
   version "3.10.1"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-3.10.1.tgz#5bf45e8e49ba4189e17d482789dfd15bd140b7b6"
+
+lodash@^4.6.1:
+  version "4.17.5"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.5.tgz#99a92d65c0272debe8c96b6057bc8fbfa3bed511"
 
 log-symbols@^1.0.1, log-symbols@^1.0.2:
   version "1.0.2"
@@ -6900,6 +6939,13 @@ parse-json@^3.0.0:
   resolved "https://registry.yarnpkg.com/parse-json/-/parse-json-3.0.0.tgz#fa6f47b18e23826ead32f263e744d0e1e847fb13"
   dependencies:
     error-ex "^1.3.1"
+
+parse-json@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/parse-json/-/parse-json-4.0.0.tgz#be35f5425be1f7f6c747184f98a788cb99477ee0"
+  dependencies:
+    error-ex "^1.3.1"
+    json-parse-better-errors "^1.0.1"
 
 parse-passwd@^1.0.0:
   version "1.0.0"
@@ -9373,6 +9419,12 @@ update-notifier@^1.0.3:
 upper-case@^1.1.1:
   version "1.1.3"
   resolved "https://registry.yarnpkg.com/upper-case/-/upper-case-1.1.3.tgz#f6b4501c2ec4cdd26ba78be7222961de77621598"
+
+uri-js@^3.0.2:
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/uri-js/-/uri-js-3.0.2.tgz#f90b858507f81dea4dcfbb3c4c3dbfa2b557faaa"
+  dependencies:
+    punycode "^2.1.0"
 
 urijs@^1.16.1:
   version "1.19.0"

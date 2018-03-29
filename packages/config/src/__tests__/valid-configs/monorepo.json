@@ -1,0 +1,8 @@
+{
+  "monorepo": true,
+  "app": {},
+  "some-backend-service": {
+    "disableClient": true,
+    "serverEntryPoint": "src/some-backend-service.ts"
+  }
+}
