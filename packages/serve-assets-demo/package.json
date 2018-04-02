@@ -1,14 +1,14 @@
 {
   "name": "@moped/serve-assets-demo",
   "private": true,
-  "version": "0.0.15",
+  "version": "0.0.16",
   "description": "",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "dependencies": {
     "@babel/preset-env": "^7.0.0-beta.32",
-    "@moped/get-host-info": "^0.0.7",
-    "@moped/serve-assets": "^0.0.6",
+    "@moped/get-host-info": "^0.0.8",
+    "@moped/serve-assets": "^0.0.7",
     "@types/node": "^8.0.33",
     "babel-loader": "^7.1.2",
     "babel-preset-env": "^1.6.1",

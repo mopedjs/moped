@@ -1,12 +1,12 @@
 {
   "name": "@moped/rule-ts-demo",
   "private": true,
-  "version": "0.0.15",
+  "version": "0.0.16",
   "description": "",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "dependencies": {
-    "@moped/rule-ts": "^0.0.9",
+    "@moped/rule-ts": "^0.0.10",
     "@types/node": "^8.0.33",
     "@types/react": "*",
     "@types/react-dom": "*",
