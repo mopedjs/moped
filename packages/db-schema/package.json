@@ -1,16 +1,16 @@
 {
   "name": "@moped/db-schema",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "description": "",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "dependencies": {
-    "@moped/load-ts-config": "^0.0.4",
+    "@moped/load-ts-config": "^0.0.5",
     "@types/mkdirp": "^0.5.1",
     "@types/node": "^8.0.33",
     "@types/rimraf": "^2.0.2",
     "mkdirp": "^0.5.1",
-    "then-rpc": "^0.0.3"
+    "then-rpc": "^0.0.4"
   },
   "scripts": {
     "prepublish": "node ../../prebuild db-schema&& tsc -p tsconfig.build.json && node ../../prepare db-schema",

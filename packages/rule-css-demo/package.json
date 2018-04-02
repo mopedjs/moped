@@ -1,12 +1,12 @@
 {
   "name": "@moped/rule-css-demo",
   "private": true,
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "dependencies": {
-    "@moped/rule-css": "^0.0.12",
+    "@moped/rule-css": "^0.0.13",
     "@types/node": "^8.0.33",
     "html-webpack-plugin": "^2.30.1",
     "webpack": "^3.10.0"
