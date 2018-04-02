@@ -7,8 +7,7 @@
   "registry": "https://registry.npmjs.org/",
   "command": {
     "publish": {
-      "access": "public",
-      "ignore": "*-demo"
+      "access": "public"
     }
   }
 }
