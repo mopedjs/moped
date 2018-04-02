@@ -38,7 +38,6 @@
     "@moped/server-side-render": "^0.0.6",
     "@moped/sql": "^0.0.6",
     "@moped/status-code": "^0.0.5",
-    "@types/chalk": "^2.2.0",
     "@types/fs-extra": "^5.0.0",
     "@types/node": "^8.0.33",
     "@types/yeoman-generator": "^2.0.0",
