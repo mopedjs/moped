@@ -1,4 +1,4 @@
-import {relative, resolve} from 'path';
+import {relative, resolve, join} from 'path';
 import * as webpack from 'webpack';
 import {Environment, getEnvironment, Platform, getPlatform} from '@moped/enums';
 import createConfig, {
@@ -355,12 +355,16 @@ export function getPlugins(
                         ? '' + options.port
                         : undefined,
                     BUILD_PLATFORM: platform,
-                    TEMPLATE_FILE:
+                    // TODO: just take template path as a param
+                    TEMPLATE_FILE: join(
                       getOverride(
                         options.buildDirectory,
                         environment,
-                        Platform.Client,
-                      ) + '/index.html',
+                        platform,
+                      ),
+                      'public',
+                      'index.html',
+                    ),
                     PUBLIC_URL: options.publicUrl,
                     SENTRY_DSN: undefined,
                     SERVER_SENTRY_DSN: undefined,
@@ -374,13 +378,14 @@ export function getPlugins(
             NODE_ENV: environment,
             PROXY_HTML_REQUESTS: process.env.PROXY_HTML_REQUESTS || 'false',
             BUILD_PLATFORM: platform,
+            // TODO: just accept the path to the template file as a param
             TEMPLATE_FILE: relative(
-              getOverride(options.buildDirectory, environment, Platform.Server),
-              getOverride(
-                options.buildDirectory,
-                environment,
-                Platform.Client,
-              ) + '/index.html',
+              getOverride(options.buildDirectory, environment, platform),
+              join(
+                getOverride(options.buildDirectory, environment, platform),
+                'public',
+                'index.html',
+              ),
             ),
             PUBLIC_URL: options.publicUrl,
           }),
