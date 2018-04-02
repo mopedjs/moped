@@ -9,5 +9,8 @@
     "publish": {
       "ignore": "*-demo"
     }
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
