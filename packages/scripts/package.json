@@ -1,11 +1,11 @@
 {
   "name": "moped",
-  "version": "0.7.12",
+  "version": "0.7.13",
   "description": "",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "dependencies": {
-    "@moped/config": "^0.0.1",
+    "@moped/config": "^0.0.2",
     "@moped/db-pg-create": "^0.0.10",
     "@moped/db-pg-migrations": "^0.0.12",
     "@moped/db-pg-schema": "^0.0.12",
