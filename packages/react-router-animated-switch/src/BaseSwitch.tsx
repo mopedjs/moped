@@ -33,7 +33,8 @@ class Switch extends React.Component<Props> {
     location: PropTypes.object,
   };
 
-  context: RouterChildContext<any>;
+  // prettier-ignore
+  context!: RouterChildContext<any>;
 
   componentWillMount() {
     invariant(

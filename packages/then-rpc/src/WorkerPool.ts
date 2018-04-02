@@ -10,7 +10,9 @@ export default class WorkerPool {
   private readonly _filename: string;
   private readonly _args: string[];
   private readonly _workers = new Queue<Worker>();
-  private readonly _prepareWorker: void | ((worker: Worker) => Promise<void>);
+  private readonly _prepareWorker:
+    | undefined
+    | ((worker: Worker) => Promise<void>);
   private _poolSize: number = 0;
 
   constructor(filename: string, options: WorkerPoolOptions = {}) {

@@ -34,10 +34,12 @@ export default class ModalProvider extends React.Component<ModalProviderProps> {
       }
     };
   };
-  _animationEndTimeout: NodeJS.Timer;
+  _animationEndTimeout: NodeJS.Timer | undefined;
   _api: Context = {
     open: (children: () => React.ReactNode, onClose: () => any) => {
-      clearTimeout(this._animationEndTimeout);
+      if (this._animationEndTimeout !== undefined) {
+        clearTimeout(this._animationEndTimeout);
+      }
       this._update({
         animating: true,
         open: true,
@@ -52,7 +54,9 @@ export default class ModalProvider extends React.Component<ModalProviderProps> {
       this._update({...this._st, children});
     },
     close: () => {
-      clearTimeout(this._animationEndTimeout);
+      if (this._animationEndTimeout !== undefined) {
+        clearTimeout(this._animationEndTimeout);
+      }
       this._update({
         ...this._st,
         animating: true,

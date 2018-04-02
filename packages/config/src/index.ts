@@ -1,6 +1,6 @@
-// TODO: add a schema like https://github.com/SchemaStore/schemastore/blob/master/src/schemas/json/prettierrc.json
+// TODO: add a schema like https://github.com/SchemaStore/schemastore/blob/master/schemas/json/prettierrc.json
 import {realpathSync, accessSync} from 'fs';
-import {relative, resolve, dirname, basename} from 'path';
+import {relative, resolve, dirname, basename, join} from 'path';
 import chalk from 'chalk';
 import cosmiconfig = require('cosmiconfig');
 import Ajv = require('ajv');
@@ -46,6 +46,14 @@ export interface AppConfig {
    * Relative path to a file containing types to override database columns.
    */
   dbOverrides: string | null;
+  /**
+   * Relative path to a directory to output a typescript database client to.
+   */
+  dbSchema: string;
+  /**
+   * The DATABASE_URL for use in development e.g. postgres://app-name@localhost/app-name
+   */
+  dbURL: string | null;
   /**
    * Relative path to an html file to use as a template.
    */
@@ -98,6 +106,7 @@ function withDefaults(
   config: RawAppConfig,
   fs: Options,
 ): AppConfig {
+  const srcDirectory = join(basedir, 'src');
   function resolveApp(relativePath: string, options: {required: true}): string;
   function resolveApp(
     relativePath: string,
@@ -107,7 +116,7 @@ function withDefaults(
     relativePath: string,
     options: {required: boolean} = {required: false},
   ): string | null {
-    const filePath = resolve(basedir, relativePath);
+    const filePath = resolve(srcDirectory, relativePath);
     try {
       fs.accessSync(filePath, F_OK);
       return fs.shortenPathsForTests
@@ -233,64 +242,70 @@ function withDefaults(
       : configFallback(
           config.clientEntryPoint,
           [
-            'src/client.tsx',
-            'src/client.ts',
-            'src/client.jsx',
-            'src/client.mjs',
-            'src/client.js',
-            'src/index.tsx',
-            'src/index.ts',
-            'src/index.jsx',
-            'src/index.mjs',
-            'src/index.js',
+            'client.tsx',
+            'client.ts',
+            'client.jsx',
+            'client.mjs',
+            'client.js',
+            'index.tsx',
+            'index.ts',
+            'index.jsx',
+            'index.mjs',
+            'index.js',
           ],
           {required: true},
         ),
-    dbMigrations: configFallback(config.dbMigrations, 'src/db-migrations'),
+    dbMigrations: configFallback(config.dbMigrations, 'db-migrations'),
     dbOverrides: configFallback(config.dbOverrides, [
-      'src/db-overrides/index.tsx',
-      'src/db-overrides/index.ts',
-      'src/db-overrides.tsx',
-      'src/db-overrides.ts',
+      'db-overrides/index.tsx',
+      'db-overrides/index.ts',
+      'db-overrides.tsx',
+      'db-overrides.ts',
     ]),
+    dbSchema: resolve(
+      srcDirectory,
+      config.dbSchema != null ? config.dbSchema : 'db-schema',
+    ),
+    dbURL:
+      config.dbURL != null ? config.dbURL : process.env.DATABASE_URL || null,
     htmlTemplate: config.disableClient
       ? null
-      : configFallback(config.htmlTemplate, 'src/index.html', {
+      : configFallback(config.htmlTemplate, 'index.html', {
           required: true,
         }),
     port: config.port == null ? 3000 : config.port,
     publicDirectory: config.disableClient
       ? null
-      : configFallback(config.publicDirectory, ['src/public', 'public']),
+      : configFallback(config.publicDirectory, ['public']),
     serverEntryPointDev: configFallback(
       config.serverEntryPointDev || config.serverEntryPoint,
       [
-        'src/server.dev.tsx',
-        'src/server.dev.ts',
-        'src/server.dev.jsx',
-        'src/server.dev.mjs',
-        'src/server.dev.js',
-        'src/server.tsx',
-        'src/server.ts',
-        'src/server.jsx',
-        'src/server.mjs',
-        'src/server.js',
+        'server.dev.tsx',
+        'server.dev.ts',
+        'server.dev.jsx',
+        'server.dev.mjs',
+        'server.dev.js',
+        'server.tsx',
+        'server.ts',
+        'server.jsx',
+        'server.mjs',
+        'server.js',
       ],
       {required: true},
     ),
     serverEntryPointProd: configFallback(
       config.serverEntryPointProd || config.serverEntryPoint,
       [
-        'src/server.prod.tsx',
-        'src/server.prod.ts',
-        'src/server.prod.jsx',
-        'src/server.prod.mjs',
-        'src/server.prod.js',
-        'src/server.tsx',
-        'src/server.ts',
-        'src/server.jsx',
-        'src/server.mjs',
-        'src/server.js',
+        'server.prod.tsx',
+        'server.prod.ts',
+        'server.prod.jsx',
+        'server.prod.mjs',
+        'server.prod.js',
+        'server.tsx',
+        'server.ts',
+        'server.jsx',
+        'server.mjs',
+        'server.js',
       ],
       {required: true},
     ),
@@ -303,7 +318,7 @@ function parseConfigObject(
     filePath: string;
   } | null,
   fs: Options,
-) {
+): Config {
   if (result) {
     const absoluteFilePath = fs.realpathSync(
       result.filePath || (result as any).filepath,
@@ -381,7 +396,10 @@ function parseConfigObject(
   };
 }
 
-export function loadConfigFile(filename: string, options?: Partial<Options>) {
+export function loadConfigFile(
+  filename: string,
+  options?: Partial<Options>,
+): Config {
   const fs = parseOptions(options);
   filename = fs.realpathSync(filename);
   const result = configLoader.load(null, filename);
@@ -390,7 +408,7 @@ export function loadConfigFile(filename: string, options?: Partial<Options>) {
 export default function loadConfig(
   basedir: string = process.cwd(),
   options?: Partial<Options>,
-) {
+): Config {
   const fs = parseOptions(options);
   basedir = fs.realpathSync(basedir);
   const result = configLoader.load(basedir);

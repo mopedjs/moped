@@ -32,7 +32,7 @@
     "react-dom": "^16.2.0",
     "react-loadable": "^5.3.1",
     "react-router-dom": "^4.2.2",
-    "ts-bicycle": "^3.0.2"
+    "ts-bicycle": "^3.1.1"
   },
   "scripts": {
     "postinstall": "moped db create && moped db up all && yarn bicycle",

@@ -7,6 +7,7 @@
  */
 
 import * as webpack from 'webpack';
+import Observable from './Observable';
 
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 
@@ -15,9 +16,12 @@ export enum LogLevel {
   warn = 'warn',
   error = 'error',
 }
-export class TypeScriptCheckerLogger {
+export class TypeScriptCheckerLogger extends Observable<undefined> {
   private _log: {level: LogLevel; args: any[]}[] = [];
-  private _onLog: () => {} | void | null = () => {};
+  private _onLog: (value: undefined) => void = () => {};
+  constructor() {
+    super(onValue => (this._onLog = onValue));
+  }
   clear() {
     this._log = [];
   }
@@ -45,21 +49,18 @@ export class TypeScriptCheckerLogger {
       }
     });
   }
-  onLog(fn: () => {} | null | void) {
-    this._onLog = fn;
-  }
 
   info(...args: any[]) {
     this._log.push({level: LogLevel.info, args});
-    this._onLog();
+    this._onLog(undefined);
   }
   warn(...args: any[]) {
     this._log.push({level: LogLevel.warn, args});
-    this._onLog();
+    this._onLog(undefined);
   }
   error(...args: any[]) {
     this._log.push({level: LogLevel.error, args});
-    this._onLog();
+    this._onLog(undefined);
   }
 }
 

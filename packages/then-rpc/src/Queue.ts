@@ -1,10 +1,7 @@
-const Queue = require('then-queue');
-export class IQueue<TItem> {
-  push(item: TItem): void {}
-  pop(): Promise<TItem> {
-    throw new Error('faked');
-  }
+const Queue: typeof IQueue = require('then-queue');
+export declare class IQueue<TItem> {
+  push(item: TItem): void;
+  pop(): Promise<TItem>;
   length: number;
 }
-(IQueue as any) = Queue;
-export default IQueue;
+export default Queue;

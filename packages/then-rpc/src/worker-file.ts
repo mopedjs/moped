@@ -1,18 +1,18 @@
-const filename: string = process.argv[2];
-let mod: any = require(filename);
+const fname: string = process.argv[2];
+let modu: any = require(fname);
 
 process.on('message', async message => {
   try {
     const result = await Promise.resolve(
       new Function('mod,ctx', 'return (' + message.fn + ')(mod, ctx);')(
-        mod,
+        modu,
         message.context,
       ),
     );
     if (message.kind === 'run') {
       process.send!({resolve: true, value: result});
     } else {
-      mod = result;
+      modu = result;
       process.send!({resolve: true, value: undefined});
     }
   } catch (ex) {

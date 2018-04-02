@@ -15,7 +15,9 @@ export default class Compiler {
   private _invalidSubscribers: Set<() => {} | null | void> = new Set();
   private _statusChangeSubscribers: Set<() => {} | null | void> = new Set();
 
-  public readonly ready: Promise<{} | null | void>;
+  // TODO: not type safe
+  // prettier-ignore
+  public readonly ready: Promise<{} | null | void> = undefined as any;
   constructor(
     config: webpack.Configuration,
     name: string,
@@ -72,7 +74,7 @@ export default class Compiler {
   buildCompleted(): boolean {
     return this._status === CompilerStatus.done;
   }
-  printStatus() {
+  printStatus(): boolean {
     switch (this._status) {
       case CompilerStatus.starting:
       case CompilerStatus.invalid:
@@ -99,7 +101,7 @@ export default class Compiler {
         if (messages.errors.length) {
           console.log(chalk.red('Failed to compile.\n'));
           console.log(messages.errors.join('\n\n'));
-          return;
+          return false;
         }
 
         // Show warnings if no errors were found.

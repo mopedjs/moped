@@ -6,38 +6,51 @@ import getConfig, {
   ExternalMode,
 } from '@moped/webpack-config';
 import NodeExternals from '@moped/node-builtins';
-import * as Paths from './Paths';
+import paths from './paths';
 import TypeScriptCheckerPluginInstance from './TypeScriptCheckerPluginInstance';
 
 export interface Options {
+  /**
+   * {
+   *   server: buildDirectory,
+   *   client: join(buildDirectory, 'public'),
+   * }
+   */
+  buildDirectory: string;
+  /**
+   * {
+   *   server: {
+   *     development: config.serverEntryPointDev,
+   *     production: config.serverEntryPointProd,
+   *   },
+   *   client: config.clientEntryPoint,
+   * },
+   */
+  entryPoint: string;
   environment: Environment;
+  htmlTemplate: string | null;
   platform: Platform;
   port?: number;
+  onExternalDependency?: (name: string) => void;
 }
 
-const dependencies = Object.keys(
-  require(Paths.appPackageJson).dependencies || {},
-);
-
 export default function({
+  buildDirectory,
+  entryPoint,
   environment,
+  htmlTemplate,
   platform,
   port,
+  onExternalDependency,
 }: Options): webpack.Configuration {
+  const dependencies = Object.keys(
+    require(paths.packageJSON).dependencies || {},
+  );
   return getConfig({
-    appNodeModulesDirectory: Paths.appNodeModulesDirectory,
-    appSourceDirectory: Paths.appSourceDirectory,
-    buildDirectory: {
-      server: Paths.appBuildDirectory,
-      client: Paths.appBuildDirectoryClient,
-    },
-    entryPoint: {
-      server: {
-        development: Paths.appServerDev,
-        production: Paths.appServerProd,
-      },
-      client: Paths.appClient,
-    },
+    appNodeModulesDirectory: paths.nodeModulesDirectory,
+    appSourceDirectory: paths.sourceDirectory,
+    buildDirectory: buildDirectory,
+    entryPoint: entryPoint,
     environment,
     externals: {
       server: (context, request) => {
@@ -45,7 +58,18 @@ export default function({
           return {mode: ExternalMode.commonjs, name: request};
         }
         if (
-          dependencies.some(name => request.substr(0, name.length) === name) &&
+          dependencies.some(name => {
+            if (
+              request.substr(0, name.length) === name &&
+              (request.length === name.length || request[name.length] === '/')
+            ) {
+              if (onExternalDependency) {
+                onExternalDependency(name);
+              }
+              return true;
+            }
+            return false;
+          }) &&
           // hot reloading requires that start-server is always part of the webpack bundle
           !/^\@moped\/start-server/.test(request)
         ) {
@@ -56,7 +80,7 @@ export default function({
       client: [],
     },
     platform,
-    htmlTemplateFileName: Paths.appHtml,
+    htmlTemplateFileName: htmlTemplate || undefined,
     plugins: {
       development: [TypeScriptCheckerPluginInstance],
       production: [],

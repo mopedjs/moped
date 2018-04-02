@@ -1,0 +1,7 @@
+{
+  "monorepo": true,
+  "app": {},
+  "service": {
+    "serverEntryPoint": "service/server.ts"
+  }
+}

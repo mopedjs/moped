@@ -12,6 +12,14 @@ export interface AppConfigDefinition {
    */
   dbOverrides?: string;
   /**
+   * Relative path to a folder to output a typed database schema to
+   */
+  dbSchema?: string;
+  /**
+   * The DATABASE_URL for use in development e.g. postgres://app-name@localhost/app-name
+   */
+  dbURL?: string;
+  /**
    * Disable all client side compilation. If you do this you **must** render everything server side.
    */
   disableClient?: boolean;

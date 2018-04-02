@@ -5,17 +5,12 @@ import {Request, Response, NextFunction} from 'express';
 import * as React from 'react';
 import {Provider as BicycleProvider} from 'react-bicycle';
 import {renderToString} from 'react-dom/server';
-import _Loadable from 'react-loadable';
+import Loadable = require('react-loadable');
 import {StaticRouter} from 'react-router-dom';
 import {ServerStyleSheet} from 'styled-components';
 const {getBundles} = require('react-loadable/webpack');
 
 const stringify = require('js-stringify');
-
-let Loadable = _Loadable;
-if (Loadable === undefined) {
-  Loadable = require('react-loadable') as any;
-}
 
 export interface Options<Context> {
   bicycle: BicycleServer<Context>;

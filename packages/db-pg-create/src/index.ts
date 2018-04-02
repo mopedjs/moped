@@ -76,8 +76,9 @@ async function whenStarted<T>(fn: () => Promise<T>): Promise<T> {
   return await fn();
 }
 
-export default async function run() {
-  const dbConnection = process.env.DATABASE_URL;
+export default async function run(
+  dbConnection: string | undefined = process.env.DATABASE_URL,
+) {
   if (!dbConnection) {
     console.warn(
       'You must set the DATABASE_URL envrionemnt variable in .env for moped to create the database.',

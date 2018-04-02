@@ -9,6 +9,7 @@
     "@types/cosmiconfig": "^4.0.0",
     "@types/node": "^8.0.33",
     "ajv": "^6.4.0",
+    "chalk": "^2.3.2",
     "cosmiconfig": "^4.0.0"
   },
   "scripts": {

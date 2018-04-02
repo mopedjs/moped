@@ -44,7 +44,7 @@ function hasDependency(): {
     return {
       hasPackageJSON: true,
       hasMoped: !!version,
-      isDemo: pkg.name === 'generator-moped-output-demo',
+      isDemo: /\-demo$/.test(pkg.name),
     };
   } catch (ex) {
     if (ex.code !== 'ENOENT') {

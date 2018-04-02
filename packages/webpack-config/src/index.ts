@@ -48,7 +48,7 @@ export interface Options {
   /**
    * The path to the `index.html` template you want to use
    */
-  htmlTemplateFileName: string;
+  htmlTemplateFileName?: string;
   /**
    * The port to run the backend option (only used in development & server)
    */
@@ -244,7 +244,7 @@ export function getBabelRule(
 export function getPlugins(
   options: {
     appNodeModulesDirectory: string;
-    htmlTemplateFileName: string;
+    htmlTemplateFileName?: string;
     port?: number;
     publicUrl: string;
     buildDirectory: Override<string>;
@@ -271,19 +271,26 @@ export function getPlugins(
             },
             {voidOtherEnvironmentVariables: true},
           ),
-          new plugins.Html({
-            alwaysWriteToDisk: true,
-            outputFileName: 'index.html',
-            templateFileName: options.htmlTemplateFileName,
-          }),
+          ...(options.htmlTemplateFileName
+            ? [
+                new plugins.Html({
+                  alwaysWriteToDisk: true,
+                  outputFileName: 'index.html',
+                  templateFileName: options.htmlTemplateFileName,
+                }),
+              ]
+            : []),
           new plugins.NamedModules(),
           new plugins.HotModuleReplacement(),
           new plugins.CaseSensitivePaths(),
           new plugins.WatchMissingNodeModules(options.appNodeModulesDirectory),
+          // TODO: this path is ugly, but we want to put it in the server build folder
+          // not the client one. We should just take the react-loadable.json location
+          // as a param
           new plugins.ReactLoadable({
             filename: resolve(
-              getOverride(options.buildDirectory, environment, Platform.Server),
-              'react-loadable.json',
+              getOverride(options.buildDirectory, environment, platform),
+              '../react-loadable.json',
             ),
           }),
           new plugins.IgnoreMomentLocales(),
@@ -300,11 +307,15 @@ export function getPlugins(
             },
             {voidOtherEnvironmentVariables: true},
           ),
-          new plugins.Html({
-            outputFileName: 'index.html',
-            templateFileName: options.htmlTemplateFileName,
-            minify: true,
-          }),
+          ...(options.htmlTemplateFileName
+            ? [
+                new plugins.Html({
+                  outputFileName: 'index.html',
+                  templateFileName: options.htmlTemplateFileName,
+                  minify: true,
+                }),
+              ]
+            : []),
           new plugins.MinifyJs(),
           new plugins.Manifest(),
           new plugins.ServiceWorker({

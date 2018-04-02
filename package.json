@@ -37,7 +37,7 @@
     "moped": "^0.7.1",
     "prettier": "^1.10.1",
     "rimraf": "^2.6.2",
-    "ts-bicycle": "^3.0.2",
+    "ts-bicycle": "^3.1.1",
     "ts-jest": "^22.0.1",
     "typescript": "^2.5.3",
     "weak": "^1.0.1"

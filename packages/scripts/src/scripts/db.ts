@@ -1,8 +1,8 @@
 // Do this as the first thing so that any code reading it knows the right env.
 import '@moped/env/development';
-import {readdirSync, writeFileSync} from 'fs';
+import {readdirSync, writeFileSync, mkdirSync, realpathSync} from 'fs';
+import {resolve} from 'path';
 import {
-  MigrationsPackage,
   Migration,
   Direction,
   NumberOfOperations,
@@ -10,15 +10,60 @@ import {
 import getID from '@moped/db-pg-migrations/getID';
 import {prompt, Separator} from 'inquirer';
 import chalk from 'chalk';
-import * as Paths from '../helpers/Paths';
-import * as spawn from '../helpers/spawn';
+import {
+  DatabaseMigrationBundle,
+  buildMigrationsBundle,
+  getMigrationBundles,
+  getMigrationsPackage,
+} from '../helpers/migrations';
+import generateSchema from '../helpers/generateSchema';
 
 const CI = process.env.CI;
 const isCI = CI && CI.toLowerCase() !== 'false';
 const args = process.argv.slice(3);
 
 async function run() {
-  let script: string = args[0];
+  const bundles = getMigrationBundles();
+  if (bundles.length === 0) {
+    console.error(
+      'In order to use moped for database migrations you must have a `db-migraitons` directory',
+    );
+    process.exit(1);
+  } else if (bundles.length === 1) {
+    await runBundle(bundles[0]);
+  } else {
+    let name = args.shift();
+    if (!name && !isCI) {
+      const {answer} = await prompt({
+        name: 'answer',
+        type: 'list',
+        message: "Which app's database would you like to interact with?",
+        choices: bundles.map(bundle => ({
+          name: `${bundle.names.join(' / ')} - ${bundle.databaseURL}`,
+          value: bundle.names[0],
+        })),
+      });
+      name = answer;
+    }
+    if (!name) {
+      console.error(
+        "You must specify which app's database you wish to interact with",
+      );
+      process.exit(1);
+      return;
+    }
+    const n = name;
+    const bundle = bundles.filter(b => b.names.indexOf(n) !== -1);
+    if (bundle.length === 0) {
+      console.error('Could not find the database for "' + n + '"');
+      process.exit(1);
+      return;
+    }
+    await runBundle(bundle[0]);
+  }
+}
+async function runBundle(bundle: DatabaseMigrationBundle) {
+  let script = args.shift();
   if (!script && !isCI) {
     const {answer} = await prompt({
       name: 'answer',
@@ -43,6 +88,11 @@ async function run() {
           name: 'create - Create a database if one does not yet exist.',
           value: 'create',
         },
+        {
+          name:
+            'schema - Generate a typed client from the current database schema.',
+          value: 'schema',
+        },
         new Separator(),
         {
           name: 'toggle - Manually toggle specific migrations up or down.',
@@ -53,57 +103,82 @@ async function run() {
             'build-migrations - Build a single entry point for moped database migrations (this happens automatically when you run `moped build` or any of the other `moped db` operations).',
           value: 'build-migrations',
         },
-        {
-          name:
-            'schema - Generate a typed client from the current database schema.',
-          value: 'schema',
-        },
+        new Separator(),
       ],
     });
     script = answer;
   }
   switch (script) {
     case 'create':
-      await create();
+      await create(bundle);
       break;
     case 'migrate':
-      await migrate();
+      await migrate(bundle);
       break;
     case 'build-migrations':
-      await buildMigrations();
+      await buildMigrationsBundle(bundle);
       break;
     case 'schema':
-      await generateSchema();
+      await generateSchema(bundle);
       break;
     case 'up':
     case 'down':
-      await runMigrations(script);
+      await runMigrations(bundle, script);
       break;
     case 'toggle':
-      await toggleMigrationsLoop();
+      await toggleMigrationsLoop(bundle);
       break;
     default:
-      console.log('Unknown script "' + script + '".');
+      console.error('Unknown script "' + script + '".');
       process.exit(1);
   }
 }
-run().catch(ex => {
-  console.error(ex);
-  process.exit(1);
-});
+run().then(
+  () => {
+    process.exit(0);
+  },
+  ex => {
+    console.error(ex);
+    process.exit(1);
+  },
+);
 
-async function create() {
+async function create(bundle: DatabaseMigrationBundle) {
   const {default: dbPgCreate} = await import('@moped/db-pg-create');
-  await dbPgCreate();
+  await dbPgCreate(bundle.databaseURL);
 }
-async function migrate() {
+async function migrate(bundle: DatabaseMigrationBundle) {
+  if (!bundle.migrationsDirectory) {
+    if (isCI) {
+      console.error('There is no migrations directory specified.');
+      process.exit(1);
+    }
+
+    const {answer} = await prompt({
+      name: 'answer',
+      type: 'confirm',
+      default: true,
+      message:
+        'There is no migrations directory specified. Would you like to create the deafult directory of "src/db-migrations"',
+    });
+    if (!answer) {
+      process.exit(1);
+    }
+    const migrationsDirectory = resolve(
+      realpathSync(process.cwd()),
+      'src/db-migrations',
+    );
+    mkdirSync(migrationsDirectory);
+    bundle.migrationsDirectory = migrationsDirectory;
+  }
+  const {migrationsDirectory} = bundle;
   const {answer} = await prompt({
     name: 'answer',
     type: 'input',
     message:
       'What would you like to call the migration (e.g. add-users-table)?',
   });
-  const currentIndex = readdirSync(Paths.dbMigrations)
+  const currentIndex = readdirSync(migrationsDirectory)
     .map(name => {
       const match = /^(\d+)\-/.exec(name);
       if (!match) {
@@ -117,7 +192,7 @@ async function migrate() {
     nextIndex = '0' + nextIndex;
   }
   writeFileSync(
-    Paths.dbMigrations + '/' + nextIndex + '-' + answer + '.ts',
+    migrationsDirectory + '/' + nextIndex + '-' + answer + '.ts',
     [
       `import {Connection, sql} from '@moped/db-pg-migrations';`,
       ``,
@@ -132,13 +207,17 @@ async function migrate() {
   );
 }
 
-async function buildMigrations() {
-  const {default: buildPackage} = await import('../helpers/build-migrations');
-  await buildPackage();
-}
-
-async function runMigrations(direction: 'up' | 'down') {
-  let count: string = args[1];
+async function runMigrations(
+  bundle: DatabaseMigrationBundle,
+  direction: 'up' | 'down',
+) {
+  if (!bundle.migrationsDirectory) {
+    console.error(
+      'There is no migrations directory specified. You could run "moped db migrate" to create a database migration',
+    );
+    process.exit(1);
+  }
+  let count = args.shift();
   let promptResult: null | Promise<any> = null;
   if (!count && !isCI) {
     promptResult = prompt({
@@ -178,7 +257,7 @@ async function runMigrations(direction: 'up' | 'down') {
     // we handle errors later
     promptResult.catch(() => {});
   }
-  const withBundle = getBundle();
+  const pkgDeferred = getMigrationsPackage(bundle, {defer: true});
   if (promptResult) {
     const {answer} = await promptResult;
     count = answer;
@@ -195,53 +274,60 @@ async function runMigrations(direction: 'up' | 'down') {
     console.error('Perhaps you meant to run: ' + chalk.cyan('moped db up one'));
     process.exit(1);
   }
-  await withBundle(async pkg => {
-    let hasMigrations = true;
-    while (hasMigrations) {
-      const migrations = await pkg.runOperation(
-        undefined,
-        direction as Direction,
-        count as NumberOfOperations,
+  const pkg = await pkgDeferred();
+  let hasMigrations = true;
+  while (hasMigrations) {
+    const migrations = await pkg.runOperation(
+      bundle.databaseURL,
+      direction as Direction,
+      count as NumberOfOperations,
+    );
+    hasMigrations = !!migrations;
+    if (migrations) {
+      console.error(chalk.red('Migrations are in an invalid state.'));
+      console.error(
+        'To fix this, you will have to manually run migrations up or down',
       );
-      hasMigrations = !!migrations;
-      if (migrations) {
-        console.error(chalk.red('Migrations are in an invalid state.'));
-        console.error(
-          'To fix this, you will have to manually run migrations up or down',
-        );
-        console.error(
-          'until there is a continuous sequence of applied migrations followed',
-        );
-        console.error('by a continuous sequence of un-applied migrations.');
-        if (process.env.CI) {
-          process.exit(1);
-        }
-        const aborted = await toggleMigrations(
-          migrations,
-          'abort - Abort this operation',
-        );
-        if (aborted) {
-          process.exit(1);
-        }
+      console.error(
+        'until there is a continuous sequence of applied migrations followed',
+      );
+      console.error('by a continuous sequence of un-applied migrations.');
+      if (process.env.CI) {
+        process.exit(1);
+      }
+      const aborted = await toggleMigrations(
+        bundle,
+        migrations,
+        'abort - Abort this operation',
+      );
+      if (aborted) {
+        process.exit(1);
       }
     }
-  });
-  await generateSchema();
+  }
+  await generateSchema(bundle);
 }
-async function toggleMigrationsLoop() {
-  const withBundle = getBundle();
-  return withBundle(async bundle => {
-    const migrations = await bundle.getState();
-    let aborted = await toggleMigrations(
+async function toggleMigrationsLoop(bundle: DatabaseMigrationBundle) {
+  const pkg = await getMigrationsPackage(bundle);
+  const migrations = await pkg.getState();
+  let aborted = await toggleMigrations(
+    bundle,
+    migrations,
+    'abort - Abort this operation',
+  );
+  while (!aborted) {
+    aborted = await toggleMigrations(
+      bundle,
       migrations,
-      'abort - Abort this operation',
+      'end - End this operation',
     );
-    while (!aborted) {
-      aborted = await toggleMigrations(migrations, 'end - End this operation');
-    }
-  });
+  }
 }
-async function toggleMigrations(migrations: Migration[], abortMessage: string) {
+async function toggleMigrations(
+  bundle: DatabaseMigrationBundle,
+  migrations: Migration[],
+  abortMessage: string,
+) {
   const {answer} = await prompt({
     name: 'answer',
     type: 'list',
@@ -300,73 +386,14 @@ async function toggleMigrations(migrations: Migration[], abortMessage: string) {
   });
   if (confirmation === 'run') {
     if (migration.isApplied) {
-      await migration.down();
+      await migration.down(bundle.databaseURL);
     } else {
-      await migration.up();
+      await migration.up(bundle.databaseURL);
     }
   } else if (confirmation === 'set') {
-    await migration.setStatus(undefined, !migration.isApplied);
+    await migration.setStatus(bundle.databaseURL, !migration.isApplied);
   } else {
     return true;
   }
   return false;
-}
-async function generateSchema() {
-  const {default: pgSchema} = await import('@moped/db-pg-schema');
-  const {default: writeSchema} = await import('@moped/db-schema');
-  const schema = await pgSchema();
-  await writeSchema(
-    schema,
-    Paths.appSourceDirectory + '/db-schema',
-    Paths.dbOverrides || undefined,
-  );
-}
-
-async function webpackBuildBundle(): Promise<{warnings: string[]}> {
-  const str = await spawn.spawnAsync('node', [
-    require.resolve('../helpers/build-webpack-migrations-bundle'),
-  ]);
-  return JSON.parse(str.substring(str.indexOf('{'), str.lastIndexOf('}') + 1));
-}
-
-function getBundle() {
-  const ready = webpackBuildBundle().then(async ({warnings}) => {
-    if (isCI && warnings.length) {
-      return () => {
-        console.log(
-          chalk.yellow(
-            '\nTreating warnings as errors because process.env.CI = true.\n' +
-              'Most CI servers set it automatically.\n',
-          ),
-        );
-        throw new Error(warnings.join('\n\n'));
-      };
-    }
-    const pkg = await new Promise<MigrationsPackage>((resolve, reject) => {
-      (global as any).AUTO_RUN_DB_MIGRATION_PROCESS = resolve;
-      require(Paths.appBuildDirectory + '/temp-db/server');
-    });
-    return () => {
-      if (warnings.length) {
-        console.log(chalk.yellow('Compiled with warnings.\n'));
-        console.log(warnings.join('\n\n'));
-        console.log(
-          '\nSearch for the ' +
-            chalk.underline(chalk.yellow('keywords')) +
-            ' to learn more about each warning.',
-        );
-        console.log(
-          'To ignore, add ' +
-            chalk.cyan('// eslint-disable-next-line') +
-            ' to the line before.\n',
-        );
-      }
-      return pkg;
-    };
-  });
-  // errors are handled later
-  ready.catch(() => {});
-  return <T>(fn: (pkg: MigrationsPackage) => Promise<T>) => {
-    return ready.then(pkg => fn(pkg()));
-  };
 }

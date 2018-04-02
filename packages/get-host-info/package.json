@@ -5,13 +5,18 @@
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "dependencies": {
+    "@types/chalk": "^2.2.0",
+    "@types/inquirer": "^0.0.40",
     "@types/node": "^8.0.33",
+    "chalk": "^2.3.2",
     "detect-port-alt": "^1.1.3",
-    "react-dev-utils": "^4.1.0"
+    "inquirer": "^5.2.0",
+    "is-root": "^2.0.0",
+    "react-dev-utils": "^5.0.0"
   },
   "scripts": {
     "prepublish": "node ../../prebuild get-host-info&& tsc -p tsconfig.build.json && node ../../prepare get-host-info",
-    "dependency-check": "dependency-check package.json --quiet && dependency-check ./package.json --quiet --unused --no-dev --ignore-module \"@types/node\""
+    "dependency-check": "dependency-check package.json --quiet && dependency-check ./package.json --quiet --unused --no-dev --ignore-module \"@types/chalk\" --ignore-module \"@types/inquirer\" --ignore-module \"@types/node\""
   },
   "repository": "https://github.com/mopedjs/moped/tree/master/packages/get-host-info",
   "license": "MIT",

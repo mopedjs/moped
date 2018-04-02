@@ -38,7 +38,7 @@ interface JsonStats {
 
 export default class Stream {
   private _handlers: Set<(message: Message) => {} | null | void> = new Set();
-  private _stats: JsonStats | null;
+  private _stats: JsonStats | null = null;
   private _invalid: boolean = false;
   constructor(compiler: webpack.Compiler) {
     compiler.plugin('compile', () => {

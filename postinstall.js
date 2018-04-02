@@ -22,7 +22,10 @@ const tsconfig = `{
 
 const dependencies = require('./package.json').devDependencies;
 readdirSync(__dirname + '/packages').forEach(directory => {
-  if (directory === 'generator-moped-output-demo') {
+  if (
+    directory === 'generator-moped-output-demo' ||
+    directory === 'monorepo-demo'
+  ) {
     return;
   }
   if (!statSync(__dirname + '/packages/' + directory).isDirectory()) {

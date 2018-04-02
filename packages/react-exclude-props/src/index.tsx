@@ -1,7 +1,7 @@
 import * as React from 'react';
 
-export class Prop<Value> {
-  protected value: Value;
+export declare class Prop<Value> {
+  private value: Value;
 }
 export interface AnyObject {
   [key: string]: any;

@@ -28,7 +28,7 @@ export interface Options {
  */
 export default class Html implements webpack.Plugin {
   private _HtmlWebpackPlugin: webpack.Plugin;
-  private _HtmlWebpackHarddiskPlugin: webpack.Plugin | null;
+  private _HtmlWebpackHarddiskPlugin: webpack.Plugin | null = null;
   constructor(options: Options) {
     this._HtmlWebpackPlugin = new HtmlWebpackPlugin({
       alwaysWriteToDisk: options.alwaysWriteToDisk,

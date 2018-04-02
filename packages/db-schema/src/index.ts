@@ -1,7 +1,7 @@
 import {relative} from 'path';
 import Worker from 'then-rpc';
 import FileSystem from './FileSystem';
-import {OverridesSpec} from './getOverrides';
+import {ColumnOverride, OverridesSpec} from './getOverrides';
 
 export interface TableSchema {
   tableName: string;
@@ -370,7 +370,7 @@ export default async function generate(
             if (
               !table.columns.some(column => column.columnName === columnName)
             ) {
-              const column = overriddenColumns[columnName]!;
+              const column: ColumnOverride = overriddenColumns[columnName]!;
               throw new Error(
                 'You cannot override the ' +
                   table.tableName +

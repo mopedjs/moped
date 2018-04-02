@@ -1,4 +1,6 @@
+import {join} from 'path';
 import {readdirSync} from 'fs';
+import webpack = require('webpack');
 import NodeExternals from '@moped/node-builtins';
 import getConfig, {
   Environment,
@@ -6,19 +8,24 @@ import getConfig, {
   Platform,
   SourceKind,
 } from '@moped/webpack-config';
-import buildMigrations from './build-migrations';
-import * as Paths from './Paths';
+import buildMigrationsBundle from './buildMigrationsBundle';
+import DatabaseMigrationBundle from './DatabaseMigrationBundle';
+import paths from '../paths';
 
-async function run() {
-  await buildMigrations();
-  const dependencies = readdirSync(Paths.appNodeModulesDirectory);
-  const webpack = await import('webpack');
+export default async function buildWebpackMigrationsBundle(
+  bundle: DatabaseMigrationBundle,
+) {
+  const bundleLocation = await buildMigrationsBundle(bundle);
+  const dependencies = readdirSync(paths.nodeModulesDirectory);
+  const buildDirectory = bundle.names.length
+    ? join(paths.buildDirectory, bundle.names.sort().join('_'), 'db-migrations')
+    : join(paths.buildDirectory, 'db-migrations');
   const compiler = webpack(
     getConfig({
-      appNodeModulesDirectory: Paths.appNodeModulesDirectory,
-      appSourceDirectory: Paths.appSourceDirectory,
-      buildDirectory: Paths.appBuildDirectory + '/temp-db',
-      entryPoint: Paths.dbMigrationsBundle,
+      appNodeModulesDirectory: paths.nodeModulesDirectory,
+      appSourceDirectory: paths.sourceDirectory,
+      buildDirectory,
+      entryPoint: bundleLocation,
       environment: Environment.Development,
       externals: (context, request) => {
         if (NodeExternals.indexOf(request) !== -1) {
@@ -39,12 +46,12 @@ async function run() {
         return null;
       },
       platform: Platform.Server,
-      htmlTemplateFileName: Paths.appHtml,
       sourceKind: SourceKind.TypeScript,
       startServer: false,
     }),
   );
   return await new Promise<{
+    filename: string;
     warnings: string[];
   }>((resolve, reject) => {
     compiler.run((err, stats) => {
@@ -57,16 +64,9 @@ async function run() {
         return reject(new Error(messages.errors.join('\n\n')));
       }
       return resolve({
+        filename: join(buildDirectory, 'server.js'),
         warnings: messages.warnings,
       });
     });
   });
 }
-
-run().then(
-  result => console.log(JSON.stringify(result)),
-  ex => {
-    console.error(ex.stack);
-    process.exit(1);
-  },
-);

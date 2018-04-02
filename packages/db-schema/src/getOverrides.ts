@@ -2,7 +2,9 @@ import {dirname} from 'path';
 import * as ts from 'typescript';
 import loadTsConfig from '@moped/load-ts-config';
 
-function getSymbolAtLocation(node: ts.Node | null | void): ts.Symbol | void {
+function getSymbolAtLocation(
+  node: ts.Node | null | undefined,
+): ts.Symbol | undefined {
   return node ? (node as any).symbol : undefined;
 }
 
@@ -15,18 +17,18 @@ export interface ColumnOverride {
 }
 
 export interface TableOverride {
-  readonly [columnName: string]: ColumnOverride | void;
+  readonly [columnName: string]: ColumnOverride | undefined;
 }
 
 export interface OverridesSpec {
-  readonly [tableName: string]: TableOverride | void;
+  readonly [tableName: string]: TableOverride | undefined;
 }
 
 interface MutableTableOverride {
-  [columnName: string]: ColumnOverride | void;
+  [columnName: string]: ColumnOverride | undefined;
 }
 interface MutableOverridesSpec {
-  [tableName: string]: TableOverride | void;
+  [tableName: string]: TableOverride | undefined;
 }
 
 export default function getOverrides(overrides?: string): OverridesSpec {
