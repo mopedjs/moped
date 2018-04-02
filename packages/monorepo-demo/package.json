@@ -9,10 +9,10 @@
     "@moped/db-pg-migrations": "^0.0.11",
     "@moped/sentry": "^0.0.3",
     "@moped/sql": "^0.0.4",
+    "@types/node": "^8.0.33",
     "bicycle": "^7.0.0",
     "express": "^4.16.2",
-    "styled-components": "^2.4.0",
-    "@types/node": "^8.0.33"
+    "styled-components": "^2.4.0"
   },
   "devDependencies": {
     "@authentication/react-passwordless": "^0.0.9",
@@ -25,7 +25,7 @@
     "@types/react-router-dom": "^4.2.3",
     "husky": "^0.14.3",
     "lint-staged": "^6.0.0",
-    "moped": "^0.7.11",
+    "moped": "^0.7.15",
     "prettier": "^1.10.1",
     "react": "^16.2.0",
     "react-bicycle": "^3.1.2",

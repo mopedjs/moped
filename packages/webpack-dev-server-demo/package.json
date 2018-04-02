@@ -1,12 +1,12 @@
 {
   "name": "@moped/webpack-dev-server-demo",
   "private": true,
-  "version": "0.0.15",
+  "version": "0.0.16",
   "description": "",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "dependencies": {
-    "@moped/get-host-info": "^0.0.8",
+    "@moped/get-host-info": "^0.0.9",
     "@moped/webpack-dev-server": "^0.0.8",
     "@types/node": "^8.0.33",
     "html-webpack-plugin": "^2.30.1",
