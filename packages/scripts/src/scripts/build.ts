@@ -77,8 +77,10 @@ async function prepareDatabase() {
   const bundles = await getMigrationBundles();
   Promise.all(
     bundles.map(async bundle => {
-      const pkg = await getMigrationsPackage(bundle);
-      await pkg.upAll(bundle.databaseURL);
+      if (bundle.migrationsDirectory) {
+        const pkg = await getMigrationsPackage(bundle);
+        await pkg.upAll(bundle.databaseURL);
+      }
       generateSchema(bundle);
     }),
   );
