@@ -1,6 +1,7 @@
 {
   "name": "monorepo-demo",
   "private": true,
+  "version": "0.0.1",
   "dependencies": {
     "@authentication/cookie": "^0.0.7",
     "@authentication/passwordless": "^0.0.7",
