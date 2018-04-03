@@ -8,3 +8,5 @@ export default {
   sourceDirectory: join(basedir, 'src'),
   packageJSON: join(basedir, 'package.json'),
 };
+
+// fixed case
