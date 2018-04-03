@@ -10,15 +10,14 @@ import {
 } from '../helpers/FileSizeReporter';
 import config, {AppConfig} from '../helpers/config';
 import paths from '../helpers/paths';
-import webpackConfig from '../helpers/webpack-config';
 import {getMigrationBundles, getMigrationsPackage} from '../helpers/migrations';
 import generateSchema from '../helpers/generateSchema';
-const formatWebpackMessages = require('react-dev-utils/formatWebpackMessages');
+import buildEntryPointAsync, {
+  BuildEntryPointConfig,
+  BuildEntryPointResult,
+} from '../helpers/buildEntryPointAsync';
 const fs = require('fs-extra');
 const stringify: (obj: any) => string = require('stable-stringify');
-
-const CI = process.env.CI;
-const isCI = CI && CI.toLowerCase() !== 'false';
 
 const appPkg = require(paths.packageJSON);
 
@@ -41,7 +40,7 @@ interface PrepareResult {
   buildDirectory: string;
   clientBuildDirectory: string;
   config: AppConfig;
-  printClientSizes(stats: webpack.Stats): void;
+  printClientSizes(stats: object): void;
 }
 async function prepare(
   config: AppConfig,
@@ -60,10 +59,10 @@ async function prepare(
     buildDirectory,
     clientBuildDirectory,
     config,
-    printClientSizes(stats: webpack.Stats) {
+    printClientSizes(stats: object) {
       console.log('File sizes after gzip:\n');
       printFileSizesAfterBuild(
-        stats,
+        {toJson: () => stats} as webpack.Stats,
         previousFileSizes,
         clientBuildDirectory,
         WARN_AFTER_BUNDLE_GZIP_SIZE,
@@ -218,28 +217,6 @@ function printAppResult({
   },
 );
 
-interface BuildEntryPointConfig {
-  /**
-   * {
-   *   server: {
-   *     development: config.serverEntryPointDev,
-   *     production: config.serverEntryPointProd,
-   *   },
-   *   client: config.clientEntryPoint,
-   * },
-   */
-  entryPoint: string;
-  environment: Environment;
-  htmlTemplate: string | null;
-  platform: Platform;
-  port?: number;
-}
-interface BuildEntryPointResult {
-  buildDirectory: string;
-  externalDependencies: ReadonlyArray<string>;
-  stats: webpack.Stats;
-  warnings: ReadonlyArray<string>;
-}
 const entryPointCache = new Map<string, Promise<BuildEntryPointResult>>();
 function buildEntryPoint(
   buildDirectory: string,
@@ -261,44 +238,7 @@ function buildEntryPoint(
     });
   }
 
-  const externalDependencies = new Set<string>();
-
-  const compiler = webpack(
-    webpackConfig({
-      ...options,
-      buildDirectory,
-      onExternalDependency(externalDependency) {
-        externalDependencies.add(externalDependency);
-      },
-    }),
-  );
-
-  const result = new Promise<BuildEntryPointResult>((resolve, reject) => {
-    compiler.run((err, stats) => {
-      if (err) {
-        return reject(err);
-      }
-      const messages = formatWebpackMessages((stats as any).toJson({}, true));
-      if (messages.errors.length) {
-        return reject(new Error(messages.errors.join('\n\n')));
-      }
-      if (isCI && messages.warnings.length) {
-        console.log(
-          chalk.yellow(
-            '\nTreating warnings as errors because process.env.CI = true.\n' +
-              'Most CI servers set it automatically.\n',
-          ),
-        );
-        return reject(new Error(messages.warnings.join('\n\n')));
-      }
-      return resolve({
-        buildDirectory,
-        externalDependencies: Array.from(externalDependencies),
-        stats,
-        warnings: messages.warnings,
-      });
-    });
-  });
+  const result = buildEntryPointAsync(buildDirectory, options);
 
   entryPointCache.set(key, result);
 
