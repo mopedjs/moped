@@ -61,7 +61,7 @@ export interface AppConfig {
   /**
    * Default port to run the app on in development (N.B. backend will default to port + 1)
    */
-  port: number;
+  port: number | null;
   /**
    * Relative path to a public directory, from which all files will be made publicly available.
    */
@@ -273,7 +273,7 @@ function withDefaults(
       : configFallback(config.htmlTemplate, 'index.html', {
           required: true,
         }),
-    port: config.port == null ? 3000 : config.port,
+    port: config.port || null,
     publicDirectory: config.disableClient
       ? null
       : configFallback(config.publicDirectory, ['public']),

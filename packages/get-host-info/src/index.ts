@@ -167,8 +167,8 @@ export async function getHostInfoPair(
 }
 export default getHostInfoPair;
 
-module.exports = getHostInfo;
-module.exports.default = getHostInfo;
+module.exports = getHostInfoPair;
+module.exports.default = getHostInfoPair;
 module.exports.choosePort = choosePort;
 module.exports.detectPort = detectPort;
 module.exports.getSingleHostInfo = getSingleHostInfo;

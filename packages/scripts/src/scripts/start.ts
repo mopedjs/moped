@@ -156,7 +156,11 @@ async function startApp(
       const config = configs[name];
       if (config.port) {
         usedPorts.add(config.port);
-      } else {
+      }
+    });
+    Object.keys(configs).forEach(name => {
+      const config = configs[name];
+      if (!config.port) {
         while (usedPorts.has(nextDefaultPort)) {
           nextDefaultPort++;
         }
