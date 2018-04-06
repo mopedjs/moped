@@ -56,8 +56,8 @@ async function startApp(
     usedPorts.delete(config.port);
   }
   const hostInfoTemp = await (config.clientEntryPoint
-    ? getHostInfoPair(config.port, usedPorts)
-    : getSingleHostInfo(config.port, usedPorts));
+    ? getHostInfoPair(config.port || undefined, usedPorts)
+    : getSingleHostInfo(config.port || undefined, usedPorts));
   if (!hostInfoTemp) {
     return;
   }
