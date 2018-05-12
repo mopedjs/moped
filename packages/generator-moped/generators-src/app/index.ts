@@ -67,7 +67,7 @@ module.exports = class MopedGenerator extends Generator {
 
   writeOutput() {
     this.fs.copyTpl(
-      this.templatePath('.env'),
+      this.templatePath('env'),
       this.destinationPath('.env'),
       this.props,
     );
@@ -76,7 +76,7 @@ module.exports = class MopedGenerator extends Generator {
       this.destinationPath('.gitignore'),
     );
     this.fs.copy(
-      this.templatePath('.prettierrc'),
+      this.templatePath('prettierrc'),
       this.destinationPath('.prettierrc'),
     );
     this.fs.copyTpl(

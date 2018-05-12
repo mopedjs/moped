@@ -87,7 +87,7 @@ lsr(__dirname + '/templates', {
       pkg.dependencies = sortObject(pkg.dependencies);
       pkg.devDependencies = sortObject(pkg.devDependencies);
       fs.writeFileSync(outputPath, JSON.stringify(pkg, null, '  ') + '\n');
-    } else if (entry.name === '.env') {
+    } else if (entry.name === 'env') {
       fs.writeFileSync(
         outputPath,
         fs

@@ -83,11 +83,11 @@ module.exports = class MopedGenerator extends Generator {
 
   writeOutput() {
     this.fs.copy(
-      this.templatePath('.prettierrc'),
+      this.templatePath('prettierrc'),
       this.destinationPath('.prettierrc'),
     );
     this.fs.copy(
-      this.templatePath('.travis.yml'),
+      this.templatePath('travis.yml'),
       this.destinationPath('.travis.yml'),
     );
     this.fs.copy(
