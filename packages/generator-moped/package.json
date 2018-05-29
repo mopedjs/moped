@@ -1,6 +1,6 @@
 {
   "name": "generator-moped",
-  "version": "0.0.30",
+  "version": "0.0.31",
   "description": "",
   "files": [
     "generators"
@@ -43,7 +43,7 @@
     "@types/yeoman-generator": "^2.0.0",
     "@types/yeoman-test": "^1.7.3",
     "fs-extra": "^5.0.0",
-    "moped": "^0.7.20",
+    "moped": "^0.7.21",
     "yeoman-test": "^1.7.0"
   },
   "dependency-check-entries": [

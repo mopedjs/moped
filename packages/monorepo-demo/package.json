@@ -1,7 +1,7 @@
 {
   "name": "monorepo-demo",
   "private": true,
-  "version": "0.0.6",
+  "version": "0.0.7",
   "dependencies": {
     "@authentication/cookie": "^0.0.7",
     "@authentication/passwordless": "^0.0.7",
@@ -26,7 +26,7 @@
     "@types/react-router-dom": "^4.2.3",
     "husky": "^0.14.3",
     "lint-staged": "^6.0.0",
-    "moped": "^0.7.20",
+    "moped": "^0.7.21",
     "prettier": "^1.10.1",
     "react": "^16.2.0",
     "react-bicycle": "^3.1.2",

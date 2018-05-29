@@ -1,6 +1,6 @@
 {
   "name": "moped",
-  "version": "0.7.20",
+  "version": "0.7.21",
   "description": "",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -13,7 +13,7 @@
     "@moped/env": "^0.1.5",
     "@moped/get-host-info": "^0.0.11",
     "@moped/node-builtins": "^0.0.7",
-    "@moped/webpack-config": "^0.0.16",
+    "@moped/webpack-config": "^0.0.17",
     "@moped/webpack-dev-server": "^0.0.8",
     "@types/inquirer": "^0.0.36",
     "@types/node": "^8.0.33",
