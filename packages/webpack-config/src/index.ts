@@ -326,7 +326,7 @@ export function getPlugins(
           new plugins.ReactLoadable({
             filename: resolve(
               getOverride(options.buildDirectory, environment, Platform.Server),
-              'react-loadable.json',
+              '../react-loadable.json',
             ),
           }),
           new plugins.IgnoreMomentLocales(),
