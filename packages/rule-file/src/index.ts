@@ -11,7 +11,14 @@ const file: webpack.Rule = {
   // Also exclude `html` and `json` extensions so they get processed
   // Exclude default_index.ejs as it is the default template used by
   // HtmlWebpackPlugin
-  exclude: [/\.html$/, /\.js$/, /\.json$/, /default_index\.ejs$/],
+  // Exclude storybook .ejs files as otherwise storybook does not work
+  exclude: [
+    /\.html$/,
+    /\.js$/,
+    /\.json$/,
+    /default_index\.ejs$/,
+    /storybook.*\.ejs$/,
+  ],
   loader: require.resolve('file-loader'),
   options: {
     name: 'static/media/[name].[hash:8].[ext]',
