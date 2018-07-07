@@ -1,7 +1,7 @@
 {
   "name": "@moped/rule-css-demo",
   "private": true,
-  "version": "0.0.14",
+  "version": "0.0.15",
   "description": "",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
