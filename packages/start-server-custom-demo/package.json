@@ -16,7 +16,6 @@
     "rimraf": "^2.6.2"
   },
   "scripts": {
-    "prepublish": "tsc -p tsconfig.build.json",
     "start": "rimraf build && webpack --watch"
   },
   "repository": "https://github.com/mopedjs/moped/tree/master/packages/start-server-custom-demo",

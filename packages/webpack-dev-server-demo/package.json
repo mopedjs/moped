@@ -16,7 +16,6 @@
     "rimraf": "^2.6.2"
   },
   "scripts": {
-    "prepublish": "tsc -p tsconfig.build.json",
     "start": "node start"
   },
   "repository": "https://github.com/mopedjs/moped/tree/master/packages/webpack-dev-server-demo",

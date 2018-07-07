@@ -21,7 +21,6 @@
     "rimraf": "^2.6.2"
   },
   "scripts": {
-    "prepublish": "tsc -p tsconfig.build.json",
     "start": "node src/server",
     "build": "rimraf build && webpack"
   },

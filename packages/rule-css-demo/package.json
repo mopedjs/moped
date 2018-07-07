@@ -16,7 +16,6 @@
     "rimraf": "^2.6.2"
   },
   "scripts": {
-    "prepublish": "tsc -p tsconfig.build.json",
     "build:prod": "cross-env NODE_ENV=production webpack",
     "build:dev": "cross-env NODE_ENV=development webpack",
     "test": "rimraf build && yarn build:prod && yarn build:dev"
