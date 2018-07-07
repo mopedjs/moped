@@ -10,7 +10,7 @@
     "@moped/db-pg-migrations": "^0.0.11",
     "@moped/sentry": "^0.0.3",
     "@moped/sql": "^0.0.4",
-    "bicycle": "^7.0.0",
+    "bicycle": "^8.0.0",
     "express": "^4.16.2",
     "styled-components": "^2.4.0"
   },
@@ -32,7 +32,7 @@
     "react-dom": "^16.2.0",
     "react-loadable": "^5.3.1",
     "react-router-dom": "^4.2.2",
-    "ts-bicycle": "^3.1.1"
+    "ts-bicycle": "^4.0.5"
   },
   "scripts": {
     "_postinstall": "moped db create && moped db up all && yarn bicycle",

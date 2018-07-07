@@ -5,6 +5,7 @@ import Schema from 'bicycle/types/Schema';
 import SchemaKind from 'bicycle/types/SchemaKind';
 import Query from 'bicycle/types/Query';
 import QueryContext from 'bicycle/types/QueryContext';
+import * as ScalarTypes from './scalar-types';
 import MutationContext from 'bicycle/types/MutationContext';
 import BicycleServer, {Options} from 'bicycle/server-core';
 import Root from './../bicycle-schema/Root';
@@ -217,6 +218,7 @@ const schema: Schema<_Context0> = {
                 kind: {
                   kind: 'Literal',
                   value: 0,
+                  enumDeclaration: 'CreateTokenStatusKind.CreatedToken',
                   loc: {
                     fileName:
                       '/Users/fplindesay/Documents/GitHub/moped/node_modules/@authentication/passwordless/lib/CreateTokenStatus.d.ts',
@@ -247,6 +249,7 @@ const schema: Schema<_Context0> = {
                 kind: {
                   kind: 'Literal',
                   value: 1,
+                  enumDeclaration: 'CreateTokenStatusKind.InvalidEmail',
                   loc: {
                     fileName:
                       '/Users/fplindesay/Documents/GitHub/moped/node_modules/@authentication/passwordless/lib/CreateTokenStatus.d.ts',
@@ -277,6 +280,7 @@ const schema: Schema<_Context0> = {
                 kind: {
                   kind: 'Literal',
                   value: 2,
+                  enumDeclaration: 'CreateTokenStatusKind.RateLimitExceeded',
                   loc: {
                     fileName:
                       '/Users/fplindesay/Documents/GitHub/moped/node_modules/@authentication/passwordless/lib/CreateTokenStatus.d.ts',
@@ -346,13 +350,37 @@ const schema: Schema<_Context0> = {
           mCtx: MutationContext<_Context0>,
         ):
           | (
-              | {dos: string; kind: 0; tokenID: string}
-              | {email: string; kind: 1; message: string}
-              | {kind: 2; message: string; nextTokenTimestamp: number})
+              | {
+                  dos: string;
+                  kind: ScalarTypes.CreateTokenStatusKind.CreatedToken;
+                  tokenID: string;
+                }
+              | {
+                  email: string;
+                  kind: ScalarTypes.CreateTokenStatusKind.InvalidEmail;
+                  message: string;
+                }
+              | {
+                  kind: ScalarTypes.CreateTokenStatusKind.RateLimitExceeded;
+                  message: string;
+                  nextTokenTimestamp: number;
+                })
           | PromiseLike<
-              | {dos: string; kind: 0; tokenID: string}
-              | {email: string; kind: 1; message: string}
-              | {kind: 2; message: string; nextTokenTimestamp: number}
+              | {
+                  dos: string;
+                  kind: ScalarTypes.CreateTokenStatusKind.CreatedToken;
+                  tokenID: string;
+                }
+              | {
+                  email: string;
+                  kind: ScalarTypes.CreateTokenStatusKind.InvalidEmail;
+                  message: string;
+                }
+              | {
+                  kind: ScalarTypes.CreateTokenStatusKind.RateLimitExceeded;
+                  message: string;
+                  nextTokenTimestamp: number;
+                }
             > {
           return User.createPasswordlessToken(args, context);
         },
@@ -482,6 +510,7 @@ const schema: Schema<_Context0> = {
                 kind: {
                   kind: 'Literal',
                   value: 0,
+                  enumDeclaration: 'VerifyPassCodeStatusKind.CorrectPassCode',
                   loc: {
                     fileName:
                       '/Users/fplindesay/Documents/GitHub/moped/node_modules/@authentication/passwordless/lib/VerifyPassCodeStatus.d.ts',
@@ -504,6 +533,7 @@ const schema: Schema<_Context0> = {
                 kind: {
                   kind: 'Literal',
                   value: 1,
+                  enumDeclaration: 'VerifyPassCodeStatusKind.ExpiredToken',
                   loc: {
                     fileName:
                       '/Users/fplindesay/Documents/GitHub/moped/node_modules/@authentication/passwordless/lib/VerifyPassCodeStatus.d.ts',
@@ -526,6 +556,7 @@ const schema: Schema<_Context0> = {
                 kind: {
                   kind: 'Literal',
                   value: 2,
+                  enumDeclaration: 'VerifyPassCodeStatusKind.IncorrectPassCode',
                   loc: {
                     fileName:
                       '/Users/fplindesay/Documents/GitHub/moped/node_modules/@authentication/passwordless/lib/VerifyPassCodeStatus.d.ts',
@@ -556,6 +587,7 @@ const schema: Schema<_Context0> = {
                 kind: {
                   kind: 'Literal',
                   value: 3,
+                  enumDeclaration: 'VerifyPassCodeStatusKind.RateLimitExceeded',
                   loc: {
                     fileName:
                       '/Users/fplindesay/Documents/GitHub/moped/node_modules/@authentication/passwordless/lib/VerifyPassCodeStatus.d.ts',
@@ -597,15 +629,43 @@ const schema: Schema<_Context0> = {
           mCtx: MutationContext<_Context0>,
         ):
           | (
-              | {kind: 0; userID: string}
-              | {kind: 1; message: string}
-              | {attemptsRemaining: number; kind: 2; message: string}
-              | {kind: 3; message: string; nextTokenTimestamp: number})
+              | {
+                  kind: ScalarTypes.VerifyPassCodeStatusKind.CorrectPassCode;
+                  userID: string;
+                }
+              | {
+                  kind: ScalarTypes.VerifyPassCodeStatusKind.ExpiredToken;
+                  message: string;
+                }
+              | {
+                  attemptsRemaining: number;
+                  kind: ScalarTypes.VerifyPassCodeStatusKind.IncorrectPassCode;
+                  message: string;
+                }
+              | {
+                  kind: ScalarTypes.VerifyPassCodeStatusKind.RateLimitExceeded;
+                  message: string;
+                  nextTokenTimestamp: number;
+                })
           | PromiseLike<
-              | {kind: 0; userID: string}
-              | {kind: 1; message: string}
-              | {attemptsRemaining: number; kind: 2; message: string}
-              | {kind: 3; message: string; nextTokenTimestamp: number}
+              | {
+                  kind: ScalarTypes.VerifyPassCodeStatusKind.CorrectPassCode;
+                  userID: string;
+                }
+              | {
+                  kind: ScalarTypes.VerifyPassCodeStatusKind.ExpiredToken;
+                  message: string;
+                }
+              | {
+                  attemptsRemaining: number;
+                  kind: ScalarTypes.VerifyPassCodeStatusKind.IncorrectPassCode;
+                  message: string;
+                }
+              | {
+                  kind: ScalarTypes.VerifyPassCodeStatusKind.RateLimitExceeded;
+                  message: string;
+                  nextTokenTimestamp: number;
+                }
             > {
           return User.verifyPasswordlessToken(args, context);
         },

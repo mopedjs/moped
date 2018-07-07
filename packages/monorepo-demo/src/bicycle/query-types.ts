@@ -9,6 +9,7 @@ import {
   Mutation,
 } from 'bicycle/typed-helpers/query';
 import {RootCache, GetOptimisticValue} from './optimistic';
+import * as ScalarTypes from './scalar-types';
 
 export class RootQuery<TResult = {}> extends BaseRootQuery<TResult> {
   // fields
@@ -59,9 +60,21 @@ export class UserQuery<TResult = {}> extends BaseQuery<TResult> {
       getOptimisticValue: GetOptimisticValue,
     ) => any,
   ): Mutation<
-    | {dos: string; kind: 0; tokenID: string}
-    | {email: string; kind: 1; message: string}
-    | {kind: 2; message: string; nextTokenTimestamp: number}
+    | {
+        dos: string;
+        kind: ScalarTypes.CreateTokenStatusKind.CreatedToken;
+        tokenID: string;
+      }
+    | {
+        email: string;
+        kind: ScalarTypes.CreateTokenStatusKind.InvalidEmail;
+        message: string;
+      }
+    | {
+        kind: ScalarTypes.CreateTokenStatusKind.RateLimitExceeded;
+        message: string;
+        nextTokenTimestamp: number;
+      }
   > {
     return new Mutation(
       'User.createPasswordlessToken',
@@ -128,10 +141,24 @@ export class UserQuery<TResult = {}> extends BaseQuery<TResult> {
       getOptimisticValue: GetOptimisticValue,
     ) => any,
   ): Mutation<
-    | {kind: 0; userID: string}
-    | {kind: 1; message: string}
-    | {attemptsRemaining: number; kind: 2; message: string}
-    | {kind: 3; message: string; nextTokenTimestamp: number}
+    | {
+        kind: ScalarTypes.VerifyPassCodeStatusKind.CorrectPassCode;
+        userID: string;
+      }
+    | {
+        kind: ScalarTypes.VerifyPassCodeStatusKind.ExpiredToken;
+        message: string;
+      }
+    | {
+        attemptsRemaining: number;
+        kind: ScalarTypes.VerifyPassCodeStatusKind.IncorrectPassCode;
+        message: string;
+      }
+    | {
+        kind: ScalarTypes.VerifyPassCodeStatusKind.RateLimitExceeded;
+        message: string;
+        nextTokenTimestamp: number;
+      }
   > {
     return new Mutation(
       'User.verifyPasswordlessToken',
