@@ -5,4 +5,4 @@ export default interface MigrationSpec {
   index: number;
   name: string;
   operation: () => Promise<Operation>;
-};
+}

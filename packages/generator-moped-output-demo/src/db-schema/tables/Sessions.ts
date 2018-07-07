@@ -26,4 +26,4 @@ export default interface DbSessions {
    * The user account that is logged in.
    */
   userID: number;
-};
+}

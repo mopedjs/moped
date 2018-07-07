@@ -51,4 +51,4 @@ export default interface Sentry {
   captureMessage(message: string, options?: CaptureOptions): void;
   captureBreadcrumb(crumb: Breadcrumb): void;
   showReportDialog: null | ((options?: {eventId?: string}) => void);
-};
+}

@@ -49,7 +49,9 @@ export default function createWebpackDevServerConfig(
   }
   const protocol =
     options.protocol == null
-      ? process.env.HTTPS === 'true' ? 'https' : 'http'
+      ? process.env.HTTPS === 'true'
+        ? 'https'
+        : 'http'
       : options.protocol;
   const host =
     options.host == null ? process.env.HOST || '0.0.0.0' : options.host;

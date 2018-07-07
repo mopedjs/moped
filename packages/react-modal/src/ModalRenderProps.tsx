@@ -3,7 +3,7 @@ export default interface ModalRenderProps {
   open: boolean;
   children: React.ReactNode;
   onClose: () => void;
-};
+}
 export interface ModalState {
   animating: boolean;
   open: boolean;

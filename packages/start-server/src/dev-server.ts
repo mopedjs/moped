@@ -36,7 +36,9 @@ export default function setServer(handler: (req: any, res: any) => any) {
       'Expected handler to be a function accepting (req: IncomingMessage, req: ServerResponse) but got ' +
         (handler === null
           ? 'null'
-          : Array.isArray(handler) ? 'Array' : typeof handler),
+          : Array.isArray(handler)
+            ? 'Array'
+            : typeof handler),
     );
   }
   requestHandler = handler;

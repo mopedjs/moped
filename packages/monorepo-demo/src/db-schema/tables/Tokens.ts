@@ -15,4 +15,4 @@ export default interface DbTokens {
   passCodeHash: string;
   state: string;
   userAgent: string;
-};
+}

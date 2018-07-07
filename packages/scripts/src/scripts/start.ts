@@ -81,8 +81,12 @@ async function startApp(
       port: hostInfo.isPair ? hostInfo.backendPort : hostInfo.port,
     }),
     name
-      ? hostInfo.isPair ? `${name} backend` : name
-      : hostInfo.isPair ? `backend` : appName,
+      ? hostInfo.isPair
+        ? `${name} backend`
+        : name
+      : hostInfo.isPair
+        ? `backend`
+        : appName,
     webpackCompiler => {
       return new Promise((resolve, reject) => {
         webpackCompiler.watch({}, (err, stats) => {

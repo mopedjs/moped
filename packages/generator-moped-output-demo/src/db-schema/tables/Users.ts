@@ -17,4 +17,4 @@ export default interface DbUsers {
    * Default Value: ''::text
    */
   publicStatus: string;
-};
+}

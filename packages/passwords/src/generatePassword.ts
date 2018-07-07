@@ -20,18 +20,20 @@ export default function generatePassword(
         else resolve(res);
       });
     })
-      .then((buffer): string => {
-        switch (encoding) {
-          case Encoding.base64:
-            return buffer.toString('base64');
-          case Encoding.base32:
-            return base32.encode(buffer);
-          case Encoding.hex:
-            return buffer.toString('hex');
-          case Encoding.decimal:
-            return buffer.toString('hex').replace(/[^0-9]/g, '');
-        }
-      })
+      .then(
+        (buffer): string => {
+          switch (encoding) {
+            case Encoding.base64:
+              return buffer.toString('base64');
+            case Encoding.base32:
+              return base32.encode(buffer);
+            case Encoding.hex:
+              return buffer.toString('hex');
+            case Encoding.decimal:
+              return buffer.toString('hex').replace(/[^0-9]/g, '');
+          }
+        },
+      )
       .then(str => {
         assert(typeof str === 'string');
         const result = prefix + str;

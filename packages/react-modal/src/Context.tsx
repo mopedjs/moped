@@ -5,7 +5,7 @@ export default interface Context {
   open: (children: () => React.ReactNode, onClose: () => any) => void;
   updateContent: (children: () => React.ReactNode) => void;
   close: () => void;
-};
+}
 
 const pair = createBroadcast<Context>({
   open: () => {},

@@ -34,26 +34,28 @@ export default class Migration {
     this._supportsOn = supportsOn;
   }
 
-  getStatus = con(async (db: Connection): Promise<MigrationStatus> => {
-    return db
-      .query(sql`SELECT * FROM "MopedMigrations" WHERE "id"=${this.id}`)
-      .then(result => {
-        const status: MigrationStatus = {
-          ...(result[0] || {
-            isApplied: false,
-            lastUp: null,
-            lastDown: null,
-          }),
-          id: this.id,
-          index: this.index,
-          name: this.name,
-        };
-        this.isApplied = status.isApplied;
-        this.lastUp = status.lastUp;
-        this.lastDown = status.lastDown;
-        return status;
-      });
-  });
+  getStatus = con(
+    async (db: Connection): Promise<MigrationStatus> => {
+      return db
+        .query(sql`SELECT * FROM "MopedMigrations" WHERE "id"=${this.id}`)
+        .then(result => {
+          const status: MigrationStatus = {
+            ...(result[0] || {
+              isApplied: false,
+              lastUp: null,
+              lastDown: null,
+            }),
+            id: this.id,
+            index: this.index,
+            name: this.name,
+          };
+          this.isApplied = status.isApplied;
+          this.lastUp = status.lastUp;
+          this.lastDown = status.lastDown;
+          return status;
+        });
+    },
+  );
 
   up = con(
     tx(async (db: Connection) => {

@@ -38,13 +38,15 @@ export default function getSchema(
           const columns = await getTableColumns(db, tableName, schema);
           return {
             tableName,
-            columns: columns.map((column): ColumnSchema => {
-              return {
-                ...column,
-                isPrimary: primaryKeys.indexOf(column.columnName) !== -1,
-                tsType: getTypeScriptType(column.udtName),
-              };
-            }),
+            columns: columns.map(
+              (column): ColumnSchema => {
+                return {
+                  ...column,
+                  isPrimary: primaryKeys.indexOf(column.columnName) !== -1,
+                  tsType: getTypeScriptType(column.udtName),
+                };
+              },
+            ),
           };
         }),
       );

@@ -9,12 +9,15 @@ export default class Worker {
     this._process = fork(modulePath, args);
   }
 
-  private _run = throat(1, (message: any): Promise<any> => {
-    return new Promise((resolve, reject) => {
-      this._process.once('message', resolve);
-      this._process.send(message);
-    });
-  });
+  private _run = throat(
+    1,
+    (message: any): Promise<any> => {
+      return new Promise((resolve, reject) => {
+        this._process.once('message', resolve);
+        this._process.send(message);
+      });
+    },
+  );
   async run(message: any) {
     if (this._dead) {
       throw new Error('Cannot run message on worker that is already dead');

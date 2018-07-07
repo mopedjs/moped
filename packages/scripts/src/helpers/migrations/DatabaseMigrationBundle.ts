@@ -4,4 +4,4 @@ export default interface DatabaseMigrationBundle {
   schemaDirectory: string | null;
   schemaOverrides: string | null;
   databaseURL: string;
-};
+}

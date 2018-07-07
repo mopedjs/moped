@@ -6,4 +6,4 @@ export default interface DbMopedMigrationsVersion {
    */
   id: number;
   version: number | null;
-};
+}

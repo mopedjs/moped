@@ -14,4 +14,4 @@ export default interface DbMopedMigrations {
   lastDown: Date | null;
   lastUp: Date | null;
   name: string;
-};
+}

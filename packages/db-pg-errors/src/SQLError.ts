@@ -18,4 +18,4 @@ export default interface SQLError extends Error {
   file?: string;
   line?: string;
   routine?: string;
-};
+}

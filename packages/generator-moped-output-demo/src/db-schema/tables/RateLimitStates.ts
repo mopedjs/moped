@@ -7,4 +7,4 @@ export default interface DbRateLimitStates {
   id: string;
   timestamp: number;
   value: number;
-};
+}

@@ -6,4 +6,4 @@ export default interface DbUserEmails {
    */
   email: string;
   userID: number;
-};
+}

@@ -15,4 +15,4 @@ export default interface Hot {
    * Test all loaded modules for updates and, if updates exist, apply them.
    */
   check(autoApply?: boolean): Promise<any>;
-};
+}

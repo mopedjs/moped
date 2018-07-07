@@ -5,4 +5,4 @@ export default interface MigrationStatus {
   isApplied: boolean;
   lastUp: Date | null;
   lastDown: Date | null;
-};
+}

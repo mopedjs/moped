@@ -350,10 +350,9 @@ const schema: Schema<_Context0> = {
               | {email: string; kind: 1; message: string}
               | {kind: 2; message: string; nextTokenTimestamp: number})
           | PromiseLike<
-
-                | {dos: string; kind: 0; tokenID: string}
-                | {email: string; kind: 1; message: string}
-                | {kind: 2; message: string; nextTokenTimestamp: number}
+              | {dos: string; kind: 0; tokenID: string}
+              | {email: string; kind: 1; message: string}
+              | {kind: 2; message: string; nextTokenTimestamp: number}
             > {
           return User.createPasswordlessToken(args, context);
         },
@@ -603,11 +602,10 @@ const schema: Schema<_Context0> = {
               | {attemptsRemaining: number; kind: 2; message: string}
               | {kind: 3; message: string; nextTokenTimestamp: number})
           | PromiseLike<
-
-                | {kind: 0; userID: string}
-                | {kind: 1; message: string}
-                | {attemptsRemaining: number; kind: 2; message: string}
-                | {kind: 3; message: string; nextTokenTimestamp: number}
+              | {kind: 0; userID: string}
+              | {kind: 1; message: string}
+              | {attemptsRemaining: number; kind: 2; message: string}
+              | {kind: 3; message: string; nextTokenTimestamp: number}
             > {
           return User.verifyPasswordlessToken(args, context);
         },

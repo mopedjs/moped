@@ -70,4 +70,4 @@ export interface UserCache {
 export default interface OptimisticUpdaters {
   Root?: RootOptimisticUpdaters;
   User?: UserOptimisticUpdaters;
-};
+}
