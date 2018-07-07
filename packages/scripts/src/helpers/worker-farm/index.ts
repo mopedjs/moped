@@ -25,7 +25,7 @@ export default function getModule<T, Key extends keyof T>(
   methods.forEach(method => {
     result[method] = (...args: any[]) => {
       return new Promise((resolve, reject) => {
-        workers(moduleName, method, args, (err, res) => {
+        workers(moduleName, method as string, args, (err, res) => {
           if (err) reject(err);
           else resolve(res);
         });
