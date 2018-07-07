@@ -12,7 +12,10 @@ export default function Status({children, code}: StatusCodeProps) {
       render={({staticContext}) => {
         // there is no `staticContext` on the client, so
         // we need to guard against that here
-        if (staticContext) staticContext.status = code;
+        if (staticContext) {
+          (staticContext as any).status = code;
+          staticContext.statusCode = code;
+        }
         return children;
       }}
     />
