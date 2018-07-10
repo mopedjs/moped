@@ -10,7 +10,7 @@ exports[`downAll 1`] = `
 
 exports[`downLast 1`] = `
 Array [
-  anonymous {
+  Object {
     "id": 1,
     "name": "Forbes Lindesay",
   },
@@ -19,7 +19,7 @@ Array [
 
 exports[`downLast 2`] = `
 Array [
-  anonymous {
+  Object {
     "id": 1,
     "name": "Forbes Lindesay",
   },
@@ -28,7 +28,7 @@ Array [
 
 exports[`downOne 1`] = `
 Array [
-  anonymous {
+  Object {
     "id": 1,
     "name": "Forbes Lindesay",
   },
@@ -45,11 +45,11 @@ exports[`downOne 2`] = `
 
 exports[`upAll 1`] = `
 Array [
-  anonymous {
+  Object {
     "id": 1,
     "name": "Forbes Lindesay",
   },
-  anonymous {
+  Object {
     "id": 2,
     "name": "Eleanor Brodie",
   },
@@ -58,7 +58,7 @@ Array [
 
 exports[`upOne 1`] = `
 Array [
-  anonymous {
+  Object {
     "id": 1,
     "name": "Forbes Lindesay",
   },
@@ -67,11 +67,11 @@ Array [
 
 exports[`upOne 2`] = `
 Array [
-  anonymous {
+  Object {
     "id": 1,
     "name": "Forbes Lindesay",
   },
-  anonymous {
+  Object {
     "id": 2,
     "name": "Eleanor Brodie",
   },

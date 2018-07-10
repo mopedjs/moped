@@ -657,7 +657,7 @@ export default interface DbFavouriteFood {
    */
   foodID: overrides.FavouriteFood['foodID'];
   rating: overrides.FavouriteFood['rating'];
-};
+}
 
 
 FILE: ./tables/Food.ts
@@ -675,7 +675,7 @@ export default interface DbFood {
   name: string;
   callories: number | null;
   averageRating: overrides.Food['averageRating'];
-};
+}
 
 
 FILE: ./tables/OnlyPrimaryKey.ts
@@ -688,7 +688,7 @@ export default interface DbOnlyPrimaryKey {
    * Default Value: autoincrement
    */
   id: number;
-};
+}
 
 
 FILE: ./tables/User.ts
@@ -705,7 +705,7 @@ export default interface DbUser {
   id: overrides.User['id'];
   username: string;
   profileDocument: overrides.User['profileDocument'];
-};
+}
 
 
 FILE: ./tables/index.ts
