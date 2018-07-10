@@ -1,6 +1,6 @@
 {
   "name": "@moped/start-server",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -16,7 +16,7 @@
   },
   "scripts": {
     "prepublish": "node ../../prebuild start-server&& tsc -p tsconfig.build.json && node ../../prepare start-server",
-    "dependency-check": "dependency-check package.json \"./dev-server.js\" \"./hot-entry.js\" --quiet && dependency-check ./package.json \"./dev-server.js\" \"./hot-entry.js\" --quiet --unused --no-dev --ignore-module \"@types/node\""
+    "dependency-check": "dependency-check package.json \"./dev-server.js\" \"./hot-entry.js\" --quiet && dependency-check ./package.json \"./dev-server.js\" \"./hot-entry.js\" --quiet --unused --no-dev --ignore-module \"@types/exit-hook\" --ignore-module \"@types/node\""
   },
   "repository": "https://github.com/mopedjs/moped/tree/master/packages/start-server",
   "license": "MIT",

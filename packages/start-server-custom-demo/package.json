@@ -1,13 +1,13 @@
 {
   "name": "@moped/start-server-custom-demo",
   "private": true,
-  "version": "0.0.21",
+  "version": "0.0.22",
   "description": "",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "dependencies": {
     "@moped/get-host-info": "^0.0.11",
-    "@moped/start-server": "^0.0.10",
+    "@moped/start-server": "^0.0.11",
     "@types/node": "^8.0.33",
     "html-webpack-plugin": "^2.30.1",
     "webpack": "^3.10.0"
