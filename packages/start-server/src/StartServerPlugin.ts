@@ -1,6 +1,7 @@
 import {fork} from 'child_process';
 import * as webpack from 'webpack';
 import HotStatsStream from './HotStatsStream';
+const death: (fn: (signal: string) => void) => void = require('death');
 
 interface Compilation {
   assets: {[name: string]: {existsAt: string}};
@@ -98,6 +99,7 @@ export default class StartServerPlugin implements webpack.Plugin {
           childProcess.kill();
         }
       });
+      death(signal => childProcess.kill(signal));
     }
     start();
     callback();

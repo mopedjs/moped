@@ -7,6 +7,7 @@
   "dependencies": {
     "@types/node": "^8.0.33",
     "ansi-to-html": "^0.6.3",
+    "death": "^1.1.0",
     "react-dev-utils": "^5.0.0"
   },
   "peerDependencies": {
