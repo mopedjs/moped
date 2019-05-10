@@ -78,7 +78,9 @@ async function prepareDatabase() {
     bundles.map(async bundle => {
       if (bundle.migrationsDirectory) {
         const pkg = await getMigrationsPackage(bundle);
-        await pkg.upAll(bundle.databaseURL);
+        const connectedPackage = pkg.connect(bundle.databaseURL);
+        await connectedPackage.upAll();
+        await connectedPackage.dispose();
       }
       generateSchema(bundle);
     }),

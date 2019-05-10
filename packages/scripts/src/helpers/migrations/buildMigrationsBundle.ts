@@ -1,5 +1,5 @@
 import {join} from 'path';
-import buildPackage from '@moped/db-pg-migrations/build-package';
+import buildPackage from '@databases/pg-migrations/build-package';
 import DatabaseMigrationBundle from './DatabaseMigrationBundle';
 
 export default async function buildMigrationsBundle(

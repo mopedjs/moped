@@ -3,11 +3,12 @@ import '@moped/env/development';
 import {readdirSync, writeFileSync, mkdirSync, realpathSync} from 'fs';
 import {resolve} from 'path';
 import {
-  Migration,
   Direction,
   NumberOfOperations,
-} from '@moped/db-pg-migrations';
-import getID from '@moped/db-pg-migrations/getID';
+  MigrationStatus,
+  ConnectedMigrationsPackage,
+} from '@databases/pg-migrations';
+import getID from '@databases/pg-migrations/getID';
 import {prompt, Separator} from 'inquirer';
 import chalk from 'chalk';
 import {
@@ -274,11 +275,10 @@ async function runMigrations(
     console.error('Perhaps you meant to run: ' + chalk.cyan('moped db up one'));
     process.exit(1);
   }
-  const pkg = await pkgDeferred();
+  const pkg = (await pkgDeferred()).connect(bundle.databaseURL);
   let hasMigrations = true;
   while (hasMigrations) {
     const migrations = await pkg.runOperation(
-      bundle.databaseURL,
       direction as Direction,
       count as NumberOfOperations,
     );
@@ -297,35 +297,42 @@ async function runMigrations(
       }
       const aborted = await toggleMigrations(
         bundle,
+        pkg,
         migrations,
         'abort - Abort this operation',
       );
       if (aborted) {
+        await pkg.dispose();
         process.exit(1);
       }
     }
   }
   await generateSchema(bundle);
+  await pkg.dispose();
 }
 async function toggleMigrationsLoop(bundle: DatabaseMigrationBundle) {
-  const pkg = await getMigrationsPackage(bundle);
+  const pkg = (await getMigrationsPackage(bundle)).connect(bundle.databaseURL);
   const migrations = await pkg.getState();
   let aborted = await toggleMigrations(
     bundle,
+    pkg,
     migrations,
     'abort - Abort this operation',
   );
   while (!aborted) {
     aborted = await toggleMigrations(
       bundle,
+      pkg,
       migrations,
       'end - End this operation',
     );
   }
+  await pkg.dispose();
 }
 async function toggleMigrations(
   bundle: DatabaseMigrationBundle,
-  migrations: Migration[],
+  pkg: ConnectedMigrationsPackage,
+  migrations: MigrationStatus[],
   abortMessage: string,
 ) {
   const {answer} = await prompt({
@@ -337,7 +344,7 @@ async function toggleMigrations(
         name:
           m.name +
           ' - ' +
-          (m.isApplied
+          (m.is_applied
             ? chalk.green('currently applied')
             : chalk.red('currently not applied')),
         value: m.id,
@@ -363,7 +370,7 @@ async function toggleMigrations(
     message: 'How do you want to handle ' + migration.name,
     choices: [
       {
-        name: migration.isApplied
+        name: migration.is_applied
           ? 'Revert the migration'
           : 'Apply the migration',
         value: 'run',
@@ -371,9 +378,9 @@ async function toggleMigrations(
       {
         name:
           'Mark the migration as ' +
-          (migration.isApplied ? 'down' : 'up') +
+          (migration.is_applied ? 'down' : 'up') +
           ' without actually ' +
-          (migration.isApplied ? 'reverting' : 'applying') +
+          (migration.is_applied ? 'reverting' : 'applying') +
           ' it.',
         value: 'set',
       },
@@ -385,13 +392,13 @@ async function toggleMigrations(
     ],
   });
   if (confirmation === 'run') {
-    if (migration.isApplied) {
-      await migration.down(bundle.databaseURL);
+    if (migration.is_applied) {
+      await pkg.downById(migration.id);
     } else {
-      await migration.up(bundle.databaseURL);
+      await pkg.upById(migration.id);
     }
   } else if (confirmation === 'set') {
-    await migration.setStatus(bundle.databaseURL, !migration.isApplied);
+    await pkg.setStatus(migration.id, !migration.is_applied);
   } else {
     return true;
   }

@@ -5,9 +5,9 @@
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "dependencies": {
+    "@databases/pg-migrations": "^0.0.4",
     "@moped/config": "^0.0.7",
     "@moped/db-pg-create": "^0.0.12",
-    "@moped/db-pg-migrations": "^0.0.15",
     "@moped/db-pg-schema": "^0.0.14",
     "@moped/db-schema": "^0.0.19",
     "@moped/env": "^0.1.5",

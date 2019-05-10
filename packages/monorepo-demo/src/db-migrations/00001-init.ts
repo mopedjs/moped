@@ -1,4 +1,4 @@
-import {Connection, sql} from '@moped/db-pg-migrations';
+import {Connection, sql} from '@databases/pg-migrations';
 
 export async function up(db: Connection) {
   await db.query(sql`

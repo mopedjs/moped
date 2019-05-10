@@ -2,7 +2,7 @@ import config from '../config';
 import DatabaseMigrationBundle from './DatabaseMigrationBundle';
 import getMigrationsPackageDeferred from './getMigrationsPackage';
 import getModule from '../worker-farm';
-import {MigrationsPackage} from '@moped/db-pg-migrations';
+import {MigrationsPackage} from '@databases/pg-migrations';
 import buildMigrationsBundleType from './buildMigrationsBundle';
 import buildWebpackMigrationsBundleType from './buildWebpackMigrationsBundle';
 

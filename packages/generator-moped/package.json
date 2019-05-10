@@ -32,7 +32,7 @@
   "devDependencies": {
     "@authentication/cookie": "^0.0.4",
     "@databases/pg": "^1.0.1",
-    "@moped/db-pg-migrations": "^0.0.15",
+    "@databases/pg-migrations": "^0.0.4",
     "@moped/sentry": "^0.0.6",
     "@moped/serve-assets": "^0.0.7",
     "@moped/server-side-render": "^0.0.6",

@@ -36,16 +36,16 @@ export class TypeScriptCheckerLogger extends Observable<undefined> {
       switch (entry.level) {
         case LogLevel.info:
           if (level === LogLevel.info) {
-            console.info.apply(console, entry.args);
+            console.info(...entry.args);
           }
           break;
         case LogLevel.warn:
           if (level === LogLevel.info || level === LogLevel.warn) {
-            console.warn.apply(console, entry.args);
+            console.warn(...entry.args);
           }
           break;
         case LogLevel.error:
-          console.error.apply(console, entry.args);
+          console.error(...entry.args);
       }
     });
   }

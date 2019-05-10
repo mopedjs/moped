@@ -1,4 +1,4 @@
-import {MigrationsPackage} from '@moped/db-pg-migrations';
+import {MigrationsPackage} from '@databases/pg-migrations';
 import chalk from 'chalk';
 import {DatabaseMigrationBundle, buildWebpackMigrationsBundle} from './';
 
