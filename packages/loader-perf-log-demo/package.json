@@ -12,6 +12,7 @@
     "@types/react": "*",
     "@types/react-dom": "*",
     "babel-preset-react-app": "^3.0.3",
+    "babel-runtime": "^6.23.0",
     "html-webpack-plugin": "^2.30.1",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",

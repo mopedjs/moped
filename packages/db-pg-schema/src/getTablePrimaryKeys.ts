@@ -1,5 +1,4 @@
-import {Connection} from '@moped/db-pg';
-import sql from '@moped/sql';
+import {Connection, sql} from '@databases/pg';
 import UdtName from './UdtName';
 
 export interface Column {

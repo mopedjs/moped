@@ -1,4 +1,4 @@
-import connect from '@moped/db-pg';
+import connect from '@databases/pg';
 import getTableNames from './getTableNames';
 import getTableColumns from './getTableColumns';
 import getTablePrimaryKeys from './getTablePrimaryKeys';

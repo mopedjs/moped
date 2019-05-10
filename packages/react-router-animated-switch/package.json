@@ -29,6 +29,7 @@
     "@types/prop-types": "^15.5.2",
     "@types/react-router": "^4.0.19",
     "@types/warning": "^3.0.0",
+    "react": "*",
     "typescript": "^2.5.3"
   },
   "@moped/target": "browser"

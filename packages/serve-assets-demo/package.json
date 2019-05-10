@@ -6,7 +6,6 @@
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "dependencies": {
-    "@babel/preset-env": "^7.0.0-beta.32",
     "@moped/get-host-info": "^0.0.11",
     "@moped/serve-assets": "^0.0.7",
     "@types/node": "^8.0.33",

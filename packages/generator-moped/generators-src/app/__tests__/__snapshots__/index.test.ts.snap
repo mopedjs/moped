@@ -198,7 +198,7 @@ if ((module as any).hot) {
 DIRECTORY: ./name-x/src/components
 FILE: ./name-x/src/db-connection.ts
 
-import connect from '@moped/db-pg';
+import connect from '@databases/pg';
 
 export default connect();
 

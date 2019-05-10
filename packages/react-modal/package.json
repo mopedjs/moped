@@ -5,10 +5,13 @@
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "dependencies": {
-    "@moped/react-broadcast": "^1.0.5",
     "@types/node": "^8.0.33"
   },
   "peerDependencies": {
+    "react": "*"
+  },
+  "devDependencies": {
+    "@types/react": "*",
     "react": "*"
   },
   "scripts": {

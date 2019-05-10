@@ -5,8 +5,7 @@
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "dependencies": {
-    "@moped/db-pg": "^0.0.13",
-    "@moped/sql": "^0.0.7",
+    "@databases/pg": "^1.0.1",
     "@types/node": "^8.0.33"
   },
   "scripts": {

@@ -1,3 +1,3 @@
-import connect from '@moped/db-pg';
+import connect from '@databases/pg';
 
 export default connect();

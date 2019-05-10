@@ -10,6 +10,9 @@
   "peerDependencies": {
     "react": "*"
   },
+  "devDependencies": {
+    "react": "*"
+  },
   "scripts": {
     "prepublish": "node ../../prebuild react-exclude-props&& tsc -p tsconfig.build.json && node ../../prepare react-exclude-props",
     "dependency-check": "dependency-check package.json --quiet && dependency-check ./package.json --quiet --unused --no-dev --ignore-module \"@types/node\""

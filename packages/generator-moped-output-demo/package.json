@@ -6,10 +6,9 @@
     "@authentication/cookie": "^0.0.7",
     "@authentication/passwordless": "^0.0.7",
     "@authentication/send-message": "^0.0.1",
-    "@moped/db-pg": "^0.0.10",
+    "@databases/pg": "^1.0.1",
     "@moped/db-pg-migrations": "^0.0.11",
     "@moped/sentry": "^0.0.3",
-    "@moped/sql": "^0.0.4",
     "bicycle": "^8.0.0",
     "express": "^4.16.2",
     "styled-components": "^2.4.0"

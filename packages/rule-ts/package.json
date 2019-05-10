@@ -14,7 +14,7 @@
     "cache-loader": "^1.1.0",
     "shasum": "^1.0.2",
     "thread-loader": "^1.1.2",
-    "ts-loader": "^2.3.7",
+    "ts-loader": "^4.0.0",
     "tsconfig": "^7.0.0"
   },
   "scripts": {
