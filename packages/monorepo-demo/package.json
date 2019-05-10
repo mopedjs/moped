@@ -3,9 +3,9 @@
   "private": true,
   "version": "0.0.10",
   "dependencies": {
-    "@authentication/cookie": "^0.0.7",
-    "@authentication/passwordless": "^0.0.7",
-    "@authentication/send-message": "^0.0.1",
+    "@authentication/cookie": "^0.1.2",
+    "@authentication/passwordless": "^1.2.2",
+    "@authentication/send-message": "^0.0.3",
     "@databases/pg": "^1.0.1",
     "@moped/db-pg-migrations": "^0.0.11",
     "@moped/sentry": "^0.0.3",
@@ -15,7 +15,7 @@
     "styled-components": "^2.4.0"
   },
   "devDependencies": {
-    "@authentication/react-passwordless": "^0.0.9",
+    "@authentication/react-passwordless": "^1.2.2",
     "@moped/serve-assets": "^0.0.5",
     "@moped/server-side-render": "^0.0.4",
     "@moped/status-code": "^0.0.3",
