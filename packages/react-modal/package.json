@@ -16,7 +16,7 @@
   },
   "scripts": {
     "prepublish": "node ../../prebuild react-modal&& tsc -p tsconfig.build.json && node ../../prepare react-modal",
-    "dependency-check": "dependency-check package.json --quiet && dependency-check ./package.json --quiet --unused --no-dev --ignore-module \"@types/node\""
+    "dependency-check": "dependency-check package.json --quiet && dependency-check ./package.json --quiet --unused --no-dev --ignore-module \"@types/node\" --ignore-module \"@types/react\""
   },
   "repository": "https://github.com/mopedjs/moped/tree/master/packages/react-modal",
   "license": "MIT",
