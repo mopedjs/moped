@@ -481,6 +481,10 @@
     "@types/keygrip" "*"
     "@types/node" "*"
 
+"@types/cuid@^1.3.0":
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/@types/cuid/-/cuid-1.3.1.tgz#cc1be79d62b2f5c32cec37f808f7caa06309ed13"
+
 "@types/deep-freeze@^0.1.1":
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/@types/deep-freeze/-/deep-freeze-0.1.1.tgz#0e1ee6ceee06f51baeb663deec0bb7780bd72827"
@@ -1719,9 +1723,9 @@ bcrypt-pbkdf@^1.0.0:
   dependencies:
     tweetnacl "^0.14.3"
 
-bicycle@^4.0.1:
-  version "4.5.0"
-  resolved "https://registry.yarnpkg.com/bicycle/-/bicycle-4.5.0.tgz#57cd8d92c7436f720165c76e739625896520d97a"
+bicycle@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/bicycle/-/bicycle-6.0.0.tgz#0f4c7fa0b68667fd0b9a6d8a66ab4c48d9e8b71f"
   dependencies:
     "@types/body-parser" "^1.16.4"
     "@types/deep-freeze" "^0.1.1"
@@ -1739,11 +1743,13 @@ bicycle@^4.0.1:
     then-request "^4.1.0"
     throat "^3.0.0"
 
-bicycle@^6.0.0:
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/bicycle/-/bicycle-6.0.0.tgz#0f4c7fa0b68667fd0b9a6d8a66ab4c48d9e8b71f"
+bicycle@^8.0.0:
+  version "8.2.0"
+  resolved "https://registry.yarnpkg.com/bicycle/-/bicycle-8.2.0.tgz#1ba76a982aa0a16c2f5873dc1e9eab7f622e877e"
   dependencies:
+    "@authentication/lock-by-id" "^0.0.1"
     "@types/body-parser" "^1.16.4"
+    "@types/cuid" "^1.3.0"
     "@types/deep-freeze" "^0.1.1"
     "@types/express" "^4.0.36"
     "@types/leven" "^2.1.0"
@@ -1751,6 +1757,7 @@ bicycle@^6.0.0:
     "@types/node" "^8.0.16"
     body-parser "^1.15.2"
     character-parser "^3.0.0"
+    cuid "^2.0.2"
     deep-freeze "0.0.1"
     leven "^2.0.0"
     ms "^1.0.0"
@@ -2543,6 +2550,10 @@ csso@~2.3.1:
   dependencies:
     clap "^1.0.9"
     source-map "^0.5.3"
+
+cuid@^2.0.2:
+  version "2.1.8"
+  resolved "https://registry.yarnpkg.com/cuid/-/cuid-2.1.8.tgz#cbb88f954171e0d5747606c0139fb65c5101eac0"
 
 currently-unhandled@^0.4.1:
   version "0.4.1"
@@ -7237,13 +7248,12 @@ trim-right@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/trim-right/-/trim-right-1.0.1.tgz#cb2e1203067e0c8de1f614094b9fe45704ea6003"
 
-ts-bicycle@^3.0.2:
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/ts-bicycle/-/ts-bicycle-3.0.2.tgz#e526f3f1195f6d532e93a2e3a49b486e237250c1"
+ts-bicycle@^4.0.5:
+  version "4.0.5"
+  resolved "https://registry.yarnpkg.com/ts-bicycle/-/ts-bicycle-4.0.5.tgz#1f84164293453bd97a53696698406a7c1c4009fd"
   dependencies:
     "@types/mkdirp" "^0.5.0"
     "@types/node" "^7.0.31"
-    bicycle "^4.0.1"
     lsr "^2.0.0"
     mkdirp "^0.5.1"
     prettier "^1.6.0"
@@ -7414,8 +7424,8 @@ upper-case@^1.1.1:
   resolved "https://registry.yarnpkg.com/upper-case/-/upper-case-1.1.3.tgz#f6b4501c2ec4cdd26ba78be7222961de77621598"
 
 urijs@^1.16.1:
-  version "1.19.0"
-  resolved "https://registry.yarnpkg.com/urijs/-/urijs-1.19.0.tgz#d8aa284d0e7469703a6988ad045c4cbfdf08ada0"
+  version "1.19.5"
+  resolved "https://registry.yarnpkg.com/urijs/-/urijs-1.19.5.tgz#119683ab4b2fb0bd637e5ea6dd9117bcac68d3e4"
 
 url-loader@^0.6.2:
   version "0.6.2"
