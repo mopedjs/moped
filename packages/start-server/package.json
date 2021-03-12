@@ -9,7 +9,7 @@
     "@types/node": "^8.0.33",
     "ansi-to-html": "^0.6.3",
     "exit-hook": "^2.0.0",
-    "react-dev-utils": "^5.0.0"
+    "react-dev-utils": "^11.0.4"
   },
   "peerDependencies": {
     "webpack": "*"

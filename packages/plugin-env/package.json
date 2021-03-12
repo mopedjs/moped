@@ -6,7 +6,7 @@
   "types": "./lib/index.d.ts",
   "dependencies": {
     "@types/node": "^8.0.33",
-    "react-dev-utils": "^4.2.1",
+    "react-dev-utils": "^11.0.4",
     "webpack": "^3.10.0"
   },
   "scripts": {
